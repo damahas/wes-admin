@@ -1,0 +1,19 @@
+// 亮色主题变量
+:root {
+  --bg-primary: #f4f5fa;
+  --bg-card: #ffffff;
+  --text-title: #2F3135;
+  --text-primary: #35404F;
+  --text-secondary: #909399;
+  --border-color: #dcdfe6;
+  --theme-color: #409eff;
+  --bg-body: linear-gradient(180deg, rgba(227, 240, 254, 1) 0%, rgba(246, 249, 255, 1) 100%);
+  // 菜单相关变量
+  --menu-item-height: 40px;
+  --menu-item-gap: 10px;
+  --menu-item-color: #35404f;
+  --menu-item-icon-color: #8593a7;
+  --menu-item-active-bg: #ffffff;
+  --menu-item-active-color: #2262fb;
+  --menu-item-active-icon-color: #2262fb;
+}

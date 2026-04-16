@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SqlSugar.IOC" Version="2.0.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.166" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wes.DbModel\Wes.DbModel.csproj" />
+    <ProjectReference Include="..\Wes.Utils\Wes.Utils.csproj" />
+    <ProjectReference Include="..\Wes.ViewModel\Wes.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SystemManage\" />
+    <None Remove="SystemManage\Interface\" />
+    <None Remove="SystemManage\Service\" />
+    <None Remove="MonitorManage\" />
+    <None Remove="GenManage\Service\" />
+    <None Remove="GenManage\Interfacce\" />
+  </ItemGroup>
+</Project>
