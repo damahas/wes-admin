@@ -11,7 +11,7 @@ namespace Wes.WebApi.Extensions
 {
     public static class SqlsugarSetup
     {
-        public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration, string dbName = "Wes.onnectionString")
+        public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration, string dbName = "WesConnectionString")
         {
             SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
             {
