@@ -40,6 +40,12 @@ namespace Wes.DbModel
         public string VarName { get; set; }
 
         /// <summary>
+        /// 变量类型
+        /// </summary>
+        [SugarColumn(ColumnName = "var_type", IsNullable = true, Length = 1, ColumnDescription = "变量类型")]
+        public DataServiceNodeReturnEnum VarType { get; set; }
+
+        /// <summary>
         /// 内容
         /// </summary>
         [SugarColumn(ColumnName = "part_config", IsNullable = true, ColumnDescription = "内容")]
@@ -54,13 +60,13 @@ namespace Wes.DbModel
         /// <summary>
         /// 类型 0 sql，1 js
         /// </summary>
-        [SugarColumn(ColumnName = "part_type", IsNullable = true, Length = 11, ColumnDescription = "类型 0 sql，1 js")]
-        public int? PartType { get; set; }
+        [SugarColumn(ColumnName = "part_type", IsNullable = true, Length = 1, ColumnDescription = "类型 0 sql，1 js")]
+        public DataServiceNodeTypeEnum? PartType { get; set; }
 
         /// <summary>
         /// 删除标志（0代表存在 1代表删除）
         /// </summary>
-        [SugarColumn(ColumnName = "is_del", IsNullable = true, Length = 11, ColumnDescription = "删除标志（0代表存在 1代表删除）")]
+        [SugarColumn(ColumnName = "is_del", IsNullable = true, Length = 1, ColumnDescription = "删除标志（0代表存在 1代表删除）")]
         public int? IsDel { get; set; }
     }
 }

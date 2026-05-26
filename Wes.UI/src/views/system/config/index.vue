@@ -254,8 +254,9 @@ function handleUpdate(row) {
 function handleDelete(row) {
   const configIds = row.configId || ids.value;
   ElMessageBox.confirm('是否确认删除参数编号为"' + configIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delConfig(configIds))

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using Wes.Business;
@@ -36,6 +35,11 @@ builder.Services.AddCors(
 );
 // 注入HttpContext，获取网络信息
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// Register Swagger (basic setup)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // 注入dll
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(container =>
@@ -51,39 +55,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(container =>
     .InstancePerLifetimeScope();
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-// swagger添加Jwt认证
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My WebApi JwtDemoTest", Version = "v1" });
-
-    // 定义安全定义
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    // 添加认证要求
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
- {
- {
- new OpenApiSecurityScheme
- {
- Reference = new OpenApiReference
- {
- Type = ReferenceType.SecurityScheme,
- Id = "Bearer"
- }
- },
- Array.Empty<string>()
- }
- });
-});
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer("Bearer", o =>
 {
@@ -174,7 +145,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         }
     };
 });
-//builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -186,8 +156,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Cors");
-
-//app.ToAuthentication(app.Services.GetService<ISysUserBiz>());
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -205,7 +173,6 @@ app.Use(async (context, next) =>
     }
 });
 
-//app.UseHttpsRedirection();
 app.Use(next =>
 {
     return context =>

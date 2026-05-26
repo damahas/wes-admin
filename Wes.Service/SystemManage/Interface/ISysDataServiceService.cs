@@ -16,6 +16,8 @@ namespace Wes.Service
 
         public SysDataServiceModel GetById(long id);
 
+        public SysDataServiceModel GetByCode(string serviceCode);
+
         public List<SysDataServiceModel> GetByIds(List<long> ids);
 
         public bool Save(SysDataServiceModel model);
@@ -26,6 +28,16 @@ namespace Wes.Service
         public List<DbTableInfo> GetTables();
 
         public List<DbColumnInfo> GetTableColumns(string tableName);
+        #endregion
+
+        #region ²éÑ¯Êý¾Ý
+        public dynamic GetDataFirstCell(string sql, Dictionary<string, object> param);
+
+        public dynamic GetDataSingle(string sql, Dictionary<string, object> param);
+
+        public List<dynamic> GetDataList(string sql, Dictionary<string, object> param);
+
+        public int ExecCommand(string sql, Dictionary<string, object> param);
         #endregion
     }
 }

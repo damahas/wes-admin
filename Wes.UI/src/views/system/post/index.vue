@@ -95,7 +95,7 @@
             </el-button>
             <el-button
               link
-              type="primary"
+              type="danger"
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:post:remove']"
@@ -300,8 +300,9 @@ function handleDelete(row) {
     .filter((p) => postIds.includes(p.postId))
     .map((p) => p.postName);
   ElMessageBox.confirm('是否确认删除岗位 "' + formNames.join("，") + '"？', "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delPost(postIds))

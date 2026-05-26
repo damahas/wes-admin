@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
 using Wes.DbModel;
 using Wes.Utils.Model;
@@ -23,7 +24,7 @@ namespace Wes.WebApi.Areas.SystemManage
 
         [HttpGet]
         [Route("list")]
-        public ReturnData GetList([FromQuery]ParamData<DataServiceParam> param)
+        public ReturnData GetList([FromQuery] ParamData<DataServiceParam> param)
         {
             return _sysDataServiceBiz.GetList(param);
         }
@@ -66,6 +67,14 @@ namespace Wes.WebApi.Areas.SystemManage
         public ReturnData GetTableColumn(string tableName)
         {
             return _sysDataServiceBiz.GetTableColumns(tableName);
+        }
+
+        [HttpPost]
+        [Route("{serviceCode}/exec")]
+        [AllowAnonymous]
+        public ReturnData GetById(string serviceCode, [FromBody] Dictionary<string, object> param)
+        {
+            return _sysDataServiceBiz.Exec(serviceCode, param);
         }
     }
 }

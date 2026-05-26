@@ -50,7 +50,6 @@ namespace Wes.DbModel
         /// 业务模块
         /// <summary>
         [SugarColumn(ColumnName = "business_field", Length = 100, ColumnDescription = "业务模块")]
-        [JsonConverter(typeof(LongToStringConverter))]
         public string BusinessField { get; set; }
 
         /// <summary>

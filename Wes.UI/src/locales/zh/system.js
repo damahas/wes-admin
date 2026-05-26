@@ -31,10 +31,6 @@ export default {
     welcome: '欢迎使用 WesAdmin 管理系统',
     description: '这是一个基于 Vue3 + Element Plus 的后台管理系统'
   },
-  feature: {
-    title: '功能页面',
-    description: '这是一个空白的功能页面，您可以根据需要添加具体功能。'
-  },
   message: {
     title: '站内信',
     all: '全部',
@@ -55,5 +51,19 @@ export default {
     empty: '暂无消息',
     loading: '加载中...',
     noMore: '没有更多了'
+  },
+  license: {
+    title: '许可证',
+    platformSystem: '平台系统',
+    platformCode: '平台代码',
+    licenseKey: '许可证',
+    licenseKeyPlaceholder: '请输入许可证',
+    activate: '激活',
+    activationInfo: '激活信息',
+    licenseVersion: '许可证版本',
+    enterprise: '企业正式版',
+    trial: '试用版',
+    activationTime: '激活时间',
+    expireTime: '到期日期'
   }
 }

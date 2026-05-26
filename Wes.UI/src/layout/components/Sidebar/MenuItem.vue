@@ -26,7 +26,7 @@
         <!-- <el-icon>
           <component :is="getIconComponent(menu.meta.icon)" />
         </el-icon> -->
-        <span v-if="!collapse">{{ menu.meta.title }}</span>
+        <span>{{ menu.meta.title }}</span>
       </template>
       <menu-item
         v-for="(child, index) in menu.children"
@@ -91,6 +91,9 @@ function hasOneShowingChild(children = [], parent) {
 }
 
 function resolvePath(routePath) {
+  if (routePath?.[0] == "/") {
+    return routePath;
+  }
   if (props.basePath) {
     return props.basePath + "/" + routePath;
   }

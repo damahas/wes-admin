@@ -10,6 +10,8 @@ namespace Wes.Service
     {
         public List<FlowProcessVersionModel> GetList(ParamData<FlowProcessVersionModel> param, out int total);
 
+        public List<FlowProcessVersionModel> GetListByProcessId(long proccessId);
+
         public FlowProcessVersionModel GetLastVersion(long processId);
 
         public List<FlowProcessVersionModel> GetAll();

@@ -8,8 +8,7 @@ using Wes.Utils.Model;
 using System.IO;
 using Wes.Utils.Security;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-//using DeviceId.Linux;
+using DeviceId.Linux;
 
 namespace Wes.Utils
 {
@@ -30,7 +29,8 @@ namespace Wes.Utils
         //public static AsyncLocal<UserInfo> CurrentUser = new AsyncLocal<UserInfo>();
         public static UserInfo CurrentUser
         {
-            get {
+            get
+            {
                 return CacheFactory.Cache.GetCache<UserInfo>($"{CacheKey.AccessToken}{Token.Value}");
             }
         }
@@ -52,7 +52,7 @@ namespace Wes.Utils
                 {
                     return deviceCode;
                 }
-                deviceCode = new DeviceIdBuilder().AddOsVersion().ToString();
+                deviceCode = new DeviceIdBuilder().AddOsVersion().OnLinux(linux => linux.AddDockerContainerId()).ToString();
                 //deviceCode = new DeviceIdBuilder().AddOsVersion().AddMacAddress().ToString();
                 //deviceCode = new DeviceIdBuilder().AddMachineName().AddOsVersion().AddMacAddress().ToString();
                 CacheFactory.Cache.SetCache(CacheKey.DeviceId, deviceCode);
@@ -73,6 +73,17 @@ namespace Wes.Utils
             }
             get
             {
+                if (!AppSettings.IsLicense)
+                {
+                    _licenseModel = new LicenseModel
+                    {
+                        LicenseType = "enterprise",
+                        ActivateTime = DateTime.MinValue,
+                        ExpireTime = DateTime.MaxValue,
+                        RefreshTime = DateTime.MaxValue
+                    };
+                    return _licenseModel;
+                }
                 if (_licenseModel != null && _licenseModel.RefreshTime > DateTime.Now)
                 {
                     return _licenseModel;

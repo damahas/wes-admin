@@ -28,17 +28,13 @@ namespace Wes.Service.SystemManage.Service
                 {
                     express.And(p => p.ServiceName.Contains(param.Params.ServiceName.Trim()));
                 }
-                if (!string.IsNullOrWhiteSpace(param.Params.ServiceType))
-                {
-                    express.And(p => p.ServiceType == param.Params.ServiceType);
-                }
                 if (!string.IsNullOrWhiteSpace(param.Params.Category))
                 {
                     express.And(p => p.Category == param.Params.Category);
                 }
-                if (!string.IsNullOrWhiteSpace(param.Params.IsEnabled))
+                if (!string.IsNullOrWhiteSpace(param.Params.Status))
                 {
-                    express.And(p => p.IsEnabled == param.Params.IsEnabled);
+                    express.And(p => p.Status == param.Params.Status);
                 }
                 if (param.Params.BeginTime != null)
                 {
@@ -65,7 +61,14 @@ namespace Wes.Service.SystemManage.Service
         {
             return Context.Queryable<SysDataServiceModel>()
                 .Where(p => p.DsId == id && p.IsDel == 0)
-                .Includes(p => p.Nodes.OrderBy(t=>t.SortBy).ToList()).First();
+                .Includes(p => p.Nodes.OrderBy(t => t.SortBy).ToList()).First();
+        }
+
+        public SysDataServiceModel GetByCode(string serviceCode)
+        {
+            return Context.Queryable<SysDataServiceModel>()
+                .Where(p => p.ServiceCode == serviceCode && p.IsDel == 0)
+                .Includes(p => p.Nodes.OrderBy(t => t.SortBy).ToList()).First();
         }
 
         public List<SysDataServiceModel> GetByIds(List<long> ids)
@@ -95,13 +98,61 @@ namespace Wes.Service.SystemManage.Service
         }
 
         #region 数据库表信息
-        public List<DbTableInfo> GetTables() { 
+        public List<DbTableInfo> GetTables()
+        {
             return Context.DbMaintenance.GetTableInfoList();
         }
         public List<DbColumnInfo> GetTableColumns(string tableName)
         {
             return Context.DbMaintenance.GetColumnInfosByTableName(tableName);
         }
+        #endregion
+
+        #region 查询数据
+        public dynamic GetDataFirstCell(string sql, Dictionary<string, object> param)
+        {
+            List<SugarParameter> parameters = new List<SugarParameter>();
+            foreach (var item in param)
+            {
+                parameters.Add(new SugarParameter(item.Key, item.Value));
+            }
+            var result = Context.Ado.GetDataTable(sql, parameters);
+            if (result.Rows.Count > 0 && result.Columns.Count > 0) { 
+                return result.Rows[0][0];
+            }
+            return null;
+        }
+
+        public dynamic GetDataSingle(string sql, Dictionary<string, object> param)
+        {
+            List<SugarParameter> parameters = new List<SugarParameter>();
+            foreach (var item in param)
+            {
+                parameters.Add(new SugarParameter(item.Key, item.Value));
+            }
+            return Context.Ado.SqlQuerySingle<dynamic>(sql, parameters);
+        }
+
+        public List<dynamic> GetDataList(string sql, Dictionary<string, object> param)
+        {
+            List<SugarParameter> parameters = new List<SugarParameter>();
+            foreach (var item in param)
+            {
+                parameters.Add(new SugarParameter(item.Key, item.Value));
+            }
+            return Context.Ado.SqlQuery<dynamic>(sql, parameters);
+        }
+
+        public int ExecCommand(string sql, Dictionary<string, object> param)
+        {
+            List<SugarParameter> parameters = new List<SugarParameter>();
+            foreach (var item in param)
+            {
+                parameters.Add(new SugarParameter(item.Key, item.Value));
+            }
+            return Context.Ado.ExecuteCommand(sql, parameters);
+        }
+
         #endregion
     }
 }

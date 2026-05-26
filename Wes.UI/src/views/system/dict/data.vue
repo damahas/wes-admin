@@ -59,28 +59,32 @@
         @queryTable="getList"
       ></right-toolbar>
     </el-row>
-
     <el-table
       v-loading="loading"
       :data="dataList"
+      row-key="dictDataId"
+      default-expand-all
+      :tree-props="{ children: 'children' }"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典标签" align="center" prop="dictLabel">
+      <el-table-column label="字典标签" align="left" prop="dictLabel">
         <template #default="scope">
           <span
             v-if="
               (scope.row.listClass == '' || scope.row.listClass == 'default') &&
               (scope.row.cssClass == '' || scope.row.cssClass == null)
             "
-            >{{ scope.row.dictLabel }}</span
           >
+            {{ scope.row.dictLabel }}
+          </span>
           <el-tag
             v-else
             :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass"
             :class="scope.row.cssClass"
-            >{{ scope.row.dictLabel }}</el-tag
           >
+            {{ scope.row.dictLabel }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="字典键值" align="center" prop="dictValue" />
@@ -118,7 +122,7 @@
           >
           <el-button
             link
-            type="primary"
+            type="danger"
             icon="Delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:dict:remove']"
@@ -141,6 +145,17 @@
       <el-form ref="dataRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典类型">
           <el-input v-model="form.dictType" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="上级节点">
+          <el-tree-select
+            v-model="form.parentId"
+            :data="treeSelectData"
+            :props="{ value: 'dictDataId', label: 'dictLabel', children: 'children' }"
+            placeholder="请选择上级节点"
+            check-strictly
+            clearable
+            :render-after-expand="false"
+          />
         </el-form-item>
         <el-form-item label="数据标签" prop="dictLabel">
           <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
@@ -170,8 +185,9 @@
               v-for="dict in sys_normal_disable"
               :key="dict.value"
               :value="dict.value"
-              >{{ dict.label }}</el-radio
             >
+              {{ dict.label }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -193,11 +209,11 @@
 </template>
 
 <script setup name="Data">
-import { ref, reactive, toRefs, getCurrentInstance } from "vue";
+import { ref, reactive, toRefs, getCurrentInstance, onMounted } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRoute } from "vue-router";
-import { getDict, download } from "@/utils";
+import { getDict, download, handleTree } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 import { optionselect as getDictOptionselect, getType } from "@/api/system/dict";
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict";
@@ -208,6 +224,8 @@ const { sys_normal_disable } = getDict("sys_normal_disable");
 const route = useRoute();
 
 const dataList = ref([]);
+const flatDataList = ref([]);
+const treeSelectData = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -295,7 +313,11 @@ function getTypeList() {
 function getList() {
   loading.value = true;
   listData(queryParams.value).then((response) => {
-    dataList.value = response.rows;
+    flatDataList.value = response.rows;
+    dataList.value = handleTree(response.rows, "dictDataId", "parentId", "children");
+    treeSelectData.value = [
+      { dictDataId: '0', dictLabel: "根节点", children: dataList.value },
+    ];
     total.value = response.total;
     loading.value = false;
   });
@@ -318,6 +340,7 @@ function reset() {
     dictSort: 0,
     status: "0",
     remark: undefined,
+    parentId: 0,
   };
   if (dataRef.value) dataRef.value.resetFields();
 }
@@ -351,7 +374,7 @@ function handleAdd() {
 
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
-  ids.value = selection.map((item) => item.dictCode);
+  ids.value = selection.map((item) => item.dictDataId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -359,8 +382,8 @@ function handleSelectionChange(selection) {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const dictCode = row.dictCode || ids.value;
-  getData(dictCode).then((response) => {
+  const dictDataId = row.dictDataId || ids.value;
+  getData(dictDataId).then((response) => {
     form.value = response.data;
     open.value = true;
     title.value = "修改字典数据";
@@ -373,10 +396,11 @@ function submitForm() {
     if (valid) {
       const apiCall = form.value.dictCode ? updateData(form.value) : addData(form.value);
       apiCall.then(() => {
-        store.dispatch('dict/deleteDict', queryParams.value.params.dictType);
+        store.dispatch("dict/deleteDict", queryParams.value.params.dictType);
         ElMessage.success(form.value.dictCode ? "修改成功" : "新增成功");
         open.value = false;
         getList();
+        store.dispatch("dict/deleteDict", queryParams.value.params.dictType);
       });
     }
   });
@@ -384,20 +408,21 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const dictCodes = row.dictCode || ids.value;
-  const dictNames = dataList.value
-    .filter((p) => dictCodes.includes(p.dictCode))
+  const dictDataIds = row.dictDataId || ids.value;
+  const dictNames = flatDataList.value
+    .filter((p) => dictDataIds.includes(p.dictDataId))
     .map((p) => p.dictLabel);
   ElMessageBox.confirm("是否确认删除字典 " + dictNames.join("，") + " ？", "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
-    .then(() => delData(dictCodes))
+    .then(() => delData(dictDataIds))
     .then(() => {
       getList();
       ElMessage.success("删除成功");
-      store.dispatch('dict/deleteDict', queryParams.value.params.dictType);
+      store.dispatch("dict/deleteDict", queryParams.value.params.dictType);
     })
     .catch(() => {});
 }
@@ -413,6 +438,8 @@ function handleExport() {
   );
 }
 
-getTypes(route.params && route.params.dictId);
-getTypeList();
+onMounted(() => {
+  getTypes(route.params && route.params.dictId);
+  getTypeList();
+});
 </script>

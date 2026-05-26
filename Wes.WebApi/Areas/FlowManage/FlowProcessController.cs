@@ -95,10 +95,10 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpDelete]
-        [Route("version/{ids}")]
-        public ReturnData DeleteVersion(string ids)
+        [Route("version/{id}")]
+        public ReturnData DeleteVersion(long id)
         {
-            return _flowProcessBiz.DeleteVersion(ids);
+            return _flowProcessBiz.DeleteVersion(id);
         }
 
         [HttpGet]

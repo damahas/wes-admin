@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,13 @@ namespace Wes.Business
 
         public ResultData<SysDataServiceModel> GetById(long id);
 
+        public ResultData<SysDataServiceModel> GetByCode(string serviceCode);
+
         public ReturnData Save(SysDataServiceModel model);
 
         public ReturnData Delete(string ids);
+
+        public ResultData<Dictionary<string, object>> Exec(string serviceCode, Dictionary<string, object> param);
 
         #region 数据库表信息
         public ResultData<List<DbTableInfo>> GetTables();

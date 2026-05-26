@@ -13,12 +13,6 @@ const routes = [
     component: () => import("@/views/login.vue"),
   },
   {
-    path: "/editor-demo",
-    name: "EditorDemo",
-    component: () => import("@/views/editor-demo/index.vue"),
-    meta: { title: "编辑器演示" }
-  },
-  {
     path: "/",
     name: "Layout",
     component: () => import("@/layout/Index.vue"),
@@ -30,16 +24,10 @@ const routes = [
         component: () => import("@/views/Home.vue"),
       },
       {
-        path: "/feature",
-        name: "Feature",
-        component: () => import("@/views/Feature.vue"),
-      },
-      {
         path: "/404",
         name: "404",
         component: () => import("@/views/error/404.vue"),
       },
-
       {
         path: '/system/user-auth',
         hidden: true,
@@ -79,19 +67,6 @@ const routes = [
           }
         ]
       },
-      // {
-      //   path: '/system/dataService',
-      //   hidden: true,
-      //   permissions: ['system:dataService:add', 'system:dataService:edit'],
-      //   children: [
-      //     {
-      //       path: 'edit',
-      //       component: () => import('@/views/system/dataService/edit'),
-      //       name: 'DataServiceEdit',
-      //       meta: { title: '数据服务编辑', activeMenu: '/system/dataService' }
-      //     }
-      //   ]
-      // },
       // {
       //   path: '/monitor/job-log',
       //   component: Layout,
@@ -134,7 +109,6 @@ const router = createRouter({
 });
 let isLoadRoute = false;
 router.beforeEach(async (to, from, next) => {
-  // console.log(to);
   const token = store.getters["user/accessToken"];
   if (isLoadRoute && !to.matched?.length) {
     next("/404");
@@ -159,7 +133,6 @@ router.beforeEach(async (to, from, next) => {
       next("/login");
       return;
     }
-    // console.log(to.matched?.length ?? 0);
     // if (to.path === "/login" && token) {
     //   next("/");
     //   return;

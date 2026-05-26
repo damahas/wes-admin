@@ -103,8 +103,6 @@ const handleAddClick = (position) => {
 .steps-wrapper {
   display: flex;
   align-items: center;
-  min-height: 60px;
-  padding: 10px 0;
 }
 
 .step-item-wrapper {

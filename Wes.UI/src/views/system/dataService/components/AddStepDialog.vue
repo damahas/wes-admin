@@ -16,12 +16,13 @@
         />
       </el-form-item>
       
-      <el-form-item label="输出变量名" required>
+      <el-form-item label="输出变量名" :required="formData.partType === 0">
         <el-input
           v-model="formData.varName"
-          placeholder="请输入输出变量名（用于后续步骤引用）"
+          :placeholder="formData.partType === 1 ? 'JS节点无需输出变量' : '请输入输出变量名（用于后续步骤引用）'"
           maxlength="50"
           show-word-limit
+          :disabled="formData.partType === 1"
         />
       </el-form-item>
       
@@ -56,7 +57,8 @@ const props = defineProps({
     default: () => ({
       partName: '',
       varName: '',
-      partType: 0
+      partType: 0,
+      sortBy: 0
     })
   }
 })
@@ -67,7 +69,8 @@ const dialogVisible = ref(false)
 const formData = ref({
   partName: '',
   varName: '',
-  partType: 0
+  partType: 0,
+  sortBy: 0,
 })
 
 // 监听visible变化
@@ -94,7 +97,7 @@ function handleConfirm() {
     return
   }
   
-  if (!formData.value.varName.trim()) {
+  if (formData.value.partType === 0 && !formData.value.varName.trim()) {
     ElMessage.error('输出变量名不能为空')
     return
   }
@@ -102,7 +105,8 @@ function handleConfirm() {
   emit('confirm', {
     partName: formData.value.partName.trim(),
     varName: formData.value.varName.trim(),
-    partType: formData.value.partType
+    partType: formData.value.partType,
+    sortBy: formData.value.sortBy
   })
   
   dialogVisible.value = false

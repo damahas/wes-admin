@@ -921,6 +921,14 @@ onMounted(() => {
   });
 });
 
+// 暴露方法供外部调用
+defineExpose({
+  insertText,
+  getValue: () => modelValue.value,
+  setValue: (val) => {
+    modelValue.value = val;
+  },
+});
 
 
 onUnmounted(() => {

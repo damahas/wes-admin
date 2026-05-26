@@ -42,3 +42,28 @@ export function delDataService(serviceId) {
     method: 'delete'
   })
 }
+
+// 获取表列表
+export function getTables() {
+  return request({
+    url: '/system/dataService/table/list',
+    method: 'get'
+  })
+}
+
+// 获取表字段
+export function getTableFields(tableName) {
+  return request({
+    url: `/system/dataService/table/${tableName}/column`,
+    method: 'get'
+  })
+}
+
+// 执行
+export function execDataService(serviceCode, data) {
+  return request({
+    url: `/system/dataService/${serviceCode}/exec`,
+    method: 'post',
+    data
+  })
+}

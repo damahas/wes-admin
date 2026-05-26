@@ -33,12 +33,6 @@ namespace Wes.DbModel
         public string ServiceName { get; set; }
 
         /// <summary>
-        /// 服务类型  1查询 2分页查询 3增删改
-        /// </summary>
-        [SugarColumn(ColumnName = "service_type", IsNullable = true, Length = 20, ColumnDescription = "服务类型 sql api")]
-        public string ServiceType { get; set; }
-
-        /// <summary>
         /// 分类字典
         /// </summary>
         [SugarColumn(ColumnName = "category", IsNullable = true, Length = 20, ColumnDescription = "分类字典")]
@@ -53,8 +47,8 @@ namespace Wes.DbModel
         /// <summary>
         /// 是否有效（0代表无效 1代表有效）
         /// </summary>
-        [SugarColumn(ColumnName = "is_enabled", IsNullable = true, Length = 11, ColumnDescription = "是否有效（0代表无效 1代表有效）")]
-        public string IsEnabled { get; set; }
+        [SugarColumn(ColumnName = "status", IsNullable = true, Length = 11, ColumnDescription = "是否有效（0代表无效 1代表有效）")]
+        public string Status { get; set; }
 
         /// <summary>
         /// 描述
@@ -65,7 +59,7 @@ namespace Wes.DbModel
         /// <summary>
         /// 删除标志（0代表存在 1代表删除）
         /// </summary>
-        [SugarColumn(ColumnName = "is_del", IsNullable = true, Length = 11, ColumnDescription = "删除标志（0代表存在 1代表删除）")]
+        [SugarColumn(ColumnName = "is_del", IsNullable = true, Length = 1, ColumnDescription = "删除标志（0代表存在 1代表删除）")]
         public int? IsDel { get; set; }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace Wes.Business
 
         public ReturnData SaveVersion(FlowProcessVersionModel model);
 
-        public ReturnData DeleteVersion(string ids);
+        public ReturnData DeleteVersion(long versionId);
 
         public ReturnData CopyVersion(long versionId);
 

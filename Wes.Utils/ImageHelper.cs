@@ -35,7 +35,7 @@ namespace Wes.Utils
                 {
                     slider.Mutate(x => x.Crop(new Rectangle(SliderPositionX, SliderPositionY, sliderWidth, sliderHeight)));
                     captchaModel.SliderImg = slider.ToBase64String(JpegFormat.Instance);
-                    slider.Mutate(x => x.GaussianBlur(80));
+                    slider.Mutate(x => x.GaussianBlur(40f));
                     image.Mutate(x => x.DrawImage(slider, new Point(SliderPositionX, SliderPositionY), 1));
                 }
                 captchaModel.CaptchaImg = image.ToBase64String(JpegFormat.Instance);

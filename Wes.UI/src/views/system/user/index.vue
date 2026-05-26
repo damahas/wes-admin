@@ -157,54 +157,51 @@
             <el-table-column
               label="操作"
               align="center"
-              width="150"
+              width="210"
               class-name="small-padding fixed-width"
             >
               <template #default="scope">
-                <el-tooltip content="修改" placement="top" v-if="scope.row.userId !== 1">
-                  <el-button
-                    link
-                    type="primary"
-                    icon="Edit"
-                    @click="handleUpdate(scope.row)"
-                    v-hasPermi="['system:user:edit']"
-                  ></el-button>
-                </el-tooltip>
-                <el-tooltip content="删除" placement="top" v-if="scope.row.userId !== 1">
-                  <el-button
-                    link
-                    type="primary"
-                    icon="Delete"
-                    @click="handleDelete(scope.row)"
-                    v-hasPermi="['system:user:remove']"
-                  ></el-button>
-                </el-tooltip>
-                <el-tooltip
-                  content="重置密码"
-                  placement="top"
-                  v-if="scope.row.userId !== 1"
+                <el-button
+                  link
+                  type="primary"
+                  icon="Edit"
+                  @click="handleUpdate(scope.row)"
+                  v-hasPermi="['system:user:edit']"
                 >
-                  <el-button
-                    link
-                    type="primary"
-                    icon="Unlock"
-                    @click="handleResetPwd(scope.row)"
-                    v-hasPermi="['system:user:resetPwd']"
-                  ></el-button>
-                </el-tooltip>
-                <el-tooltip
-                  content="分配角色"
-                  placement="top"
-                  v-if="scope.row.userId !== 1"
+                  修改
+                </el-button>
+                <el-button
+                  link
+                  type="danger"
+                  icon="Delete"
+                  @click="handleDelete(scope.row)"
+                  v-hasPermi="['system:user:remove']"
                 >
-                  <el-button
-                    link
-                    type="primary"
-                    icon="Files"
-                    @click="handleAuthRole(scope.row)"
-                    v-hasPermi="['system:user:edit']"
-                  ></el-button>
-                </el-tooltip>
+                  删除
+                </el-button>
+                <el-dropdown
+                  style="display: inline-flex; vertical-align: middle; margin-left: 12px"
+                >
+                  <el-button link type="primary">
+                    更多<el-icon><ArrowDown /></el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item
+                        @click="handleResetPwd(scope.row)"
+                        v-hasPermi="['system:user:resetPwd']"
+                      >
+                        <el-icon><Unlock /></el-icon>重置密码
+                      </el-dropdown-item>
+                      <el-dropdown-item
+                        @click="handleAuthRole(scope.row)"
+                        v-hasPermi="['system:user:edit']"
+                      >
+                        <el-icon><Files /></el-icon>分配角色
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
               </template>
             </el-table-column>
           </el-table>
@@ -364,6 +361,7 @@
 
 <script setup name="User">
 import { ElMessage, ElMessageBox } from "element-plus";
+import { ArrowDown, Unlock, Files } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { ref, reactive, toRefs, watch, inject, unref } from "vue";
 import { download, getDict, addDateRange } from "@/utils";
@@ -565,8 +563,9 @@ function resetQuery() {
 function handleDelete(row) {
   const userIds = row.userId || ids.value;
   ElMessageBox.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(function () {

@@ -123,7 +123,7 @@
             >
             <el-button
               link
-              type="primary"
+              type="danger"
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:dict:remove']"
@@ -345,8 +345,9 @@ function submitForm() {
 function handleDelete(row) {
   const dictIds = row.dictId || ids.value;
   ElMessageBox.confirm('是否确认删除字典编号为"' + dictIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delType(dictIds))
@@ -378,3 +379,16 @@ function handleRefreshCache() {
 
 getList();
 </script>
+
+<style scoped>
+.link-type {
+  color: var(--el-color-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.link-type:hover {
+  color: var(--el-color-primary-light-3);
+}
+</style>

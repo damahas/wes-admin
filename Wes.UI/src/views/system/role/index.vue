@@ -87,45 +87,52 @@
         <el-table-column
           label="操作"
           align="center"
+          width="210"
           class-name="small-padding fixed-width"
         >
           <template #default="scope">
-            <el-tooltip content="修改" placement="top" v-if="scope.row.roleId !== 1">
-              <el-button
-                link
-                type="primary"
-                icon="Edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:role:edit']"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip content="删除" placement="top" v-if="scope.row.roleId !== 1">
-              <el-button
-                link
-                type="primary"
-                icon="Delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:role:remove']"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip content="数据权限" placement="top" v-if="scope.row.roleId !== 1">
-              <el-button
-                link
-                type="primary"
-                icon="Lock"
-                @click="handleDataScope(scope.row)"
-                v-hasPermi="['system:role:edit']"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip content="分配用户" placement="top" v-if="scope.row.roleId !== 1">
-              <el-button
-                link
-                type="primary"
-                icon="User"
-                @click="handleAuthUser(scope.row)"
-                v-hasPermi="['system:role:edit']"
-              ></el-button>
-            </el-tooltip>
+            <el-button
+              link
+              type="primary"
+              icon="Edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['system:role:edit']"
+              v-if="scope.row.roleId !== 1"
+              >修改</el-button
+            >
+            <el-button
+              link
+              type="danger"
+              icon="Delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['system:role:remove']"
+              v-if="scope.row.roleId !== 1"
+              >删除</el-button
+            >
+            <el-dropdown
+              style="display: inline-flex; vertical-align: middle; margin-left: 12px"
+              v-if="scope.row.roleId !== 1"
+            >
+              <el-button link type="primary">
+                更多<el-icon><ArrowDown /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="handleDataScope(scope.row)"
+                    v-hasPermi="['system:role:edit']"
+                  >
+                    <el-icon><Lock /></el-icon>数据权限
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    @click="handleAuthUser(scope.row)"
+                    v-hasPermi="['system:role:edit']"
+                  >
+                    <el-icon><User /></el-icon>分配用户
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -277,6 +284,7 @@
 import { ref, reactive, toRefs, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { ArrowDown, Lock, User } from "@element-plus/icons-vue";
 import { getDict, download, addDateRange } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 import {
@@ -403,8 +411,9 @@ function resetQuery() {
 function handleDelete(row) {
   const roleIds = row.roleId || ids.value;
   ElMessageBox.confirm(`是否确认删除角色编号为"${roleIds}"的数据项?`, "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delRole(roleIds))
@@ -448,20 +457,6 @@ function handleStatusChange(row) {
     .catch(() => {
       row.status = row.status === "0" ? "1" : "0";
     });
-}
-
-/** 更多操作 */
-function handleCommand(command, row) {
-  switch (command) {
-    case "handleDataScope":
-      handleDataScope(row);
-      break;
-    case "handleAuthUser":
-      handleAuthUser(row);
-      break;
-    default:
-      break;
-  }
 }
 
 /** 分配用户 */

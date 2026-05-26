@@ -122,17 +122,17 @@ namespace Wes.Business
             {
                 return new ReturnData(500, "保存失败！");
             }
-            return new ReturnData();
+            return new ResultData<FlowProcessVersionModel>(model);
         }
 
-        public ReturnData DeleteVersion(string ids)
+        public ReturnData DeleteVersion(long versionId)
         {
-            var delIds = ids.ToLongList();
-            if (delIds == null || delIds.Count == 0)
+            var version = _flowProcessVersionService.GetById(versionId);
+            if (version != null && version.VersionId == version.Process?.CurVersionId)
             {
-                return new ReturnData(500, "参数有误，请检查参数！");
+                return new ReturnData(500, "当前版本已启用，无法删除");
             }
-            if (_flowProcessVersionService.Delete(delIds))
+            if (_flowProcessVersionService.Delete(new List<long> { version.VersionId }))
             {
                 return new ReturnData();
             }
@@ -151,7 +151,8 @@ namespace Wes.Business
             return SaveVersion(version);
         }
 
-        public ReturnData UseVersion(long versionId) {
+        public ReturnData UseVersion(long versionId)
+        {
             var version = _flowProcessVersionService.GetById(versionId);
             if (version == null)
             {

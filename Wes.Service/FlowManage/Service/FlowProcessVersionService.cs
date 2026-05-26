@@ -35,6 +35,13 @@ namespace Wes.Service
             return query.ToPageList(param.PageNum, param.PageSize, ref total);
         }
 
+        public List<FlowProcessVersionModel> GetListByProcessId(long proccessId)
+        {
+            return Context.Queryable<FlowProcessVersionModel>()
+                    .Where(p => p.ProcessId == proccessId && p.IsDel == 0)
+                    .OrderBy(p => p.CreateTime, OrderByType.Desc).ToList();
+        }
+
         public FlowProcessVersionModel GetLastVersion(long processId)
         {
             return Context.Queryable<FlowProcessVersionModel>()

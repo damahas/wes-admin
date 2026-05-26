@@ -10,11 +10,9 @@ const modules = import.meta.glob("../../views/**/*.vue");
 
 function loadView(view) {
   let res;
-  console.log("view", view);
   for (const path in modules) {
     const dir = path.split("views/")[1].split(".vue")[0];
     if (dir === view) {
-      console.log("dir", path, modules[path]());
       res = () => modules[path]();
     }
   }
@@ -141,7 +139,6 @@ export default {
       const r = await getRouters();
       const sdata = JSON.parse(JSON.stringify(r.data));
       const sidebarRoutes = filterAsyncRouter(sdata);
-      console.log("sidebarRoutes", sidebarRoutes, router);
       sidebarRoutes.forEach((route) => {
         router.addRoute(route);
         // router.addRoute("Layout", route);

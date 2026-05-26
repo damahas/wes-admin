@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="MonitorManage\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.166" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.214" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wes.Utils\Wes.Utils.csproj" />

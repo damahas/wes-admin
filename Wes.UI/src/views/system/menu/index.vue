@@ -96,7 +96,7 @@
             >
             <el-button
               link
-              type="primary"
+              type="danger"
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:menu:remove']"
@@ -531,8 +531,9 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   ElMessageBox.confirm('是否确认删除名称为"' + row.menuName + '"的数据项?', "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delMenu(row.menuId))

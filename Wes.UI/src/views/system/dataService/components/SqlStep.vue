@@ -1,357 +1,665 @@
 <template>
-  <div class="sql-step-container">
-    <el-card shadow="never" class="step-card">
-      <template #header>
-        <div class="card-header">
-          <span>SQL配置步骤</span>
-          <div class="header-actions">
-            <el-tag type="success">SQL</el-tag>
-          </div>
+  <div class="step-wrapper">
+    <div class="step-header">
+      <div class="header-left">
+        <div class="header-icon sql-icon">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <ellipse cx="12" cy="6" rx="8" ry="3" />
+            <path d="M4 6v6c0 1.657 3.582 3 8 3s8-1.343 8-3V6" />
+            <path d="M4 12v6c0 1.657 3.582 3 8 3s8-1.343 8-3v-6" />
+          </svg>
         </div>
-      </template>
-      
-      <div class="sql-layout">
-        <!-- 左侧：表字段树结构（预留） -->
-        <div class="left-panel">
-          <div class="panel-header">
-            <h3>表字段结构</h3>
-            <el-tag type="info">开发中</el-tag>
-          </div>
-          <div class="panel-content">
-            <el-empty description="表字段树结构开发中" />
-          </div>
+        <div class="header-text">
+          <h3>SQL配置</h3>
+          <p>配置SQL查询语句和变量参数</p>
         </div>
-        
-        <!-- 中间：SQL编辑器区域 -->
-        <div class="center-panel">
-          <div class="panel-header">
-            <h3>SQL配置</h3>
+      </div>
+      <el-button type="danger" plain @click="emit('delete')"> 删除 </el-button>
+    </div>
+
+    <div class="step-body">
+      <div class="form-group flex-1 content-area">
+        <!-- 左侧表结构树 -->
+        <div class="table-tree">
+          <div class="tree-header">
+            <el-input
+              v-model="searchText"
+              placeholder="搜索表名"
+              prefix-icon="Search"
+              size="small"
+              clearable
+            />
           </div>
-          <div class="panel-content">
-            <!-- 变量名输入 -->
-            <div class="var-name-input">
-              <el-input
-                :model-value="props.node.varName"
-                @update:model-value="value => emit('update:node', { ...props.node, varName: value })"
-                placeholder="请输入节点变量名称"
-                maxlength="100"
-              >
-                <template #prepend>变量名</template>
-              </el-input>
-            </div>
-            
-            <!-- SQL编辑器 -->
-            <div class="editor-container">
-              <div class="editor-header">
-                <span>SQL语句</span>
-                <el-tag size="small">支持参数化查询</el-tag>
-              </div>
-              <CodeEditor
-                :model-value="localPartConfig"
-                @update:model-value="updatePartConfig"
-                language="sql"
-                placeholder="请输入SQL语句，可以使用 :paramName 作为参数"
-                :height="300"
-              />
-              <div class="editor-tips">
-                <el-alert title="SQL编写提示" type="info" :closable="false">
-                  <ul>
-                    <li>使用 :参数名 的方式定义参数，如：SELECT * FROM users WHERE id = :userId</li>
-                    <li>支持多行SQL语句</li>
-                    <li>复杂的SQL建议在右侧配置参数</li>
-                    <li>支持SQL语法高亮和代码提示</li>
-                  </ul>
-                </el-alert>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 右侧：变量配置和AI -->
-        <div class="right-panel">
-          <!-- 变量配置 -->
-          <div class="variables-panel">
-            <div class="panel-header">
-              <h3>变量配置</h3>
-              <el-button type="primary" plain icon="Plus" size="small" @click="addVariable">
-                添加变量
-              </el-button>
-            </div>
-            <div class="panel-content">
-              <div v-if="variables.length === 0" class="empty-variables">
-                <el-empty description="暂无变量配置" size="small" />
-              </div>
-              
-              <div v-else class="variables-list">
-                <div v-for="(variable, index) in variables" :key="index" class="variable-item">
-                  <el-input
-                    v-model="variable.param"
-                    placeholder="变量名"
-                    style="width: 120px; margin-right: 10px;"
-                    @input="updateVariables"
-                  />
-                  <el-select
-                    v-model="variable.type"
-                    placeholder="类型"
-                    style="width: 100px; margin-right: 10px;"
-                    @change="updateVariables"
+          <div class="tree-content">
+            <el-tree
+              ref="treeRef"
+              :data="treeData"
+              :props="treeProps"
+              :expand-on-click-node="false"
+              :filter-node-method="filterNode"
+              :load="loadNode"
+              lazy
+              node-key="id"
+            >
+              <template #default="{ node, data }">
+                <span
+                  class="tree-node"
+                  @click.stop="handleNodeClick(data, node)"
+                >
+                  <el-icon v-if="data.isLeaf"><Document /></el-icon>
+                  <el-icon v-else><Folder /></el-icon>
+                  <el-tooltip
+                    :content="data.description || data.label"
+                    placement="top"
+                    :disabled="!data.description"
                   >
-                    <el-option label="字符串" value="string" />
-                    <el-option label="数字" value="number" />
-                    <el-option label="布尔值" value="boolean" />
-                    <el-option label="日期" value="date" />
-                    <el-option label="数组" value="array" />
-                    <el-option label="对象" value="object" />
-                  </el-select>
-                  <el-input
-                    v-model="variable.description"
-                    placeholder="描述"
-                    style="flex: 1; margin-right: 10px;"
-                    @input="updateVariables"
-                  />
-                  <el-button
-                    link
-                    type="danger"
-                    icon="Delete"
-                    @click="removeVariable(index)"
-                  />
-                </div>
+                    <span class="node-label">
+                      {{ data.label }}
+                      <span v-if="data.description" class="node-desc">({{ data.description }})</span>
+                    </span>
+                  </el-tooltip>
+                  <el-tag
+                    v-if="data.dbColumnName"
+                    size="small"
+                    type="info"
+                    class="type-tag"
+                  >
+                    {{ data.dataType }}
+                  </el-tag>
+                </span>
+              </template>
+            </el-tree>
+          </div>
+        </div>
+
+        <!-- 中间编辑器 -->
+        <div class="editor-area">
+          <label class="form-label">SQL语句</label>
+          <CodeEditor
+            ref="codeEditorRef"
+            :model-value="localPartConfig"
+            @update:model-value="updatePartConfig"
+            language="sql"
+            placeholder="请输入SQL语句，可以使用 :paramName 作为参数"
+            height="calc(100vh - 219px)"
+          />
+        </div>
+
+        <!-- 右侧参数编辑 -->
+        <div class="param-panel">
+          <div class="param-section">
+            <div class="section-header">
+              <span class="form-label">输出变量</span>
+            </div>
+            <div class="output-var-group">
+              <div class="output-var-row">
+                <label class="var-label"><span class="required">*</span>变量名</label>
+                <el-input
+                  :model-value="props.node.varName"
+                  @update:model-value="updateVarName"
+                  placeholder="请输入变量名"
+                  size="small"
+                  clearable
+                />
               </div>
-              
-              <div class="variables-tips">
-                <el-alert title="变量配置说明" type="warning" :closable="false">
-                  <ul>
-                    <li>变量名需与SQL中的 :参数名 保持一致</li>
-                    <li>配置的变量会在调用时作为参数传入</li>
-                    <li>变量配置会保存到 paramConfig 字段</li>
-                  </ul>
-                </el-alert>
+              <div class="output-var-row">
+                <label class="var-label"><span class="required">*</span>输出类型</label>
+                <el-radio-group
+                  :model-value="props.node.varType"
+                  @update:model-value="updateVarType"
+                  size="small"
+                >
+                  <el-radio :label="0">列表对象</el-radio>
+                  <el-radio :label="1">对象</el-radio>
+                  <el-radio :label="2">单个值</el-radio>
+                  <el-radio :label="3">增删改</el-radio>
+                </el-radio-group>
               </div>
             </div>
           </div>
-          
-          <!-- AI对话区域（预留） -->
-          <div class="ai-panel">
-            <div class="panel-header">
-              <h3>AI助手</h3>
-              <el-tag type="info">开发中</el-tag>
+          <div class="param-section flex-1">
+            <div class="section-divider"></div>
+            <div class="section-header">
+              <span class="form-label">输入变量</span>
+              <el-button size="small" type="primary" plain @click="addParam">+ 添加</el-button>
             </div>
-            <div class="panel-content">
-              <el-empty description="AI对话功能开发中" />
+            <div class="param-list">
+              <div v-for="(param, index) in params" :key="index" class="param-item">
+                <el-input
+                  v-model="param.key"
+                  placeholder="变量名"
+                  size="small"
+                  @change="updateParams"
+                />
+                <el-select v-model="param.type" size="small" @change="updateParams">
+                  <el-option label="字符串" value="string" />
+                  <el-option label="数字" value="number" />
+                  <el-option label="布尔" value="boolean" />
+                  <el-option label="日期" value="date" />
+                  <el-option label="对象" value="object" />
+                </el-select>
+                <el-button
+                  size="small"
+                  type="danger"
+                  plain
+                  :icon="Delete"
+                  @click="removeParam(index)"
+                />
+              </div>
+              <div v-if="params.length === 0" class="param-empty">
+                暂无参数，点击上方添加
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </el-card>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
-import CodeEditor from '@/components/CodeEditor'
+import { ref, watch, onMounted } from "vue";
+import { getTables, getTableFields } from "@/api/system/dataService";
+import CodeEditor from "@/components/CodeEditor";
+import { Folder, Document, Search, Delete, QuestionFilled } from "@element-plus/icons-vue";
 
 const props = defineProps({
   node: {
     type: Object,
-    required: true
+    required: true,
   },
-  paramConfig: {
-    type: Array,
-    default: () => []
-  }
-})
+  formData: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
-const emit = defineEmits(['update:node', 'update:param-config'])
+const emit = defineEmits(["update:node", "update:formData"]);
 
 // 本地副本用于编辑
-const localPartConfig = ref(props.node.partConfig || '')
+const localPartConfig = ref(props.node.partConfig || "");
+const treeData = ref([]);
+const searchText = ref("");
+const treeRef = ref(null);
+const codeEditorRef = ref(null);
 
-// 变量配置 - 直接使用 props.paramConfig
-const variables = ref([...props.paramConfig])
+// 请求参数列表
+const params = ref([]);
+
+// 初始化参数
+function initParams() {
+  try {
+    const config = props.formData.paramConfig;
+    if (config && typeof config === "string" && config.trim()) {
+      params.value = JSON.parse(config);
+    } else if (Array.isArray(config)) {
+      params.value = config;
+    } else {
+      params.value = [];
+    }
+  } catch (e) {
+    params.value = [];
+  }
+}
+
+// 更新参数到父组件（存储在 formData.paramConfig）
+function updateParams() {
+  emit("update:formData", {
+    ...props.formData,
+    paramConfig: JSON.stringify(params.value),
+  });
+}
+
+// 添加参数
+function addParam() {
+  params.value.push({
+    key: "",
+    type: "string",
+  });
+  updateParams();
+}
+
+// 删除参数
+function removeParam(index) {
+  params.value.splice(index, 1);
+  updateParams();
+}
+
+// 更新输出变量名
+function updateVarName(value) {
+  emit("update:node", {
+    ...props.node,
+    varName: value,
+  });
+}
+
+// 更新输出类型
+function updateVarType(value) {
+  emit("update:node", {
+    ...props.node,
+    varType: value,
+  });
+}
+
+// 组件挂载时初始化参数
+onMounted(() => {
+  initParams();
+});
+
+// 监听 formData 变化，重新初始化参数
+watch(
+  () => props.formData.paramConfig,
+  () => {
+    initParams();
+  },
+  { deep: true }
+);
+
+// 树形组件配置
+const treeProps = {
+  children: "children",
+  label: "label",
+  isLeaf: "isLeaf",
+};
+
+// 监听搜索文本
+watch(searchText, (val) => {
+  treeRef.value?.filter(val);
+});
+
+// 过滤节点
+function filterNode(value, data) {
+  if (!value) return true;
+  return data.label.toLowerCase().includes(value.toLowerCase());
+}
+
+// 懒加载节点
+async function loadNode(node, resolve) {
+  // 根节点加载表列表
+  if (node.level === 0) {
+    try {
+      const res = await getTables();
+      if (res.code === 200 && res.data) {
+        const tables = res.data.map((item) => ({
+          id: item.name,
+          label: item.name,
+          name: item.name,
+          description: item.description,
+          dbObjectType: item.dbObjectType,
+          isLeaf: false,
+        }));
+        resolve(tables);
+      } else {
+        resolve([]);
+      }
+    } catch (error) {
+      console.error("加载表列表失败:", error);
+      resolve([]);
+    }
+  } else {
+    // 子节点加载字段
+    const tableName = node.data.name || node.data.label;
+    try {
+      const res = await getTableFields(tableName);
+      if (res.code === 200 && res.data) {
+        const fields = res.data.map((field) => ({
+          id: `${tableName}.${field.dbColumnName}`,
+          label: field.dbColumnName,
+          name: field.dbColumnName,
+          tableName: field.tableName,
+          dbColumnName: field.dbColumnName,
+          propertyName: field.propertyName,
+          dataType: field.dataType,
+          isPrimarykey: field.isPrimarykey,
+          isNullable: field.isNullable,
+          length: field.length,
+          isLeaf: true,
+        }));
+        resolve(fields);
+      } else {
+        resolve([]);
+      }
+    } catch (error) {
+      console.error("加载表字段失败:", error);
+      resolve([]);
+    }
+  }
+}
+
+// 节点点击处理 - 插入到编辑器
+function handleNodeClick(data, node) {
+  // 如果是字段节点，插入字段名
+  if (data.dbColumnName) {
+    insertToEditor(data.label);
+  } else if (data.name) {
+    // 如果是表节点，插入表名
+    insertToEditor(data.name);
+  }
+}
+
+// 插入文本到编辑器
+function insertToEditor(text) {
+  if (codeEditorRef.value) {
+    codeEditorRef.value.insertText(text);
+  } else {
+    // 备选方案：直接在当前光标位置追加
+    localPartConfig.value += text;
+  }
+}
 
 // 监听props.node.partConfig变化
-watch(() => props.node.partConfig, (newPartConfig) => {
-  if (newPartConfig !== localPartConfig.value) {
-    localPartConfig.value = newPartConfig || ''
+watch(
+  () => props.node.partConfig,
+  (newPartConfig) => {
+    if (newPartConfig !== localPartConfig.value) {
+      localPartConfig.value = newPartConfig || "";
+    }
   }
-})
-
-// 监听paramConfig变化
-watch(() => props.paramConfig, (newParamConfig) => {
-  variables.value = [...newParamConfig]
-}, { deep: true })
+);
 
 // 更新partConfig
 function updatePartConfig(newValue) {
-  localPartConfig.value = newValue
-  emit('update:node', {
+  localPartConfig.value = newValue;
+  emit("update:node", {
     ...props.node,
-    partConfig: newValue
-  })
-}
-
-// 添加变量
-function addVariable() {
-  variables.value.push({
-    param: '',
-    type: 'string',
-    description: ''
-  })
-  updateVariables()
-}
-
-// 删除变量
-function removeVariable(index) {
-  variables.value.splice(index, 1)
-  updateVariables()
-}
-
-// 更新变量配置
-function updateVariables() {
-  // 过滤掉空的变量
-  const validVariables = variables.value.filter(v => v.param && v.type)
-  emit('update:param-config', validVariables)
+    partConfig: newValue,
+  });
 }
 </script>
 
 <style scoped>
-.sql-step-container {
+.step-wrapper {
+  width: 100%;
   height: 100%;
-}
-
-.step-card {
-  height: 100%;
-  min-height: 600px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sql-layout {
-  display: flex;
-  gap: 20px;
-  height: calc(100% - 60px);
-}
-
-.left-panel,
-.center-panel,
-.right-panel {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.right-panel {
-  flex: 0.8;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.panel-header {
+.step-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--el-border-color-light);
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px 12px 0 0;
 }
 
-.panel-header h3 {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sql-icon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+}
+
+.header-text h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--el-text-color-primary);
 }
 
-.panel-content {
-  flex: 1;
-  overflow-y: auto;
+.header-text p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
 }
 
-.var-name-input {
-  margin-bottom: 20px;
+.delete-btn {
+  color: #dc2626;
+  border-color: #fca5a5;
+  background: transparent;
 }
 
-.editor-container {
+.delete-btn:hover {
+  color: #fff;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.step-body {
   flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  border: 1px solid var(--el-border-color-light);
+  border-top: none;
+}
+
+.form-group {
   display: flex;
   flex-direction: column;
 }
 
-.editor-header {
+.form-group.flex-1 {
+  flex: 1;
+  min-height: 0;
+}
+
+.content-area {
+  flex-direction: row;
+  gap: 16px;
+  flex: 1;
+}
+
+.table-tree {
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: calc(100vh - 194px);
+}
+
+.tree-header {
+  padding: 12px;
+  border-bottom: 1px solid var(--el-border-color-light);
+  background: #fafafa;
+}
+
+.tree-header .form-label {
+  margin-bottom: 8px;
+}
+
+.tree-content {
+  flex: 1;
+  overflow: auto;
+  padding: 8px;
+}
+
+.tree-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tree-node .el-icon {
+  color: var(--el-color-primary);
+  flex-shrink: 0;
+}
+
+.node-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.node-desc {
+  color: #999;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.type-tag {
+  margin-left: auto;
+  font-size: 10px;
+}
+
+.editor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.form-label {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--el-text-color-regular);
+}
+
+/* 右侧参数面板 */
+.param-panel {
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.param-section {
+  margin-bottom: 16px;
+}
+
+.param-section.flex-1 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.param-section .form-label {
+  margin-bottom: 8px;
+}
+
+.form-label .required {
+  color: #f56c6c;
+  margin-right: 4px;
+}
+
+.param-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.editor-tips {
-  margin-top: 15px;
+.param-header .form-label {
+  margin-bottom: 0;
 }
 
-.editor-tips ul {
-  margin: 5px 0;
-  padding-left: 20px;
-}
-
-.editor-tips li {
-  margin: 3px 0;
-  font-size: 12px;
-}
-
-.variables-panel,
-.ai-panel {
+.param-list {
   flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  min-height: 250px;
+  gap: 8px;
 }
 
-.empty-variables {
-  padding: 40px 0;
+.param-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.variables-list {
+.param-item .el-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.param-item .el-select {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.param-empty {
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  padding: 20px 0;
+}
+
+/* 输出变量组 */
+.output-var-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.variable-item {
+.output-var-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.var-label {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
   display: flex;
   align-items: center;
-  padding: 10px;
-  background: #f8f9fa;
-  border-radius: 4px;
+  gap: 4px;
 }
 
-.variables-tips {
-  margin-top: 15px;
+.var-label .required {
+  color: #f56c6c;
 }
 
-.variables-tips ul {
-  margin: 5px 0;
-  padding-left: 20px;
-}
-
-.variables-tips li {
-  margin: 3px 0;
+.help-icon {
+  color: #909399;
+  cursor: pointer;
   font-size: 12px;
 }
 
-.ai-panel .panel-content {
+.inline-help {
+  color: #909399;
+  cursor: pointer;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.section-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.section-divider {
+  height: 1px;
+  background: var(--el-border-color-light);
+  margin: 16px 0;
 }
 </style>

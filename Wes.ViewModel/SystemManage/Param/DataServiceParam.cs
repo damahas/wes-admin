@@ -15,14 +15,9 @@ namespace Wes.ViewModel.SystemManage
         public string ServiceName { set; get; }
 
         /// <summary>
-        /// 服务类型 sql api
+        /// 是否有效（0代表有效 1代表无效）
         /// </summary>
-        public string ServiceType { set; get; }
-
-        /// <summary>
-        /// 是否有效（0代表无效 1代表有效）
-        /// </summary>
-        public string IsEnabled { set; get; }
+        public string Status { set; get; }
 
         /// <summary>
         /// 开始时间

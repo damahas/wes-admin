@@ -20,7 +20,14 @@
           highlight-current
           default-expand-all
           @node-click="handleNodeClick"
-        />
+        >
+          <template #default="{ data }">
+            <span class="tree-node">
+              <el-icon><FolderOpened /></el-icon>
+              <span>{{ data.label }}</span>
+            </span>
+          </template>
+        </el-tree>
       </div>
       <!-- 数据服务列表 -->
       <div class="split-right-panel main-panel">
@@ -107,18 +114,6 @@
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="服务类型"
-              align="center"
-              prop="serviceType"
-              v-if="columns.serviceType && columns.serviceType.visible"
-              :show-overflow-tooltip="true"
-              width="100"
-            >
-              <template #default="scope">
-                <dict-tag :options="serviceTypeOptions" :value="scope.row.serviceType" />
-              </template>
-            </el-table-column>
-            <el-table-column
               label="分类"
               align="center"
               prop="category"
@@ -136,14 +131,14 @@
             <el-table-column
               label="状态"
               align="center"
-              prop="isEnabled"
-              v-if="columns.isEnabled && columns.isEnabled.visible"
+              prop="status"
+              v-if="columns.status && columns.status.visible"
               width="100"
             >
               <template #default="scope">
                 <dict-tag
                   :options="sys_normal_disable"
-                  :value="scope.row.isEnabled"
+                  :value="scope.row.status"
                 />
               </template>
             </el-table-column>
@@ -161,10 +156,18 @@
             <el-table-column
               label="操作"
               align="center"
-              width="150"
+              width="210"
               class-name="small-padding fixed-width"
             >
               <template #default="scope">
+                <el-tooltip content="预览" placement="top">
+                  <el-button
+                    link
+                    type="primary"
+                    icon="View"
+                    @click="handlePreview(scope.row)"
+                  >预览</el-button>
+                </el-tooltip>
                 <el-tooltip content="修改" placement="top">
                   <el-button
                     link
@@ -177,7 +180,7 @@
                 <el-tooltip content="删除" placement="top">
                   <el-button
                     link
-                    type="primary"
+                    type="danger"
                     icon="Delete"
                     @click="handleDelete(scope.row)"
                     v-hasPermi="['system:dataService:remove']"
@@ -204,6 +207,13 @@
       @success="handleEditSuccess"
       @cancel="editDialogVisible = false"
     />
+
+    <!-- 数据服务预览弹窗 -->
+    <data-service-preview-dialog
+      v-model:visible="previewDialogVisible"
+      :ds-id="previewDsId"
+      @close="previewDialogVisible = false"
+    />
   </div>
 </template>
 
@@ -215,6 +225,7 @@ import { getDict, handleTree } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 import DictTag from "@/components/DictTag/index.vue";
 import DataServiceEditDialog from "./edit.vue";
+import DataServicePreviewDialog from "./preview.vue";
 import { listDataService, delDataService } from "@/api/system/dataService";
 
 const categoryName = ref("");
@@ -222,12 +233,6 @@ const categoryTreeRef = ref(null);
 const router = useRouter();
 
 const { sys_data_service_category, sys_normal_disable } = getDict("sys_data_service_category", "sys_normal_disable");
-
-const serviceTypeOptions = ref([
-  { value: "1", label: "查询" },
-  { value: "2", label: "分页查询" },
-  { value: "3", label: "增删改" },
-]);
 
 const serviceList = ref([]);
 const loading = ref(true);
@@ -240,6 +245,8 @@ const total = ref(0);
 // 弹窗相关状态
 const editDialogVisible = ref(false);
 const editId = ref(undefined);
+const previewDialogVisible = ref(false);
+const previewDsId = ref(undefined);
 const categoryOptions = computed(() => {
   if (sys_data_service_category?.value && Array.isArray(sys_data_service_category.value) && sys_data_service_category.value.length > 0) {
     return handleTree(sys_data_service_category.value);
@@ -262,19 +269,8 @@ const queryConfig = computed(() => [
     placeholder: "请输入服务名称",
   },
   {
-    label: "服务类型",
-    prop: "serviceType",
-    type: "select",
-    placeholder: "服务类型",
-    options: [
-      { value: "1", label: "查询" },
-      { value: "2", label: "分页查询" },
-      { value: "3", label: "增删改" },
-    ],
-  },
-  {
     label: "状态",
-    prop: "isEnabled",
+    prop: "status",
     type: "select",
     placeholder: "状态",
     options: sys_normal_disable?.value || [],
@@ -285,9 +281,8 @@ const queryConfig = computed(() => [
 const columns = ref({
   serviceCode: { label: "服务编码", visible: true },
   serviceName: { label: "服务名称", visible: true },
-  serviceType: { label: "服务类型", visible: true },
   category: { label: "分类", visible: true },
-  isEnabled: { label: "状态", visible: true },
+  status: { label: "状态", visible: true },
   createTime: { label: "创建时间", visible: true },
 });
 
@@ -298,9 +293,8 @@ const data = reactive({
     params: {
       serviceCode: undefined,
       serviceName: undefined,
-      serviceType: undefined,
       category: undefined,
-      isEnabled: undefined,
+      status: undefined,
     },
   },
 });
@@ -349,9 +343,8 @@ function resetQuery() {
   queryParams.value.params = {
   serviceCode: undefined,
   serviceName: undefined,
-  serviceType: undefined,
   category: undefined,
-  isEnabled: undefined,
+  status: undefined,
   };
   categoryTreeRef.value?.setCurrentKey(null);
   handleQuery();
@@ -377,8 +370,9 @@ function handleDelete(row) {
     `是否确认删除服务编码为"${codeText}"的数据项？`,
     "提示",
     {
-      confirmButtonText: "确定",
+      confirmButtonText: "确定删除",
       cancelButtonText: "取消",
+      confirmButtonType: "danger",
       type: "warning",
     }
   )
@@ -428,9 +422,17 @@ function handleUpdate(row) {
     ElMessage.warning("请选择一条记录进行修改");
     return;
   }
-  
+
   editId.value = dsId;
   editDialogVisible.value = true;
+}
+
+/** 预览按钮操作 */
+function handlePreview(row) {
+  if (row.dsId) {
+    previewDsId.value = row.dsId;
+    previewDialogVisible.value = true;
+  }
 }
 
 /** 弹窗成功回调 */
@@ -444,3 +446,16 @@ function handleEditSuccess() {
 
 getList();
 </script>
+
+<style scoped>
+.tree-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.tree-node .el-icon {
+  font-size: 14px;
+}
+</style>

@@ -92,7 +92,7 @@
               修改
             </el-button>
             <el-button
-              type="primary"
+              type="danger"
               link
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
@@ -107,8 +107,8 @@
       <pagination
         v-show="total > 0"
         :total="total"
-        :page="queryParams.pageNum"
-        :limit="queryParams.pageSize"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
         @pagination="getList"
       />
     </div>
@@ -218,7 +218,7 @@
             </el-button>
             <el-button
               link
-              type="primary"
+              type="danger"
               icon="el-icon-delete"
               @click="handleDelPart(scope.$index)"
             >
@@ -523,8 +523,9 @@ function submitForm() {
 function handleDelete(row) {
   const ruleIds = row.ruleId || ids.value;
   ElMessageBox.confirm('是否确认删除编号为"' + ruleIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定",
+    confirmButtonText: "确定删除",
     cancelButtonText: "取消",
+    confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delSysCodeRule(ruleIds))

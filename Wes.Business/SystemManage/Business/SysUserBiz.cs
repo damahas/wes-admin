@@ -50,12 +50,9 @@ namespace Wes.Business
 
         public LoginData Login(LoginInfo login)
         {
-            if (GlobalContext.AppSettings.IsLicense)
+            if (GlobalContext.LicenseModel == null || GlobalContext.LicenseModel.ExpireTime < DateTime.Now)
             {
-                if (GlobalContext.LicenseModel == null || GlobalContext.LicenseModel.ExpireTime < DateTime.Now)
-                {
-                    return new LoginData(402, "许可证已过期，为了不影响您的使用，请联系服务专员处理");
-                }
+                return new LoginData(402, "许可证已过期，为了不影响您的使用，请联系服务专员处理");
             }
 
             if ("true".Equals(_sysConfigBiz.GetByConfigKey("sys.login.isCaptchaOn")))

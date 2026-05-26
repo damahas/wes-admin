@@ -83,7 +83,7 @@ namespace Wes.Business
                          ParentId = p.ParentId,
                          Component = GetComponent(p),
                          Hidden = p.Visible == "1",
-                         Name = p.Path.ToFirstCharUpper(),
+                         Name = GetMenuName(p),
                          Path = $"{(p.ParentId == 0 ? "/" : "")}{p.Path}",
                          OrderNum = p.OrderNum ?? 0,
                          Redirect = p.IsFrame == 1 ? "noRedirect" : null,
@@ -131,7 +131,7 @@ namespace Wes.Business
                         ParentId = p.ParentId,
                         Component = GetComponent(p),
                         Hidden = p.Visible == "1",
-                        Name = p.Path.ToFirstCharUpper(),
+                        Name = GetMenuName(p),
                         Path = p.Path,
                         OrderNum = p.OrderNum ?? 0,
                         Meta = new MenuMetaInfo()
@@ -203,6 +203,13 @@ namespace Wes.Business
             if (menu?.IsFrame == 1 && menu.Path.StartsWith("http"))
                 return "InnerLink";
             return "Layout";
+        }
+
+        private string GetMenuName(SysMenuModel menu) {
+            if (!string.IsNullOrWhiteSpace(menu.Component)) {
+                return menu.Component.Replace("/", "_");
+            }
+            return menu.Path.ToFirstCharUpper();
         }
 
         public ResultData<List<RoleTreeDetailInfo>> GetMenuTree()

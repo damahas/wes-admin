@@ -5,11 +5,20 @@
     :fullscreen="true"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
+    :show-close="false"
     @closed="handleDialogClosed"
   >
     <template #header>
       <div class="dialog-header">
-        <span class="dialog-title">{{ title }}</span>
+        <div class="dialog-header-left">
+          <Steps
+            :activeIndex="currentStep"
+            :canAddNew="true"
+            :steps="steps"
+            @step-click="handleStepClick"
+            @step-add="openAddStepDialog"
+          />
+        </div>
         <div class="dialog-header-actions">
           <el-button
             type="primary"
@@ -19,16 +28,6 @@
             :disabled="currentStep === 0"
           >
             上一步
-          </el-button>
-
-          <el-button
-            type="danger"
-            plain
-            icon="Delete"
-            @click="removeCurrentStep"
-            :disabled="currentStep === 0 || currentStep > sortedNodes.length"
-          >
-            删除当前步骤
           </el-button>
 
           <el-button
@@ -48,17 +47,6 @@
     </template>
 
     <div class="dialog-content">
-      <!-- 步骤条 -->
-      <div class="step-container">
-        <Steps
-          :activeIndex="currentStep"
-          :canAddNew="true"
-          :steps="steps"
-          @step-click="handleStepClick"
-          @step-add="openAddStepDialog"
-        ></Steps>
-      </div>
-
       <!-- 步骤内容区域 -->
       <div class="step-content">
         <!-- 步骤1: 基础信息 -->
@@ -69,6 +57,7 @@
             :category-options="categoryOptions"
             :status-options="sys_normal_disable"
             @validate="handleBasicInfoValidate"
+            @template-select="handleTemplateSelect"
           />
         </div>
 
@@ -80,9 +69,20 @@
           class="step-panel"
         >
           <!-- SQL步骤 -->
-          <sql-step v-if="node.partType === 0" :node="node" :form-data="form" />
+          <sql-step
+            v-if="node.partType === 0"
+            :node="node"
+            :form-data="form"
+            @update:node="handleUpdateNode(index, $event)"
+            @update:formData="handleUpdateFormData"
+            @delete="handleDeleteNode(index)"
+          />
           <!-- JS步骤 -->
-          <js-step v-else-if="node.partType === 1" :node="node" />
+          <js-step
+            v-else-if="node.partType === 1"
+            :node="node"
+            @delete="handleDeleteNode(index)"
+          />
         </div>
       </div>
     </div>
@@ -105,6 +105,7 @@ import BasicInfoStep from "./components/BasicInfoStep.vue";
 import SqlStep from "./components/SqlStep.vue";
 import JsStep from "./components/JsStep.vue";
 import AddStepDialog from "./components/AddStepDialog.vue";
+import { ElMessageBox } from "element-plus";
 import {
   getDataService,
   addDataService,
@@ -114,17 +115,17 @@ import {
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   editId: {
     type: [String, Number],
-    default: undefined
-  }
-})
+    default: undefined,
+  },
+});
 
-const emit = defineEmits(['update:visible', 'success', 'cancel'])
+const emit = defineEmits(["update:visible", "success", "cancel"]);
 
-const dialogVisible = ref(false)
+const dialogVisible = ref(false);
 const serviceRef = ref(null);
 const basicInfoRef = ref(null);
 // 获取字典数据
@@ -145,27 +146,37 @@ const newStepForm = ref({
 });
 
 // 监听visible变化
-watch(() => props.visible, (newVal) => {
-  dialogVisible.value = newVal
-  if (newVal) {
-    loadData()
+watch(
+  () => props.visible,
+  (newVal) => {
+    dialogVisible.value = newVal;
+    if (newVal) {
+      loadData();
+    }
   }
-})
+);
 
 // 监听dialogVisible变化
-watch(() => dialogVisible.value, (newVal) => {
-  emit('update:visible', newVal)
-  if (!newVal) {
-    emit('cancel')
+watch(
+  () => dialogVisible.value,
+  (newVal) => {
+    emit("update:visible", newVal);
+    if (!newVal) {
+      emit("cancel");
+    }
   }
-})
+);
 
 // 监听editId变化
-watch(() => props.editId, () => {
-  if (dialogVisible.value) {
-    loadData()
-  }
-}, { immediate: true })
+watch(
+  () => props.editId,
+  () => {
+    if (dialogVisible.value) {
+      loadData();
+    }
+  },
+  { immediate: true }
+);
 
 // Steps 组件需要的步骤数据
 const steps = computed(() => {
@@ -201,8 +212,7 @@ const form = ref({
   serviceName: "",
   category: "",
   paramConfig: "",
-  serviceType: "",
-  isEnabled: 1,
+  status: 1,
   remark: "",
   nodes: [],
 });
@@ -219,27 +229,45 @@ const sortedNodes = computed(() => {
 });
 
 // 打开添加步骤弹窗
-function openAddStepDialog() {
-  let insertIndex = currentStep.value;
+function openAddStepDialog(insertIndex) {
   if (currentStep.value === 0 && form.value.nodes.length === 0) {
     insertIndex = 0;
   } else if (currentStep.value > sortedNodes.value.length) {
     insertIndex = sortedNodes.value.length;
   }
-  
+
   // 设置默认值
   newStepForm.value = {
-    partName: `步骤${insertIndex + 1}`,
-    varName: `step${insertIndex + 1}`,
+    partName: `步骤${form.value.nodes.length + 1}`,
+    varName: `param${form.value.nodes.length + 1}`,
     partType: 0, // 默认SQL类型
+    sortBy: insertIndex,
   };
-  
+
   addStepDialogVisible.value = true;
 }
 
-
-
-
+// 处理节点标题中的删除按钮点击
+function handleDeleteNode(index) {
+  // 设置当前步骤为要删除的节点位置（+1因为步骤0是基础信息）
+  currentStep.value = index + 1;
+  // 确认删除
+  ElMessageBox.confirm("确定要删除该步骤吗？", "提示", {
+    confirmButtonText: "确定删除",
+    cancelButtonText: "取消",
+    confirmButtonType: "danger",
+    type: "warning",
+  })
+    .then(() => {
+      form.value.nodes.splice(index, 1);
+      reorderNodes();
+      // 如果删除的是当前步骤，跳转到上一步
+      if (currentStep.value > sortedNodes.value.length) {
+        currentStep.value = sortedNodes.value.length;
+      }
+    })
+    .catch(() => {});
+}
 
 // 删除当前步骤
 function removeCurrentStep() {
@@ -249,17 +277,29 @@ function removeCurrentStep() {
     reorderNodes();
 
     // 如果删除的是当前步骤，跳转到上一步
-    if (currentStep.value > sortedNodes.value.length) {
+    if (currentStep.value > sortedNodes.value.length) {/*  */
       currentStep.value = sortedNodes.value.length;
     }
   }
 }
 
-// 重新排序 nodes
+// 更新指定节点
+function handleUpdateNode(index, updatedNode) {
+  form.value.nodes[index] = { ...form.value.nodes[index], ...updatedNode };
+}
+
+// 更新表单数据
+function handleUpdateFormData(updatedFormData) {
+  Object.assign(form.value, updatedFormData);
+}
+
+// 重新排序 nodes - 保存时确保sortBy与index一致
 function reorderNodes() {
   form.value.nodes.forEach((node, index) => {
     node.sortBy = index;
   });
+  // 标记需要更新
+  form.value.nodes = [...form.value.nodes];
 }
 
 // 上一步
@@ -287,6 +327,43 @@ function handleBasicInfoValidate(isValid) {
   console.log("基础信息验证结果:", isValid);
 }
 
+// 处理模板选择
+function handleTemplateSelect(steps) {
+  if (!steps || steps.length === 0) return;
+
+  // JS节点默认代码模板
+  const defaultJsConfig = `/**
+ * 数据处理
+ * @param {*} data 每个sql节点的数据，如{node1:[],node2:{}}
+ * @returns 可以添加属性，返回如{node1:[],node2:{},nodeTree:""}
+ */
+function handle(data) {
+  return data;
+}`;
+
+  // 清空现有节点
+  form.value.nodes = [];
+
+  // 根据模板添加节点
+  steps.forEach((step, index) => {
+    const newNode = {
+      partName: step.partName,
+      varName: step.varName || '',
+      varType: step.varType || 0,
+      partConfig: step.partType === 1 ? defaultJsConfig : '',
+      sortBy: index,
+      partType: step.partType,
+      isDel: 0,
+    };
+    form.value.nodes.push(newNode);
+  });
+
+  // 跳转到第一个步骤
+  if (steps.length > 0) {
+    currentStep.value = 1;
+  }
+}
+
 /** 取消 */
 function handleCancel() {
   dialogVisible.value = false;
@@ -300,8 +377,7 @@ function reset() {
     serviceName: "",
     category: "",
     paramConfig: "",
-    serviceType: "",
-    isEnabled: 1,
+    status: 1,
     remark: "",
     nodes: [],
   };
@@ -315,9 +391,12 @@ function loadData() {
     title.value = "修改数据服务";
     getDataService(props.editId).then((response) => {
       form.value = response.data;
-      // 确保 nodes 是数组
+      // 确保 nodes 是数组，且按 sortBy 排序
       if (!Array.isArray(form.value.nodes)) {
         form.value.nodes = [];
+      } else {
+        // 按 sortBy 排序，确保显示顺序正确
+        form.value.nodes.sort((a, b) => (a.sortBy || 0) - (b.sortBy || 0));
       }
     });
   } else {
@@ -343,8 +422,11 @@ function submitForm() {
   }
 }
 
-// 提交数据
+// 提交数据 - 保存前确保sortBy正确
 function submitData() {
+  // 确保排序正确
+  reorderNodes();
+
   const dataToSubmit = { ...form.value };
 
   const apiCall = dataToSubmit.dsId
@@ -355,7 +437,7 @@ function submitData() {
     .then(() => {
       ElMessage.success(dataToSubmit.dsId ? "修改成功" : "新增成功");
       dialogVisible.value = false;
-      emit('success')
+      emit("success");
     })
     .catch((error) => {
       console.error("提交失败:", error);
@@ -365,40 +447,42 @@ function submitData() {
 
 // 处理添加步骤弹窗确认
 function handleAddStepConfirm(data) {
-  let insertIndex = currentStep.value;
-  if (currentStep.value === 0 && form.value.nodes.length === 0) {
-    insertIndex = 0;
-  } else if (currentStep.value > sortedNodes.value.length) {
-    insertIndex = sortedNodes.value.length;
-  }
-  
+  let insertIndex = data.sortBy;
+
+  // JS节点默认代码模板
+  const defaultJsConfig = `/**
+ * 数据处理
+ * @param {*} data 每个sql节点的数据，如{node1:[],node2:{}}
+ * @returns 可以添加属性，返回如{node1:[],node2:{},nodeTree:""}
+ */
+function handle(data) {
+  return data;
+}`;
+
   // 创建新节点
   const newNode = {
     partName: data.partName,
     varName: data.varName,
-    partConfig: "",
+    partConfig: data.partType === 1 ? defaultJsConfig : "",
     sortBy: insertIndex,
     partType: data.partType,
     isDel: 0,
   };
-
   // 插入到正确位置并重新排序
   form.value.nodes.splice(insertIndex, 0, newNode);
   reorderNodes();
 
   // 跳转到新步骤
   currentStep.value = insertIndex + 1;
-  
-  ElMessage.success('步骤添加成功');
+
+  ElMessage.success("步骤添加成功");
 }
 
 // 弹窗关闭时的处理
 function handleDialogClosed() {
   // 重置状态
-  reset()
+  reset();
 }
-
-
 </script>
 
 <style scoped>
@@ -410,6 +494,11 @@ function handleDialogClosed() {
   padding-right: 20px;
 }
 
+.dialog-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
 .dialog-title {
   font-size: 16px;
   font-weight: 500;
@@ -419,15 +508,12 @@ function handleDialogClosed() {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .dialog-content {
   height: 100%;
-  padding: 20px;
-}
-
-.step-container {
-  margin-bottom: 20px;
+  padding: 0px 20px;
 }
 
 .step-content {

@@ -34,7 +34,6 @@
             <el-link
               v-if="templateUrl"
               type="primary"
-              :underline="false"
               style="font-size: 12px; vertical-align: baseline"
               @click="handleDownloadTemplate"
             >

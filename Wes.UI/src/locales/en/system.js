@@ -31,10 +31,6 @@ export default {
     welcome: 'Welcome to WesAdmin Management System',
     description: 'This is a backend management system based on Vue3 + Element Plus'
   },
-  feature: {
-    title: 'Feature Page',
-    description: 'This is a blank feature page, you can add specific features as needed.'
-  },
   message: {
     title: 'Internal Message',
     all: 'All',
@@ -55,5 +51,19 @@ export default {
     empty: 'No messages',
     loading: 'Loading...',
     noMore: 'No more messages'
+  },
+  license: {
+    title: 'License',
+    platformSystem: 'Platform System',
+    platformCode: 'Platform Code',
+    licenseKey: 'License Key',
+    licenseKeyPlaceholder: 'Please enter license key',
+    activate: 'Activate',
+    activationInfo: 'Activation Info',
+    licenseVersion: 'License Version',
+    enterprise: 'Enterprise Edition',
+    trial: 'Trial Version',
+    activationTime: 'Activation Time',
+    expireTime: 'Expire Date'
   }
 }
