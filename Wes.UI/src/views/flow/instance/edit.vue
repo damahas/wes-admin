@@ -53,7 +53,7 @@
                   发起人：{{ getName(task.actualUser) }}
                 </div>
                 <div style="margin: 6px 0" v-if="node.nodeType == 'task'">
-                  <div>
+                  <div style="display: flex">
                     处理人：{{ getName(task.actualUser) }}
                     <status-tag :status="task.taskResult" style="margin-left: 8px" />
                   </div>
@@ -63,7 +63,7 @@
                       size="small"
                       type="primary"
                       style="float: right"
-                      v-if="task.taskResult == 'start'"
+                      v-if="task.taskResult === 0"
                       @click="handleDelegate(task)"
                     >
                       委 托
@@ -86,11 +86,7 @@
       </template>
     </el-dialog>
 
-    <select-user
-      ref="selectUserRef"
-      :isSingle="true"
-      @handleData="handleSelectUser"
-    />
+    <select-user ref="selectUserRef" :isSingle="true" @handleData="handleSelectUser" />
   </div>
 </template>
 
@@ -154,14 +150,15 @@ function handleSelectUser(rows) {
 
 function getNodeIcon(nodeResult) {
   switch (nodeResult) {
-    case "start":
-    case "doing":
+    case 0:
+    case 10:
       return "el-icon-more";
-    case "pass":
+    case 100:
       return "el-icon-circle-check";
-    case "unpass":
+    case 101:
       return "el-icon-circle-close";
-    case "pending":
+    case 200:
+    case 201:
       return "el-icon-warning-outline";
     default:
       return "";
@@ -170,14 +167,15 @@ function getNodeIcon(nodeResult) {
 
 function getNodeColor(nodeResult) {
   switch (nodeResult) {
-    case "start":
-    case "doing":
+    case 0:
+    case 10:
       return "#909399";
-    case "pass":
+    case 100:
       return "#67C23A";
-    case "unpass":
+    case 101:
       return "#F56C6C";
-    case "pending":
+    case 200:
+    case 201:
       return "#E6A23C";
     default:
       return "";
@@ -185,7 +183,7 @@ function getNodeColor(nodeResult) {
 }
 
 function getName(user) {
-  return user?.nickName;
+  return user?.userName;
 }
 
 defineExpose({ openDialog });

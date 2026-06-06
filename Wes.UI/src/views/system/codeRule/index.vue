@@ -85,7 +85,7 @@
             <el-button
               type="primary"
               link
-              icon="el-icon-edit"
+              icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:coderule:edit']"
             >
@@ -94,7 +94,7 @@
             <el-button
               type="danger"
               link
-              icon="el-icon-delete"
+              icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:coderule:remove']"
             >
@@ -211,7 +211,7 @@
             <el-button
               link
               type="primary"
-              icon="el-icon-edit"
+              icon="Edit"
               @click="handleEditPart(scope.$index)"
             >
               修改
@@ -219,7 +219,7 @@
             <el-button
               link
               type="danger"
-              icon="el-icon-delete"
+              icon="Delete"
               @click="handleDelPart(scope.$index)"
             >
               删除
@@ -423,6 +423,7 @@ const resetTypes = {
   year: "年",
 };
 const sortable = ref(undefined);
+const originPartValue = ref("");
 
 const partTypeOptions = computed(() => {
   return Object.keys(partTypes).map((p) => {
@@ -540,12 +541,14 @@ function handleEditPart(index) {
   partIndex.value = index;
   if (index > -1) {
     partForm.value = { ...form.value.parts[index] };
+    originPartValue.value = partForm.value.partValue ?? "";
     partTitle.value = "修改序号片段";
   } else {
     partForm.value = {
       weekStartDay: 1,
       isSkipZero: 0,
     };
+    originPartValue.value = "";
     partTitle.value = "新增序号片段";
   }
   if (partFormRef.value) partFormRef.value.resetFields();
@@ -554,16 +557,37 @@ function handleEditPart(index) {
 function handleSavePart() {
   partFormRef.value?.validate((valid) => {
     if (valid) {
-      if (partIndex.value > -1) {
-        form.value.parts[partIndex.value] = { ...partForm.value };
+      const doSave = () => {
+        if (partIndex.value > -1) {
+          form.value.parts[partIndex.value] = { ...partForm.value };
+        } else {
+          form.value.parts.push({
+            ...partForm.value,
+            partId: -1 - form.value.parts.length,
+            sort: form.value.parts.length + 1,
+          });
+        }
+        partOpen.value = false;
+      };
+
+      if (
+        partForm.value.partType === "calc" &&
+        partForm.value.partValue !== originPartValue.value
+      ) {
+        ElMessageBox.confirm(
+          "动态字符规则已变更，保存后当前序号将立即重置并重新计数，确认保存吗？",
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          }
+        )
+          .then(() => doSave())
+          .catch(() => {});
       } else {
-        form.value.parts.push({
-          ...partForm.value,
-          partId: -1 - form.value.parts.length,
-          sort: form.value.parts.length + 1,
-        });
+        doSave();
       }
-      partOpen.value = false;
     }
   });
 }

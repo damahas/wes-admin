@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.AspNetCore.Http;
 
-namespace Wes.Utils
+namespace Wes.Utils.Hepler
 {
     public class NetHepler
     {

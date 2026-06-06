@@ -4,7 +4,7 @@
     ref="formRef"
     :inline="true"
     v-show="visible"
-    label-width="68px"
+    :label-width="labelWidth"
   >
     <template v-for="item in queryConfig" :key="item.prop">
       <el-form-item :label="item.label" :prop="item.prop">
@@ -48,6 +48,10 @@ const props = defineProps({
   modelValue: {
     type: Object,
     required: true,
+  },
+  labelWidth: {
+    type: [String, Number],
+    default: "68px",
   },
 });
 

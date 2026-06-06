@@ -70,7 +70,7 @@
 
 <script setup>
 import { reactive, ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import { ElMessage } from "element-plus";
@@ -78,6 +78,7 @@ import SliderCode from "@/components/SliderCode";
 import { login } from "@/api/login";
 
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 const { t, locale } = useI18n();
 
@@ -142,7 +143,7 @@ const handleLogin = () => {
       // store.dispatch("user/login", {
       //   username: loginForm.userName,
       // });
-      router.push("/");
+      router.push(route.query.redirect || "/");
     })
     .catch(() => {
       // 重新获取验证码

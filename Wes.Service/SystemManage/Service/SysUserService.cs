@@ -77,6 +77,11 @@ namespace Wes.Service
             return this.GetFirst(p => p.UserId == userId && p.IsDel == 0);
         }
 
+        public SysUserModel GetByAccout(string account)
+        {
+            return this.GetFirst(p => p.Account == account && p.IsDel == 0);
+        }
+
         public List<SysUserModel> GetByRoleId(long roleId)
         {
             return Context.Queryable<SysUserModel>()
@@ -94,6 +99,19 @@ namespace Wes.Service
         public long GetLeaderIdByUserId(long userId)
         {
             var user = GetFirst(p => p.UserId == userId);
+            if (user == null || user.DeptId == 0)
+            {
+                return 0;
+            }
+            var depts = Context.Queryable<SysDeptModel>().Where(p => p.LeaderUserId > 0
+            && (p.DeptId == user.DeptId || p.ParentId == user.DeptId || p.Ancestors.Contains($",{user.DeptId},"))
+            ).ToList();
+            return depts.OrderBy(p => p.Ancestors.Length).FirstOrDefault()?.LeaderUserId ?? 0;
+        }
+
+        public long GetLeaderIdByAccount(string account)
+        {
+            var user = GetFirst(p => p.Account == account);
             if (user == null || user.DeptId == 0)
             {
                 return 0;

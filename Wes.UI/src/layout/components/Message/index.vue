@@ -120,7 +120,7 @@
                 <div class="title-box-left">
                   <div v-if="!msg.isRead" class="message-item-read-dot"></div>
                   <div class="message-item-cat-name">
-                    【{{ getMessageType(msg)?.label || msg.type }}】
+                    {{ getMessageType(msg)?.label || msg.type }}
                   </div>
                   <el-tag
                     v-if="msg.status"
@@ -136,7 +136,9 @@
                 </div>
               </div>
 
-              <div class="message-item-title">{{ msg.messageTitle }}</div>
+              <el-tooltip :content="msg.messageTitle" placement="top">
+                <div class="message-item-title">{{ msg.messageTitle }}</div>
+              </el-tooltip>
             </div>
           </div>
 

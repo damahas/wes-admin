@@ -12,6 +12,7 @@ using Wes.Utils;
 using Wes.Utils.Security;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using Wes.Utils.Hepler;
 
 namespace Wes.WebApi.Areas.SystemManage
 {

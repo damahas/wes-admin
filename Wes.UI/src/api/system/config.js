@@ -58,3 +58,11 @@ export function refreshCache() {
     method: 'delete'
   })
 }
+
+export function testMail(data){
+    return request({
+    url: '/system/config/test/mail',
+    method: 'post',
+    data: data
+  })
+}

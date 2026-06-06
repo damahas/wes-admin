@@ -17,11 +17,15 @@ namespace Wes.Service
 
         public SysUserModel GetById(long userId);
 
+        public SysUserModel GetByAccout(string account);
+
         public List<SysUserModel> GetByRoleId(long roleId);
 
         public List<SysUserModel> GetByDeptId(long deptId);
 
         public long GetLeaderIdByUserId(long userId);
+
+        public long GetLeaderIdByAccount(string account);
 
         public SysUserModel GetByUserName(string userName);
 

@@ -11,6 +11,6 @@ export default {
     },
   ],
   defaultValue: {
-    name: '结束节点',
+    name: '开始节点',
   },
 };

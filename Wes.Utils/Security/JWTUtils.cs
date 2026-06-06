@@ -11,7 +11,7 @@ using System.Net;
 
 namespace Wes.Utils
 {
-    public static class JWTHelper
+    public static class JWTUtils
     {
         public static string GenerateToken(string userId)
         {
@@ -26,7 +26,7 @@ namespace Wes.Utils
                 issuer: GlobalContext.JwtSettings.Issuer,
                 audience: GlobalContext.JwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(GlobalContext.JwtSettings.Expires),
+                expires: DateTime.Now.AddHours(GlobalContext.JwtSettings.Expires),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalContext.JwtSettings.SecretKey)), SecurityAlgorithms.HmacSha256)
             );
             return new JwtSecurityTokenHandler().WriteToken(token);

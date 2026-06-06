@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Wes.Utils.Extension;
 
-namespace Wes.Utils.JsonConverter
+namespace Wes.Utils.Converter
 {
     public class LongToStringConverter : JsonConverter<long>
     {

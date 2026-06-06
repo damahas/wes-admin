@@ -152,7 +152,8 @@ namespace Wes.Business
                         BusinessCode = flowRunModel.BusinessCode,
                         IsUrgent = flowRunModel.IsUrgent,
                         InstanceStatus = FlowStatusEnum.start,
-                        ExtendInfo = flowRunModel.ExtendInfo
+                        ExtendInfo = flowRunModel.ExtendInfo,
+                        Process = _flowProcessService.GetById(flowEngine.Flow.processId),
                     };
                     _flowInstanceService.Save(flowInstance, db);
                 }

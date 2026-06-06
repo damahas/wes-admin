@@ -4,7 +4,7 @@ using System.Text;
 using System.Linq;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Wes.Utils.JsonConverter;
+using Wes.Utils.Converter;
 
 namespace Wes.Utils.Model
 {

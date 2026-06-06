@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Wes.Business;
 using Wes.DbModel;
+using Wes.Utils.Hepler;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Wes.WebApi.Areas.SystemManage
 {
@@ -74,6 +74,26 @@ namespace Wes.WebApi.Areas.SystemManage
         public ReturnData RefreshCache()
         {
             return _sysConfigBiz.Refresh();
+        }
+
+        [HttpPost]
+        [Route("test/mail")]
+        public ReturnData TestMail([FromBody] MailModel mailModel)
+        {
+            if (string.IsNullOrWhiteSpace(mailModel.MailHost))
+                return new ReturnData(400, "邮箱服务器不能为空");
+            if (string.IsNullOrWhiteSpace(mailModel.MailPort))
+                return new ReturnData(400, "邮箱端口不能为空");
+            if (string.IsNullOrWhiteSpace(mailModel.MailAccount))
+                return new ReturnData(400, "邮箱账号不能为空");
+            if (string.IsNullOrWhiteSpace(mailModel.TestMail))
+                return new ReturnData(400, "测试邮箱不能为空");
+
+            var success = MailHelper.Send(mailModel, mailModel.TestMail, "测试邮件", "您收到一条测试邮件，请注意查收", null, out var errorMsg);
+            if (success)
+                return new ReturnData(200, "发送成功");
+            else
+                return new ReturnData(500, $"发送失败：{errorMsg}");
         }
     }
 }

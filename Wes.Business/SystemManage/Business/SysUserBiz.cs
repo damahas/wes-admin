@@ -11,6 +11,7 @@ using Wes.Utils.Cache;
 using Wes.Utils;
 using System.Linq;
 using Wes.ViewModel.SystemManage;
+using Wes.Utils.Hepler;
 
 namespace Wes.Business
 {
@@ -84,9 +85,9 @@ namespace Wes.Business
                 SaveLoginLog(login.UserName, "1", "账号已停用");
                 return new LoginData(500, "账号已停用");
             }
-            var token = JWTHelper.GenerateToken(user.UserId.ToString());
+            var token = JWTUtils.GenerateToken(user.UserId.ToString());
             //var token = Guid.NewGuid().ToString("N");
-            var expireTime = DateTime.Now.AddDays(7);
+            var expireTime = DateTime.Now.AddHours(GlobalContext.JwtSettings.Expires);
             var tokenSaveResult = _sysUserService.SaveToken(new SysTokenModel()
             {
                 UserId = user.UserId,

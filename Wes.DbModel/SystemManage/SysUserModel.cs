@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using Wes.Utils;
-using Wes.Utils.JsonConverter;
+using Wes.Utils.Converter;
 using System.Text.Json.Serialization;
 
 namespace Wes.DbModel

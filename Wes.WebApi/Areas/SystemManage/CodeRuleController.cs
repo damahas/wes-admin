@@ -60,5 +60,18 @@ namespace Wes.WebApi.Areas.SystemManage
         {
             return _sysCodeRuleBiz.Delete(ids);
         }
+
+        [HttpGet]
+        [Route("gen/{ruleCode}")]
+        public ReturnData Gen(string ruleCode)
+        {
+            string errorMsg = string.Empty;
+            string genCode = _sysCodeRuleBiz.GetCode(ruleCode, out errorMsg);
+            if (!string.IsNullOrWhiteSpace(errorMsg))
+            {
+                return new ReturnData(400, errorMsg);
+            }
+            return new ResultData<string>(genCode);
+        }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Wes.ViewModel.SystemManage;
 using Microsoft.AspNetCore.Authorization;
 using StackExchange.Redis;
+using Wes.Utils.Hepler;
 
 namespace Wes.WebApi.Controllers
 {

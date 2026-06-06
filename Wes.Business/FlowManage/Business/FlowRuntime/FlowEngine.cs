@@ -37,10 +37,12 @@ namespace Wes.Business.FlowManage.FlowRuntime
 
         public ISqlSugarClient Db { set; get; }
         public IFlowInstanceNodeService nodeService { set; get; }
+        private ISysMessageBiz messageBiz { set; get; }
 
         public FlowEngine()
         {
             nodeService = GlobalContext.ServiceProvider.GetService<IFlowInstanceNodeService>();
+            messageBiz = GlobalContext.ServiceProvider.GetService<ISysMessageBiz>();
             depth = 0;
         }
 
@@ -63,7 +65,7 @@ namespace Wes.Business.FlowManage.FlowRuntime
             var nodeInfo = InstanceTaskId > 0 ? nodeService.GetByTaskId(InstanceTaskId)
                 : new FlowInstanceNodeModel()
                 {
-                    NodeId = Flow.nodes.Find(p => p.meta?.type == FlowNodeTypeEnum.start)?.id,
+                    NodeId = Flow.nodes.Find(p => p.type == FlowNodeTypeEnum.start)?.id,
                     NodeType = FlowNodeTypeEnum.start
                 };
             var baseNode = GetNode(nodeInfo?.NodeType);
@@ -107,12 +109,12 @@ namespace Wes.Business.FlowManage.FlowRuntime
                 return FlowRunResultEnum.error;
             }
             depth++;
-            var nodeIds = Flow.lines.Where(p => p.startId == nodeInfo.id).Select(p => p.endId);
+            var nodeIds = Flow.lines.Where(p => p.source == nodeInfo.id).Select(p => p.target);
             var nodes = Flow.nodes.FindAll(p => nodeIds.Contains(p.id));
             if (nodes == null || nodes.Count == 0)
             {
                 // 通知节点后面可以没有下一节点
-                if (nodeInfo.meta.type == FlowNodeTypeEnum.notice)
+                if (nodeInfo.type == FlowNodeTypeEnum.notice)
                 {
                     return FlowRunResultEnum.success;
                 }
@@ -121,7 +123,7 @@ namespace Wes.Business.FlowManage.FlowRuntime
             }
             foreach (var node in nodes)
             {
-                var baseNode = GetNode(node.meta?.type);
+                var baseNode = GetNode(node.type);
                 if (baseNode == null)
                 {
                     errorMsg = $"获取节点错误，请检查[{node.meta?.name}]节点类型";
@@ -131,6 +133,11 @@ namespace Wes.Business.FlowManage.FlowRuntime
                 if (runResult == FlowRunResultEnum.next)
                 {
                     return ToNext(node, out errorMsg, out userIds);
+                }
+                // 发送消息通知
+                if (runResult == FlowRunResultEnum.success)
+                {
+                    SendMessage(userIds);
                 }
                 return runResult;
             }
@@ -150,6 +157,26 @@ namespace Wes.Business.FlowManage.FlowRuntime
                 case FlowNodeTypeEnum.task: return new TaskNode(Db, FlowInstance, Flow, FlowRunModel);
                 //case FlowNodeTypeEnum.notice: return new NoticeNode();
                 default: return null;
+            }
+        }
+
+        private void SendMessage(List<long> userIds)
+        {
+            if (userIds == null || userIds.Count() == 0)
+            {
+                return;
+            }
+            foreach (var userId in userIds)
+            {
+                messageBiz.Save(new SysMessageModel()
+                {
+                    MessageType = "flow",
+                    OpenType = "in",
+                    MessageTitle = $"您收到一条【{FlowInstance.Process.ProcessName}】审批，业务单号【{FlowInstance.BusinessCode}】请及时处理",
+                    MessageBody = $"{FlowInstance.Process.BackUrl}/{FlowInstance.BusinessId}",
+                    UserId = userId,
+                    SendUserId = GlobalContext.CurrentUser.UserId,
+                });
             }
         }
     }

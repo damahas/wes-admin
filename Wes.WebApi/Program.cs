@@ -11,7 +11,8 @@ using Wes.Business;
 using Wes.Utils;
 using Wes.Utils.Model;
 using Wes.WebApi.Extensions;
-using Wes.Utils.JsonConverter;
+using Wes.Utils.Converter;
+using Wes.Utils.Hepler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,7 +73,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         OnTokenValidated = context =>
         {
             // 不要直接写入响应，标记失败并把原因放入 HttpContext.Items，由 OnChallenge统一处理
-            string token = JWTHelper.GetToken(context.Request.Headers["authorization"]);
+            string token = JWTUtils.GetToken(context.Request.Headers["authorization"]);
             var sysUserBiz = GlobalContext.ServiceProvider.GetService<ISysUserBiz>();
             UserInfo userInfo;
             if (sysUserBiz.TryGetUser(token, out userInfo))
@@ -177,7 +178,7 @@ app.Use(next =>
 {
     return context =>
     {
-        GlobalContext.Token.Value = JWTHelper.GetToken(context.Request.Headers["authorization"]);
+        GlobalContext.Token.Value = JWTUtils.GetToken(context.Request.Headers["authorization"]);
         return next(context);
     };
 });

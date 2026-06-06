@@ -7,41 +7,45 @@
 <script>
 export default {
   props: {
-    status: String,
+    status: Number,
   },
   methods: {
     getStatusType(status) {
       switch (status) {
-        case "start":
+        case 0:
           return "info";
-        case "doing":
+        case 10:
           return "";
-        case "pass":
+        case 100:
           return "success";
-        case "unpass":
+        case 101:
           return "danger";
-        case "pending":
+        case 200:
           return "warning";
+        case 201:
+          return "warning";
+        case 9999:
+          return "";
         default:
           return "";
       }
     },
     getStatusTitle(status) {
       switch (status) {
-        case "start":
+        case 0:
           return "待处理";
-        case "doing":
+        case 10:
           return "审批中";
-        case "pass":
+        case 100:
           return "通过";
-        case "unpass":
+        case 101:
           return "不通过";
-        case "pending":
+        case 200:
           return "挂起";
-        case "auto":
-          return "自动处理";
-        case "delegation":
+        case 201:
           return "委托";
+        case 9999:
+          return "自动处理";
         default:
           return status;
       }

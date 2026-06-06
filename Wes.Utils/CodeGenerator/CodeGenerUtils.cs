@@ -16,7 +16,7 @@ namespace Wes.Utils.CodeGenerator
             code.Append($"using SqlSugar;\r\n");
             code.Append($"using System.Collections.Generic;\r\n");
             code.Append($"using System.Text;\r\n");
-            code.Append($"using Wes.Utils.JsonConverter;\r\n");
+            code.Append($"using Wes.Utils.Converter;\r\n");
             code.Append($"using System.Text.Json.Serialization;\r\n");
             code.Append($"\r\n");
             code.Append($"namespace Wes.DbModel\r\n");

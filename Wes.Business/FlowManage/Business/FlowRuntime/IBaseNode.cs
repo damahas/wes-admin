@@ -19,5 +19,7 @@ namespace Wes.Business.FlowManage.FlowRuntime
         public FlowRunResultEnum Exec(out string errMsg);
         // 处理下一个节点找人
         public FlowRunResultEnum Next(FlowVersionNodeModel node, FlowVersionNodeModel preNode, out string errorMsg, out List<long> userIds);
+
+        //public void Hook(FlowVersionNodeModel node, FlowVersionNodeModel preNode);
     }
 }

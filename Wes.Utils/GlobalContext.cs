@@ -118,7 +118,17 @@ namespace Wes.Utils
         public string RedisConnectionString { set; get; }
         public string FilePath { set; get; }
         public long SystemId { set; get; }
-        public bool IsLicense { set; get; }
+        public bool IsLicense
+        {
+            get
+            {
+                #if DEBUG
+                return false;
+                #else
+                return true;
+                #endif
+            }
+        }
     }
 
     public class JwtSettings

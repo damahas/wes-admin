@@ -155,10 +155,10 @@ namespace Wes.Business.FlowManage.FlowRuntime
                 switch (handle.type)
                 {
                     case NodeHandleByEnum.author:
-                        result.Add(flowInstanceModel.CreateBy.ToLong());
+                        result.Add(userService.GetByAccout(flowInstanceModel.CreateBy)?.UserId ?? 0);
                         break;
                     case NodeHandleByEnum.leader:
-                        result.Add(userService.GetLeaderIdByUserId(flowInstanceModel.CreateBy.ToLong()));
+                        result.Add(userService.GetLeaderIdByAccount(flowInstanceModel.CreateBy));
                         break;
                     case NodeHandleByEnum.role:
                         var roleUsers = userService.GetByRoleId(handle.handleId);
@@ -174,6 +174,7 @@ namespace Wes.Business.FlowManage.FlowRuntime
                     default: break;
                 }
             }
+            userIds = result;
             // 根据不同处理类型选择
             switch (node?.meta?.handleRule)
             {
@@ -191,7 +192,6 @@ namespace Wes.Business.FlowManage.FlowRuntime
                         });
                         return FlowRunResultEnum.success;
                     }
-                    userIds = result;
                     return FlowRunResultEnum.select;
                 case NodeHandleTypeEnum.one:
                 case NodeHandleTypeEnum.all:

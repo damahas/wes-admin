@@ -36,7 +36,7 @@ namespace Wes.Business.FlowManage.FlowRuntime
         public FlowRunResultEnum Exec(out string errMsg)
         {
             errMsg = "";
-            var startNode = flow.nodes.Find(p => p?.meta?.type == FlowNodeTypeEnum.start);
+            var startNode = flow.nodes.Find(p => p?.type == FlowNodeTypeEnum.start);
             if (startNode == null)
             {
                 errMsg = "找不到流程开始节点";

@@ -33,7 +33,7 @@
       <el-dropdown @command="handleCommand">
         <span class="user-info">
           <el-icon><User /></el-icon>
-          {{ userInfo?.username || t("common.user") }}
+          {{ userInfo?.userName || t("common.user") }}
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </span>
         <template #dropdown>

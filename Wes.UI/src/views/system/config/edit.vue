@@ -17,10 +17,17 @@
           </template>
         </el-autocomplete>
       </el-form-item>
-      <el-form-item label="参数键值" prop="configValue" v-if="!configKey">
+
+      <FormRenderer
+        v-if="currentSchema"
+        v-model="schemaData"
+        :schema="currentSchema"
+        @update:model-value="handleSchemaChange"
+      />
+
+      <el-form-item label="参数键值" prop="configValue" v-if="isCustomKey">
         <el-input v-model="form.configValue" placeholder="请输入参数键值" />
       </el-form-item>
-      <component :is="configKey" v-if="configKey" v-model="form.configValue"></component>
       <el-form-item label="系统内置" prop="configType">
         <el-radio-group v-model="form.configType">
           <el-radio v-for="dict in sys_yes_no" :key="dict.value" :value="dict.value">
@@ -42,48 +49,159 @@
 </template>
 
 <script setup>
-import { ref, defineExpose, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { ElMessage } from "element-plus";
 import { getDict } from "@/utils";
-import { getConfig, addConfig, updateConfig } from "@/api/system/config";
-import editDing from "./editDing.vue";
-import editSystem from "./editSystem.vue";
+import { getConfig, addConfig, updateConfig, testMail } from "@/api/system/config";
+import FormRenderer from "./formRenderer.vue";
 
 const { sys_yes_no } = getDict("sys_yes_no");
 const emit = defineEmits(["change"]);
+
+const configKeys = [
+  { value: "sys.integration.dingtalk", label: "钉钉集成" },
+  { value: "sys.integration.mail", label: "邮箱集成" },
+  { value: "sys.subSystem", label: "子系统管理" },
+];
+
+const configSchema = {
+  "sys.integration.dingtalk": {
+    fields: [
+      {
+        label: "钉钉接口地址",
+        key: "dingPath",
+        type: "input",
+        defaultValue: "https://api.dingtalk.com",
+        required: true,
+      },
+      {
+        label: "AgentId",
+        key: "agentId",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      { label: "AppKey", key: "appKey", type: "input", defaultValue: "", required: true },
+      {
+        label: "AppSecret",
+        key: "appSecret",
+        type: "password",
+        defaultValue: "",
+        required: true,
+      },
+    ],
+  },
+  "sys.integration.mail": {
+    fields: [
+      {
+        label: "邮箱服务器地址",
+        key: "mailHost",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "邮箱端口",
+        key: "mailPort",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "邮箱账号",
+        key: "mailAccount",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "邮箱密码",
+        key: "mailPassword",
+        type: "password",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "测试邮箱",
+        key: "testMail",
+        type: "input",
+        defaultValue: "",
+        button: {
+          title: "发送邮件",
+          action: handleTestMail,
+        },
+      },
+      { label: "支持SSL", key: "enableSsl", type: "switch", defaultValue: false },
+    ],
+  },
+  "sys.subSystem": {
+    type: "table",
+    columns: [
+      { label: "ID", key: "systemId" },
+      { label: "系统名称", key: "systemName" },
+      { label: "访问地址", key: "systemUrl" },
+    ],
+  },
+};
 
 const title = ref("");
 const open = ref(false);
 const configRef = ref(null);
 const form = ref({});
-const rules = ref({
+const rules = {
   configName: [{ required: true, message: "参数名称不能为空", trigger: "blur" }],
   configKey: [{ required: true, message: "参数键名不能为空", trigger: "blur" }],
   configValue: [{ required: true, message: "参数键值不能为空", trigger: "blur" }],
-});
+};
 
-const configKey = computed(() => {
-  switch (form.value.configKey) {
-    case "sys.integration.dingtalk":
-      return editDing;
-    case "sys.subSystem":
-      return editSystem;
-    default:
-      return "";
-  }
-});
+const schemaData = ref({});
+
+const configKey = computed(() => form.value.configKey);
+
+const isCustomKey = computed(() => configKey.value && !currentSchema.value);
+
+const currentSchema = computed(() => configSchema[configKey.value] ?? null);
 
 const dialogWidth = computed(() => {
-  if (form.value.configKey === "sys.subSystem") {
-    return "68%";
-  }
+  if (configKey.value === "sys.subSystem") return "68%";
   return "600px";
 });
 
-const configKeys = [
-  { value: "sys.integration.dingtalk", label: "钉钉集成" },
-  { value: "sys.subSystem", label: "子系统管理" },
-];
+const initSchemaData = (schema, val) => {
+  if (val) {
+    try {
+      return JSON.parse(val);
+    } catch {
+      return schema.type === "table" ? [] : {};
+    }
+  }
+  if (schema.type === "table") return [];
+  const d = {};
+  schema.fields.forEach((f) => (d[f.key] = f.defaultValue ?? ""));
+  return d;
+};
+
+watch(configKey, (key) => {
+  schemaData.value = configSchema[key] ? initSchemaData(configSchema[key], null) : {};
+});
+
+watch(
+  () => form.value.configValue,
+  (val) => {
+    if (!configKey.value || !currentSchema.value) return;
+    schemaData.value = initSchemaData(currentSchema.value, val);
+  }
+);
+
+// 从 schemaData 同步到 configValue
+function handleSchemaChange() {
+  form.value.configValue = JSON.stringify(schemaData.value);
+}
+
+async function handleTestMail() {
+  await testMail(schemaData.value);
+  ElMessage.success("邮件发送成功，请检查收件箱");
+}
 
 const querySearch = (str) => {
   return configKeys.filter((p) => p.value.includes(str));
@@ -119,6 +237,7 @@ function reset() {
     configType: "Y",
     remark: undefined,
   };
+  schemaData.value = {};
   if (configRef.value) configRef.value.resetFields();
 }
 

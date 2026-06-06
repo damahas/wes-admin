@@ -20,13 +20,13 @@ namespace Wes.ViewModel.FlowManage
     public class FlowVersionNodeModel
     {
         public string id { get; set; }
+        public FlowNodeTypeEnum type { get; set; }
         public FlowVersionNodeMateModel meta { get; set; }
     }
 
     public class FlowVersionNodeMateModel
     {
         public string name { get; set; }
-        public FlowNodeTypeEnum type { get; set; }
         public bool isNoRepeatHandle { get; set; }
         public bool isCanEmpty { get; set; }
         public List<FlowVersionNodeMateHandleModel> handleBy { get; set; }
@@ -37,7 +37,6 @@ namespace Wes.ViewModel.FlowManage
 
     public class FlowVersionNodeMateHandleModel
     {
-        // author发起人 leader部门负责人 role角色 dept部门 user员工
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public NodeHandleByEnum type { get; set; }
         public long handleId { set; get; }
@@ -46,8 +45,8 @@ namespace Wes.ViewModel.FlowManage
     public class FlowVersionLineModel
     {
         public string id { get; set; }
-        public string startId { get; set; }
-        public string endId { get; set; }
+        public string source { get; set; }
+        public string target { get; set; }
         public object meta { get; set; }
     }
 

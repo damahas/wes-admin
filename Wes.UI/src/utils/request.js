@@ -10,7 +10,7 @@ const { t } = i18n.global;
 // 创建axios实例
 const service = axios.create({
   baseURL: "/api",
-  timeout: 10000,
+  timeout: 60000,
 });
 
 // 请求拦截器

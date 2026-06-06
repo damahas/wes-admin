@@ -1,17 +1,18 @@
-﻿using System;
-using System.Linq;
-using Wes.Service;
-using Wes.Utils.Extension;
-using Wes.DbModel;
-using Wes.Utils.Model;
-using System.Collections.Generic;
-using Wes.ViewModel.SystemManage;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using NPOI.SS.Formula.PTG;
 using SqlSugar;
-using Wes.Utils.Cache;
-using Wes.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
+using Wes.DbModel;
+using Wes.Service;
+using Wes.Utils;
+using Wes.Utils.Cache;
+using Wes.Utils.Extension;
+using Wes.Utils.Model;
+using Wes.ViewModel.SystemManage;
 
 namespace Wes.Business
 {
@@ -40,68 +41,68 @@ namespace Wes.Business
             return new ResultData<CodeRuleInfo>(result);
         }
 
-        public bool GetCode(long id, out string errMsg, out List<string> codes, int count)
-        {
-            errMsg = "";
-            codes = new List<string>();
-            var key = Utils.CacheKey.CodeRule + id;
-            var startTime = DateTime.Now;
-            while (true)
-            {
-                // 超时逻辑 2min
-                if ((DateTime.Now - startTime).Seconds > 120)
-                {
-                    errMsg = "序号生成超时!";
-                    return false;
-                }
-                // 用缓存做的分布式锁
-                if (CacheFactory.Cache.GetCache<string>(key) != null)
-                {
-                    Thread.Sleep(100);
-                    continue;
-                }
-                string lockKey = Guid.NewGuid().ToString();
-                CacheFactory.Cache.SetCache(key, lockKey);
-                var cachLockKey = CacheFactory.Cache.GetCache<string>(key);
-                if (cachLockKey != lockKey)
-                {
-                    Thread.Sleep(100);
-                    continue;
-                }
-                // 处理序号生成
-                var parts = _sysCodeRuleService.GetPartListByRuleId(id).OrderBy(p => p.Sort).ToList();
-                for (int i = 0; i < count; i++)
-                {
-                    string code = "";
-                    if (!PartsToCode(ref parts, out code, out errMsg))
-                    {
-                        CacheFactory.Cache.RemoveCache(key);
-                        return false;
-                    }
-                    codes.Add(code);
-                }
+        //public bool GetCode(long id, out string errMsg, out List<string> codes, int count)
+        //{
+        //    errMsg = "";
+        //    codes = new List<string>();
+        //    var key = Utils.CacheKey.CodeRule + id;
+        //    var startTime = DateTime.Now;
+        //    while (true)
+        //    {
+        //        // 超时逻辑 2min
+        //        if ((DateTime.Now - startTime).Seconds > 120)
+        //        {
+        //            errMsg = "序号生成超时!";
+        //            return false;
+        //        }
+        //        // 用缓存做的分布式锁
+        //        if (CacheFactory.Cache.GetCache<string>(key) != null)
+        //        {
+        //            Thread.Sleep(100);
+        //            continue;
+        //        }
+        //        string lockKey = Guid.NewGuid().ToString();
+        //        CacheFactory.Cache.SetCache(key, lockKey);
+        //        var cachLockKey = CacheFactory.Cache.GetCache<string>(key);
+        //        if (cachLockKey != lockKey)
+        //        {
+        //            Thread.Sleep(100);
+        //            continue;
+        //        }
+        //        // 处理序号生成
+        //        var parts = _sysCodeRuleService.GetPartListByRuleId(id).OrderBy(p => p.Sort).ToList();
+        //        for (int i = 0; i < count; i++)
+        //        {
+        //            string code = "";
+        //            if (!PartsToCode(ref parts, out code, out errMsg))
+        //            {
+        //                CacheFactory.Cache.RemoveCache(key);
+        //                return false;
+        //            }
+        //            codes.Add(code);
+        //        }
 
-                // 保存序号片段
-                client.Ado.BeginTran();
-                try
-                {
-                    foreach (var item in parts)
-                    {
-                        _sysCodeRuleService.SavePart(item, client);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    client.Ado.RollbackTran();
-                    CacheFactory.Cache.RemoveCache(key);
-                    errMsg = $"编码片段更新失败，请重试";
-                    return false;
-                }
-                client.Ado.CommitTran();
-                CacheFactory.Cache.RemoveCache(key);
-                return true;
-            }
-        }
+        //        // 保存序号片段
+        //        client.Ado.BeginTran();
+        //        try
+        //        {
+        //            foreach (var item in parts)
+        //            {
+        //                _sysCodeRuleService.SavePart(item, client);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            client.Ado.RollbackTran();
+        //            CacheFactory.Cache.RemoveCache(key);
+        //            errMsg = $"编码片段更新失败，请重试";
+        //            return false;
+        //        }
+        //        client.Ado.CommitTran();
+        //        CacheFactory.Cache.RemoveCache(key);
+        //        return true;
+        //    }
+        //}
 
         public string GetCode(string ruleCode, out string errMsg)
         {
@@ -286,37 +287,19 @@ namespace Wes.Business
                             }
                         }
                         // 获取序号逻辑
-                        string calcCode = "";
-                        bool iscarry = true;
-                        for (int i = calcParts.Count - 1; i > -1; i--)
+                        string calcCode = GetCalcPartCode(calcParts, part.PartValue, out errMsg);
+                        if (!string.IsNullOrWhiteSpace(errMsg))
                         {
-                            var curPart = calcParts[i];
-                            if (curPart.CurrentIndex > curPart.EndIndex)
+                            return false;
+                        }
+                        // 跳过全部0
+                        if (part.IsSkipZero > 0 && calcCode.Trim('0').Length == 0)
+                        {
+                            calcCode = GetCalcPartCode(calcParts, part.PartValue, out errMsg);
+                            if (!string.IsNullOrWhiteSpace(errMsg))
                             {
-                                errMsg = $"编码片段{part.PartValue}已经用完，请修改规则或等重置时间";
                                 return false;
                             }
-                            if (!iscarry)
-                            {
-                                calcCode = curPart.CurrentChar + calcCode;
-                                continue;
-                            }
-                            calcCode = curPart.CurrentChar + calcCode;
-                            if (curPart.CurrentIndex == curPart.EndIndex)
-                            {
-                                curPart.CurrentIndex = curPart.StartIndex;
-                                iscarry = true;
-                                if (i == 0)
-                                {
-                                    curPart.CurrentIndex = curPart.EndIndex + 1;
-                                }
-                            }
-                            else
-                            {
-                                curPart.CurrentIndex = curPart.CurrentIndex + 1;
-                                iscarry = false;
-                            }
-                            curPart.CurrentChar = character[curPart.CurrentIndex].ToString();
                         }
                         part.CurrentIndex = JsonConvert.SerializeObject(calcParts);
                         code += calcCode;
@@ -389,6 +372,45 @@ namespace Wes.Business
             }
             part.CurrentIndex = JsonConvert.SerializeObject(partInfos);
             return string.Empty;
+        }
+
+        private string GetCalcPartCode(List<CodePartInfo> calcParts, string partValue, out string errMsg)
+        {
+            errMsg = string.Empty;
+            string calcCode = "";
+            bool iscarry = true;
+            for (int i = calcParts.Count - 1; i > -1; i--)
+            {
+                var curPart = calcParts[i];
+                if (curPart.CurrentIndex > curPart.EndIndex)
+                {
+                    errMsg = $"编码片段{partValue}已经用完，请修改规则或等重置时间";
+                    return calcCode;
+                }
+                if (!iscarry)
+                {
+                    calcCode = curPart.CurrentChar + calcCode;
+                    continue;
+                }
+                calcCode = curPart.CurrentChar + calcCode;
+                // 最后一个数，如果是第一位则进1溢出，否则回滚到开始
+                if (curPart.CurrentIndex == curPart.EndIndex)
+                {
+                    curPart.CurrentIndex = curPart.StartIndex;
+                    iscarry = true;
+                    if (i == 0)
+                    {
+                        curPart.CurrentIndex = curPart.EndIndex + 1;
+                    }
+                }
+                else
+                {
+                    curPart.CurrentIndex = curPart.CurrentIndex + 1;
+                    iscarry = false;
+                }
+                curPart.CurrentChar = character[curPart.CurrentIndex].ToString();
+            }
+            return calcCode;
         }
 
         #endregion

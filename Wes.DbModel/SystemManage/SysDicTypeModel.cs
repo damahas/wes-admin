@@ -3,7 +3,7 @@ using SqlSugar;
 using System.Collections.Generic;
 using System.Text;
 using Wes.Utils;
-using Wes.Utils.JsonConverter;
+using Wes.Utils.Converter;
 using System.Text.Json.Serialization;
 
 namespace Wes.DbModel

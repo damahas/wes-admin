@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using SqlSugar;
-using Wes.Utils.JsonConverter;
+using Wes.Utils.Converter;
 using System.Text.Json.Serialization;
 
 namespace Wes.DbModel

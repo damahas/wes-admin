@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using Wes.Utils.Model;
 
-namespace Wes.Utils
+namespace Wes.Utils.Hepler
 {
     public static class ImageHelper
     {

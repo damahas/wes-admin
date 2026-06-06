@@ -18,7 +18,7 @@ namespace Wes.Business
 
         public ReturnData Delete(string ids);
 
-        public bool GetCode(long id, out string errMsg, out List<string> codes, int count);
+        //public bool GetCode(long id, out string errMsg, out List<string> codes, int count);
 
         public string GetCode(string ruleCode, out string errMsg);
 
