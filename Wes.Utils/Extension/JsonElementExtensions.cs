@@ -40,36 +40,5 @@ namespace Wes.Utils.Extension
             // 不是 Object，可以按需返回 element 本身，或 null，或抛出异常
             return element;
         }
-
-        private static object ParseNumber(JsonElement element)
-        {
-            // 优先按整数解析
-            if (element.TryGetInt32(out int i)) return i;
-            if (element.TryGetInt64(out long l)) return l;
-            if (element.TryGetUInt64(out ulong ul)) return ul;
-            if (element.TryGetDecimal(out decimal d)) return d;
-            // 回退到 double
-            return element.GetDouble();
-        }
-
-        private static Dictionary<string, object?> ParseObject(JsonElement element)
-        {
-            var dict = new Dictionary<string, object?>();
-            foreach (var prop in element.EnumerateObject())
-            {
-                dict[prop.Name] = prop.Value.ToRawObject(); // 递归转换
-            }
-            return dict;
-        }
-
-        private static List<object?> ParseArray(JsonElement element)
-        {
-            var list = new List<object?>();
-            foreach (var item in element.EnumerateArray())
-            {
-                list.Add(item.ToRawObject());
-            }
-            return list;
-        }
     }
 }

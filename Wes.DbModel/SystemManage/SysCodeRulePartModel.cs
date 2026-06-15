@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 序号生成规则片段
     /// <summary>
-    [SugarTable("sys_code_rule_part", "序号生成规则片段", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_code_rule_part", "序号生成规则片段", IsDisabledDelete = true)]
     public class SysCodeRulePartModel
     {
         /// <summary>

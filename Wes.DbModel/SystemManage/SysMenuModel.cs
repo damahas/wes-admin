@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 菜单
     /// </summary>
-    [SugarTable("sys_menu", "菜单权限", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_menu", "菜单权限", IsDisabledDelete = true)]
     public class SysMenuModel
     {
         /// <summary>

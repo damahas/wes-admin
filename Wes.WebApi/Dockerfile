@@ -1,9 +1,11 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
-COPY ./bin/Release/net8.0 .
-COPY ./dist ../front
+RUN apk add --no-cache nginx
+COPY ./bin/Release/net10.0 .
+COPY ../Zero.UI/dist ../front
+COPY ../Zero.UI/nginx.conf /etc/nginx/
+COPY ../Zero.WebApi/UploadFile /app/UploadFile
+ENTRYPOINT ["nginx"]
 ENTRYPOINT ["dotnet", "Wes.WebApi.dll"]

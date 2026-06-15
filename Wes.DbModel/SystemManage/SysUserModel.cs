@@ -12,7 +12,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 用户信息
     /// </summary>
-    [SugarTable("sys_user", "用户信息", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_user", "用户信息", IsDisabledDelete = true)]
     public class SysUserModel
     {
         /// <summary>

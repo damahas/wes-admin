@@ -9,14 +9,14 @@
   <img src="https://img.shields.io/badge/.NET-10.0-blue" alt=".NET">
   <img src="https://img.shields.io/badge/Element--Plus-2.13-blue" alt="Element Plus">
   <img src="https://img.shields.io/badge/MySQL-8.0-orange" alt="MySQL">
-  <img src="https://img.shields.io/badge/license-TODO-lightgrey" alt="license">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="license">
 </p>
 
 ---
 
 ## 简介
 
-WesAdmin 是一套全栈企业级后台管理系统，提供用户管理、RBAC 权限控制、可视化工作流引擎、代码生成器、数据服务编排等核心功能，帮助开发者快速搭建和交付企业级后台应用。
+WesAdmin 是一套基于若依（RuoYi）的全新 UI 全栈企业级后台管理系统，提供用户管理、RBAC 权限控制、可视化工作流引擎、代码生成器、数据服务编排等核心功能，帮助开发者快速搭建和交付企业级后台应用。
 
 > **开发状态**: 持续迭代中，欢迎 Star / Fork / PR。
 
@@ -49,8 +49,8 @@ WesAdmin 是一套全栈企业级后台管理系统，提供用户管理、RBAC 
 - **菜单管理** — 菜单树 CRUD、前端动态路由自动生成
 - **部门管理** — 部门树 CRUD、部门选择器
 - **岗位管理** — 岗位 CRUD
-- **字典管理** — 字典类型 + 字典数据维护
-- **参数配置** — 系统参数 CRUD、缓存刷新、Excel 导出
+- **字典管理** — 字典类型 + 字典数据维护，支持树结构
+- **参数配置** — 系统参数 CRUD、缓存刷新、Excel 导出、钉钉/企微/飞书/邮件集成配置
 - **编号规则** — 自定义编码规则生成器
 - **数据服务** — 可视化 API 编排（SQL + JavaScript 步骤组合），对外暴露 API
 - **许可证** — 设备指纹绑定、许可证激活/验证、企业版/试用版
@@ -66,13 +66,6 @@ WesAdmin 是一套全栈企业级后台管理系统，提供用户管理、RBAC 
 - **节点类型** — 开始、结束、任务（审批）、通知
 - **审批方式** — 按用户、按角色、按部门
 - **防死循环** — 流程引擎内置深度保护机制
-
-### 代码生成器
-- **导入表** — 从数据库导入表结构
-- **模板生成** — 支持 CRUD / 树表模板
-- **一键生成** — 自动生成 Model / Service / Biz / Controller / Vue 组件
-- **代码预览** — 生成前预览代码
-- **结构同步** — 同步数据库表结构变更
 
 ---
 
@@ -91,7 +84,8 @@ WesAdmin.sln
 ├── Wes.Service/             # 数据访问层 (Service/Repository)
 ├── Wes.DbModel/             # 数据库模型层 (ORM 实体)
 ├── Wes.ViewModel/           # 视图模型 (DTO/Param/Result)
-└── Wes.Utils/               # 工具层 (缓存、加密等)
+└── Wes.Utils/               # 工具层 (缓存、加密、三方集成等)
+    └── Integration/          #   钉钉/企微/飞书/邮件集成
 ```
 
 **依赖关系**: `WebApi` → `Business` → `Service` → `DbModel`，所有层均依赖 `Utils` 和 `ViewModel`。
@@ -110,8 +104,8 @@ WesAdmin.sln
 
 1. 克隆仓库
 ```bash
-git clone TODO
-cd wes-admin-master
+git clone https://github.com/wes-admin/wes-admin.git
+cd wes-admin
 ```
 
 2. 配置数据库连接
@@ -173,7 +167,8 @@ docker run -d -p 80:80 wes-admin
 
 ## 默认账户
 
-> TODO: 补充默认管理员账户信息
+账号：admin
+密码：123456
 
 ---
 
@@ -187,31 +182,43 @@ docker run -d -p 80:80 wes-admin
 
 - [x] RBAC 权限管理
 - [x] 可视化工作流引擎
-- [x] 代码生成器
+- [x] 代码生成器（已升级为 AI 智能开发）
 - [x] 国际化（中/英）
 - [x] 暗黑模式
 - [x] 滑块验证码
 - [x] 许可证授权机制
 - [x] 数据服务 API 编排
+- [x] 钉钉/企微/飞书三方集成（登录 + 组织同步）
+- [x] 邮件集成
 - [ ] 数据服务请求日志功能
 - [ ] TODO: 后续计划补充
 
 ---
 
-## 贡献指南
+## AI 智能开发
 
-> TODO: 补充贡献指南
+推荐使用 AI 编程助手（如 [CodeBuddy](https://www.codebuddy.ai)）替代传统代码生成器，开发效率大幅提升：
+
+- **智能编码** — AI 理解项目上下文，自动生成 Model / Service / Biz / Controller / Vue 组件
+- **代码重构** — 一键重构、代码审查、性能优化建议
+- **Bug 修复** — 智能定位问题，快速修复
+- **知识问答** — 项目架构、技术选型随时答疑
+- **自然语言驱动** — 用自然语言描述需求，AI 即可完成开发任务
+
+---
+
+## 贡献指南
 
 欢迎提交 Issue 和 Pull Request。
 
 ---
 
-## 许可证
+## 鸣谢
 
-> TODO: 补充许可证类型
+本项目基于 [RuoYi](https://gitee.com/y_project/RuoYi-Vue) 开发，感谢若依团队的开源贡献。
 
 ---
 
-## 联系方式
+## 许可证
 
-> TODO: 补充联系方式（作者、邮箱、群组等）
+本项目基于 [MIT License](LICENSE) 开源协议发布。

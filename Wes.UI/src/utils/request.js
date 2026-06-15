@@ -58,7 +58,6 @@ service.interceptors.response.use(
       ElMessage.error(msg || t("request.loginExpired"));
       return Promise.reject(new Error(msg || t("request.loginExpired")));
     }
-
     // 其他错误，根据配置决定是否提示
     if (!response.config?.hideError) {
       ElMessage.error(msg || t("request.requestFailed"));

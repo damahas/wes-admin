@@ -158,6 +158,25 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Cors");
 
+// 全局异常处理中间件
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        if (!context.Response.HasStarted)
+        {
+            context.Response.StatusCode = StatusCodes.Status200OK;
+            context.Response.ContentType = "application/json";
+            var msg = System.Text.Json.JsonSerializer.Serialize(ex.Message);
+            await context.Response.WriteAsync($"{{\"code\":501,\"msg\":{msg}}}");
+        }
+    }
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
+using Wes.Utils.Converter;
 
 namespace Wes.ViewModel.SystemManage
 {
@@ -15,6 +16,7 @@ namespace Wes.ViewModel.SystemManage
 
     public class RoleTreeDetailInfo
     {
+        [JsonConverter(typeof(LongToStringConverter))]
         public long Id { set; get; }
 
         [JsonIgnore]

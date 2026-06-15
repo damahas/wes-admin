@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 角色和菜单关联
     /// <summary>
-    [SugarTable("sys_role_menu", "角色和菜单关联", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_role_menu", "角色和菜单关联", IsDisabledDelete = true)]
     public class SysRoleMenuModel
     {
         /// <summary>

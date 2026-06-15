@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 数据服务节点
     /// </summary>
-    [SugarTable("sys_data_service_node", "数据服务节点", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_data_service_node", "数据服务节点", IsDisabledDelete = true)]
     public class SysDataServiceNodeModel
     {
         /// <summary>

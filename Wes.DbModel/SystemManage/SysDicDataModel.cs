@@ -11,7 +11,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 字典值
     /// </summary>
-    [SugarTable("sys_dict_data", "字典数据", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_dict_data", "字典数据", IsDisabledDelete = true)]
     public class SysDicDataModel
     {
         /// <summary>

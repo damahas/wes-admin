@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Wes.DbModel
 {
-    [SugarTable("sys_user_post", "用户与岗位关联", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_user_post", "用户与岗位关联", IsDisabledDelete = true)]
     public class SysUserPostModel
     {
         /// <summary>

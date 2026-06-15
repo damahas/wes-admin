@@ -11,7 +11,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 角色
     /// </summary>
-    [SugarTable("sys_role", "角色信息", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_role", "角色信息", IsDisabledDelete = true)]
     public class SysRoleModel
     {
         /// <summary>

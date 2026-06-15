@@ -259,22 +259,17 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="12" v-if="form.userId == undefined">
             <el-form-item label="用户账户" prop="account">
               <el-input
-                v-if="form.userId == undefined"
                 v-model="form.account"
                 placeholder="请输入用户账户"
                 maxlength="100"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item
-              v-if="form.userId == undefined"
-              label="用户密码"
-              prop="password"
-            >
+          <el-col :span="12" v-if="form.userId == undefined">
+            <el-form-item label="用户密码" prop="password">
               <el-input
                 v-model="form.password"
                 placeholder="请输入用户密码"

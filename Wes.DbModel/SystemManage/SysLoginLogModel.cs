@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 系统访问记录
     /// </summary>
-    [SugarTable("sys_login_log", "系统访问记录", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_login_log", "系统访问记录", IsDisabledDelete = true)]
     public class SysLoginLogModel
     {
         /// <summary>

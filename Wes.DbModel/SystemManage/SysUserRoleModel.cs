@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 用户和角色关联
     /// <summary>
-    [SugarTable("sys_user_role", "用户和角色关联", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_user_role", "用户和角色关联", IsDisabledDelete = true)]
     public class SysUserRoleModel
     {
         /// <summary>

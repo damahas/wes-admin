@@ -59,10 +59,17 @@ export function refreshCache() {
   })
 }
 
-export function testMail(data){
-    return request({
+export function testMail(data) {
+  return request({
     url: '/system/config/test/mail',
     method: 'post',
     data: data
+  })
+}
+
+export function integrationSync(provider) {
+  return request({
+    url: '/system/config/sync/' + provider,
+    method: 'post',
   })
 }

@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 部门
     /// </summary>
-    [SugarTable("sys_dept", "部门", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_dept", "部门", IsDisabledDelete = true)]
     public class SysDeptModel
     {
         /// <summary>

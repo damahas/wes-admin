@@ -77,6 +77,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPost]
+        [Route("sync/{provider}")]
+        public async Task<ReturnData> SyncThirdParty(string provider)
+        {
+            return await _sysConfigBiz.SyncThirdPartyAsync(provider);
+        }
+
+        [HttpPost]
         [Route("test/mail")]
         public ReturnData TestMail([FromBody] MailModel mailModel)
         {

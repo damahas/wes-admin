@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Wes.DbModel;
 using Wes.Service;
 using Wes.Utils.Extension;
 using Wes.Utils.Model;
+using Wes.Utils.Integration;
 using Wes.ViewModel.SystemManage;
 using Wes.Utils.Cache;
 using Wes.Utils;
@@ -16,11 +19,13 @@ namespace Wes.Business
     {
         private ISysConfigService _sysConfigService;
         private ISysDicDataService _sysDicDataService;
+        private ISyncDataSaveService _syncDataSaveService;
 
-        public SysConfigBiz(ISysConfigService sysConfigService, ISysDicDataService sysDicDataService)
+        public SysConfigBiz(ISysConfigService sysConfigService, ISysDicDataService sysDicDataService, ISyncDataSaveService syncDataSaveService)
         {
             _sysConfigService = sysConfigService;
             _sysDicDataService = sysDicDataService;
+            _syncDataSaveService = syncDataSaveService;
         }
 
         #region 配置操作
@@ -103,5 +108,78 @@ namespace Wes.Business
             }
             return new ReturnData();
         }
+
+        #region 调用三方接口
+
+        /// <summary>
+        /// 同步指定三方平台的组织架构（部门 + 用户）
+        /// </summary>
+        /// <param name="provider">平台标识：dingtalk / feishu / wecom</param>
+        public async Task<ReturnData> SyncThirdPartyAsync(string provider)
+        {
+            var configKey = $"sys.integration.{provider.ToLower()}";
+            var configJson = GetByConfigKey(configKey);
+            if (string.IsNullOrEmpty(configJson))
+                throw new Exception($"未找到平台配置，Key: {configKey}，请先在参数配置中新增 {configKey}");
+
+            var integration = CreateIntegration(provider, configJson);
+
+            var deptResult = await _syncDataSaveService.SaveDeptsAsync(integration.Provider, await integration.GetDepartments());
+            var userResult = await _syncDataSaveService.SaveUsersAsync(integration.Provider, await integration.GetUsers());
+
+            var success = deptResult.Success && userResult.Success;
+            var msg = $"创建{deptResult.CreatedCount + userResult.CreatedCount}条，更新{deptResult.UpdatedCount + userResult.UpdatedCount}条，失败{deptResult.FailedCount + userResult.FailedCount}条";
+            return success ? new ReturnData() : new ReturnData(500, msg);
+        }
+
+        /// <summary>
+        /// 从配置 JSON 创建三方集成实例
+        /// </summary>
+        private IThirdPartyIntegration CreateIntegration(string provider, string configJson)
+        {
+            var jObj = JObject.Parse(configJson);
+            var factory = new IntegrationFactory();
+
+            switch (provider.ToLower())
+            {
+                case "dingtalk":
+                    var dingConfig = new DingTalkConfig
+                    {
+                        BaseUrl = jObj["dingPath"]?.Value<string>() ?? "https://oapi.dingtalk.com",
+                        AppId = jObj["appId"]?.Value<string>(),
+                        ClientId = jObj["clientId"]?.Value<string>(),
+                        ClientSecret = jObj["clientSecret"]?.Value<string>(),
+                        CorpId = jObj["corpId"]?.Value<string>(),
+                        Enabled = true,
+                    };
+                    return factory.Create(dingConfig);
+
+                case "feishu":
+                    var feishuConfig = new FeishuConfig
+                    {
+                        BaseUrl = jObj["baseUrl"]?.Value<string>() ?? "https://open.feishu.cn",
+                        AppId = jObj["appId"]?.Value<string>(),
+                        AppSecret = jObj["appSecret"]?.Value<string>(),
+                        Enabled = true,
+                    };
+                    return factory.Create(feishuConfig);
+
+                case "wecom":
+                    var wecomConfig = new WeComConfig
+                    {
+                        BaseUrl = jObj["baseUrl"]?.Value<string>() ?? "https://qyapi.weixin.qq.com",
+                        CorpId = jObj["corpId"]?.Value<string>(),
+                        CorpSecret = jObj["corpSecret"]?.Value<string>(),
+                        AgentId = jObj["agentId"]?.Value<long?>(),
+                        Enabled = true,
+                    };
+                    return factory.Create(wecomConfig);
+
+                default:
+                    throw new NotSupportedException($"不支持的三方平台: {provider}");
+            }
+        }
+
+        #endregion
     }
 }

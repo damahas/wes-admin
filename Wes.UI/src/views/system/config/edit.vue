@@ -52,7 +52,13 @@
 import { ref, computed, watch } from "vue";
 import { ElMessage } from "element-plus";
 import { getDict } from "@/utils";
-import { getConfig, addConfig, updateConfig, testMail } from "@/api/system/config";
+import {
+  getConfig,
+  addConfig,
+  updateConfig,
+  testMail,
+  integrationSync,
+} from "@/api/system/config";
 import FormRenderer from "./formRenderer.vue";
 
 const { sys_yes_no } = getDict("sys_yes_no");
@@ -60,6 +66,8 @@ const emit = defineEmits(["change"]);
 
 const configKeys = [
   { value: "sys.integration.dingtalk", label: "钉钉集成" },
+  { value: "sys.integration.wecom", label: "企微集成" },
+  { value: "sys.integration.feishu", label: "飞书集成" },
   { value: "sys.integration.mail", label: "邮箱集成" },
   { value: "sys.subSystem", label: "子系统管理" },
 ];
@@ -68,10 +76,60 @@ const configSchema = {
   "sys.integration.dingtalk": {
     fields: [
       {
+        label: "AppId",
+        key: "appId",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "CorpId",
+        key: "corpId",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "ClientId",
+        key: "clientId",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "ClientSecret",
+        key: "clientSecret",
+        type: "password",
+        defaultValue: "",
+        required: true,
+      },
+      {
         label: "钉钉接口地址",
         key: "dingPath",
         type: "input",
-        defaultValue: "https://api.dingtalk.com",
+        defaultValue: "https://oapi.dingtalk.com",
+        required: true,
+        button: {
+          title: "同步",
+          action: handleDingtalkSync,
+        },
+      },
+    ],
+  },
+  "sys.integration.wecom": {
+    fields: [
+      {
+        label: "企业ID",
+        key: "corpId",
+        type: "input",
+        defaultValue: "",
+        required: true,
+      },
+      {
+        label: "应用Secret",
+        key: "corpSecret",
+        type: "password",
+        defaultValue: "",
         required: true,
       },
       {
@@ -79,15 +137,46 @@ const configSchema = {
         key: "agentId",
         type: "input",
         defaultValue: "",
+      },
+      {
+        label: "企微接口地址",
+        key: "baseUrl",
+        type: "input",
+        defaultValue: "https://qyapi.weixin.qq.com",
+        required: true,
+        button: {
+          title: "同步",
+          action: handleWecomSync,
+        },
+      },
+    ],
+  },
+  "sys.integration.feishu": {
+    fields: [
+      {
+        label: "应用AppId",
+        key: "appId",
+        type: "input",
+        defaultValue: "",
         required: true,
       },
-      { label: "AppKey", key: "appKey", type: "input", defaultValue: "", required: true },
       {
-        label: "AppSecret",
+        label: "应用Secret",
         key: "appSecret",
         type: "password",
         defaultValue: "",
         required: true,
+      },
+      {
+        label: "飞书接口地址",
+        key: "baseUrl",
+        type: "input",
+        defaultValue: "https://open.feishu.cn",
+        required: true,
+        button: {
+          title: "同步",
+          action: handleFeishuSync,
+        },
       },
     ],
   },
@@ -201,6 +290,21 @@ function handleSchemaChange() {
 async function handleTestMail() {
   await testMail(schemaData.value);
   ElMessage.success("邮件发送成功，请检查收件箱");
+}
+
+async function handleDingtalkSync() {
+  await integrationSync("dingtalk");
+  ElMessage.success("钉钉同步完成");
+}
+
+async function handleWecomSync() {
+  await integrationSync("wecom");
+  ElMessage.success("企微同步完成");
+}
+
+async function handleFeishuSync() {
+  await integrationSync("feishu");
+  ElMessage.success("飞书同步完成");
 }
 
 const querySearch = (str) => {

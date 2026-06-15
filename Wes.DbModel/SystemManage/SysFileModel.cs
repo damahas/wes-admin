@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 文件
     /// <summary>
-    [SugarTable("sys_file", "文件", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_file", "文件", IsDisabledDelete = true)]
     public class SysFileModel
     {
         /// <summary>

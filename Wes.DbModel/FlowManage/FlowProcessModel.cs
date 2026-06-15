@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 审批流
     /// <summary>
-    [SugarTable("flow_process", "审批流", IsDisabledDelete = true)]
+    [SugarTable("flow_process", "审批流", IsDisabledUpdateAll = true)]
     public class FlowProcessModel
     {
         /// <summary>

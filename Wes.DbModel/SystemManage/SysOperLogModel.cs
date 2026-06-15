@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 操作日志记录
     /// </summary>
-    [SugarTable("sys_oper_log", "操作日志记录", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_oper_log", "操作日志记录", IsDisabledDelete = true)]
     public class SysOperLogModel
     {
         /// <summary>

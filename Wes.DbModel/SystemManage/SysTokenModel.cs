@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 登录密钥
     /// </summary>
-    [SugarTable("sys_token", "登录token", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_token", "登录token", IsDisabledDelete = true)]
     public class SysTokenModel
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace Wes.DbModel
         /// <summary>
         /// 登录token
         /// <summary>
-        [SugarColumn(ColumnName = "token", Length = 100, ColumnDescription = "登录token")]
+        [SugarColumn(ColumnName = "token", Length = 500, ColumnDescription = "登录token")]
         public string Token { get; set; }
 
         /// <summary>

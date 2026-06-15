@@ -11,7 +11,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 参数配置
     /// </summary>
-    [SugarTable("sys_config", "参数配置", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_config", "参数配置", IsDisabledDelete = true)]
     public class SysConfigModel
     {
         /// <summary>

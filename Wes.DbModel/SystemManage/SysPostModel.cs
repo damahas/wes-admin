@@ -11,7 +11,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 岗位信息
     /// </summary>
-    [SugarTable("sys_post", "岗位信息", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_post", "岗位信息", IsDisabledDelete = true)]
     public class SysPostModel
     {
         /// <summary>

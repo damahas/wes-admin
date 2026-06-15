@@ -10,7 +10,7 @@ namespace Wes.DbModel
     /// <summary>
     /// 数据服务
     /// </summary>
-    [SugarTable("sys_data_service", "数据服务", IsDisabledUpdateAll = true)]
+    [SugarTable("sys_data_service", "数据服务", IsDisabledDelete = true)]
     public class SysDataServiceModel
     {
         /// <summary>
