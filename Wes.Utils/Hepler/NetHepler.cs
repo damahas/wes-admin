@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,6 +111,24 @@ namespace Wes.Utils.Hepler
                 {
                 }
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// 获取 IP 归属地（同步，可能阻塞）
+        /// </summary>
+        public static string IpLocation
+        {
+            get
+            {
+                try
+                {
+                    return IpLocationHelper.GetLocation(Ip);
+                }
+                catch
+                {
+                    return string.Empty;
+                }
             }
         }
 

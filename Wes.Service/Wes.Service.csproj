@@ -20,7 +20,5 @@
     <None Remove="SystemManage\Interface\" />
     <None Remove="SystemManage\Service\" />
     <None Remove="MonitorManage\" />
-    <None Remove="GenManage\Service\" />
-    <None Remove="GenManage\Interfacce\" />
   </ItemGroup>
 </Project>

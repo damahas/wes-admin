@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace Wes.ViewModel.SystemManage
 {
     public class OnlineInfo

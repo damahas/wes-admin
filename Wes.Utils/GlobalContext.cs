@@ -1,4 +1,4 @@
-﻿using DeviceId;
+using DeviceId;
 using System;
 using System.Collections.Generic;
 using System.Text;

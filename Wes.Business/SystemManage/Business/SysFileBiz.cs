@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Wes.Service;
@@ -12,7 +12,7 @@ using Wes.ViewModel.SystemManage;
 
 namespace Wes.Business
 {
-    public class SysFileBiz : ISysFlieBiz
+    public class SysFileBiz : ISysFileBiz
     {
         private ISysFileService _sysFileService;
 

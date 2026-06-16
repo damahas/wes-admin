@@ -17,8 +17,6 @@
     <None Remove="SystemManage\Interface\" />
     <None Remove="SystemManage\Business\" />
     <None Remove="MonitorManage\" />
-    <None Remove="GenManage\Business\" />
-    <None Remove="GenManage\Interface\" />
     <None Remove="FlowManage\Business\FlowRuntime\" />
   </ItemGroup>
   <ItemGroup>

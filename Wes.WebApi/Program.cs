@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using System.IO;
 using Wes.Business;
 using Wes.Utils;
 using Wes.Utils.Model;
@@ -21,27 +22,27 @@ builder.Services.AddControllers(opt =>
 {
     opt.UseCentralRoutePrefix(new RouteAttribute("api"));
 }).AddJsonOptions(options =>
- {
-     //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
- }).AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
+{
+    //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+}).AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
 builder.Services.AddMemoryCache();
 GlobalContext.AppSettings = builder.Configuration.GetSection("SystemConfig").Get<AppSettings>();
 GlobalContext.JwtSettings = builder.Configuration.GetSection("JwtConfig").Get<JwtSettings>();
 // sqlsugar
 builder.Services.AddSqlsugarSetup(builder.Configuration);
-// ¿çÓò
+// è·¨åŸŸ
 builder.Services.AddCors(
  options => options.AddPolicy("Cors", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
 );
-// ×¢ÈëHttpContext£¬»ñÈ¡ÍøÂçĞÅÏ¢
+// æ³¨å…¥HttpContextï¼Œè·å–ç½‘ç»œä¿¡æ¯
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Register Swagger (basic setup)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ×¢Èëdll
+// æ³¨å…¥dll
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(container =>
 {
@@ -61,18 +62,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     o.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuerSigningKey = true,//ÊÇ·ñÑéÖ¤Ç©Ãû,²»ÑéÖ¤µÄ»°¿ÉÒÔ´Û¸ÄÊı¾İ£¬²»°²È«
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(GlobalContext.JwtSettings.SecretKey)),//½âÃÜµÄÃÜÔ¿
-        ValidateIssuer = true,//ÊÇ·ñÑéÖ¤·¢ĞĞÈË£¬¾ÍÊÇÑéÖ¤ÔØºÉÖĞµÄIssÊÇ·ñ¶ÔÓ¦ValidIssuer²ÎÊı
-        ValidIssuer = GlobalContext.JwtSettings.Issuer,//·¢ĞĞÈË,
-        ValidateAudience = true,//ÊÇ·ñÑéÖ¤¶©ÔÄÈË£¬¾ÍÊÇÑéÖ¤ÔØºÉÖĞµÄAudÊÇ·ñ¶ÔÓ¦ValidAudience²ÎÊı
-        ValidAudience = GlobalContext.JwtSettings.Audience//¶©ÔÄÈË 
+        ValidateIssuerSigningKey = true,//æ˜¯å¦éªŒè¯ç­¾å,ä¸éªŒè¯çš„è¯å¯ä»¥ç¯¡æ”¹æ•°æ®ï¼Œä¸å®‰å…¨
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(GlobalContext.JwtSettings.SecretKey)),//è§£å¯†çš„å¯†é’¥
+        ValidateIssuer = true,//æ˜¯å¦éªŒè¯å‘è¡Œäººï¼Œå°±æ˜¯éªŒè¯è½½è·ä¸­çš„Issæ˜¯å¦å¯¹åº”ValidIssuerå‚æ•°
+        ValidIssuer = GlobalContext.JwtSettings.Issuer,//å‘è¡Œäºº,
+        ValidateAudience = true,//æ˜¯å¦éªŒè¯è®¢é˜…äººï¼Œå°±æ˜¯éªŒè¯è½½è·ä¸­çš„Audæ˜¯å¦å¯¹åº”ValidAudienceå‚æ•°
+        ValidAudience = GlobalContext.JwtSettings.Audience//è®¢é˜…äºº 
     };
     o.Events = new JwtBearerEvents
     {
         OnTokenValidated = context =>
         {
-            // ²»ÒªÖ±½ÓĞ´ÈëÏìÓ¦£¬±ê¼ÇÊ§°Ü²¢°ÑÔ­Òò·ÅÈë HttpContext.Items£¬ÓÉ OnChallengeÍ³Ò»´¦Àí
+            // ä¸è¦ç›´æ¥å†™å…¥å“åº”ï¼Œæ ‡è®°å¤±è´¥å¹¶æŠŠåŸå› æ”¾å…¥ HttpContext.Itemsï¼Œç”± OnChallengeç»Ÿä¸€å¤„ç†
             string token = JWTUtils.GetToken(context.Request.Headers["authorization"]);
             var sysUserBiz = GlobalContext.ServiceProvider.GetService<ISysUserBiz>();
             UserInfo userInfo;
@@ -93,7 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         },
         OnAuthenticationFailed = context =>
         {
-            // Èç¹û¹ıÆÚ£¬Ôò°Ñ<ÊÇ·ñ¹ıÆÚ>Ìí¼Óµ½·µ»ØÍ·ĞÅÏ¢ÖĞ£¬²¢¼ÇÂ¼Ô­Òò£¬²»Ö±½ÓĞ´ÏìÓ¦Ìå
+            // å¦‚æœè¿‡æœŸï¼Œåˆ™æŠŠ<æ˜¯å¦è¿‡æœŸ>æ·»åŠ åˆ°è¿”å›å¤´ä¿¡æ¯ä¸­ï¼Œå¹¶è®°å½•åŸå› ï¼Œä¸ç›´æ¥å†™å“åº”ä½“
             if (context.Exception is SecurityTokenExpiredException)
             {
                 if (!context.Response.HasStarted)
@@ -106,13 +107,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         },
         OnChallenge = context =>
         {
-            //Í³Ò»´¦ÀíÈÏÖ¤Ê§°Ü»òÈ±Ê§µÄÏìÓ¦£¬±ÜÃâÔÚÆäËûÊÂ¼şÖĞÖ±½ÓĞ´ÏìÓ¦µ¼ÖÂ³åÍ»
+            //ç»Ÿä¸€å¤„ç†è®¤è¯å¤±è´¥æˆ–ç¼ºå¤±çš„å“åº”ï¼Œé¿å…åœ¨å…¶ä»–äº‹ä»¶ä¸­ç›´æ¥å†™å“åº”å¯¼è‡´å†²çª
             context.HandleResponse();
 
             var httpContext = context.HttpContext;
             if (!httpContext.Response.HasStarted)
             {
-                httpContext.Response.StatusCode = StatusCodes.Status200OK; // ±£³ÖÔ­ÓĞĞĞÎª£¬Êµ¼Ê×´Ì¬Í¨¹ı body.code ·µ»Ø
+                httpContext.Response.StatusCode = StatusCodes.Status200OK; // ä¿æŒåŸæœ‰è¡Œä¸ºï¼Œå®é™…çŠ¶æ€é€šè¿‡ body.code è¿”å›
                 httpContext.Response.ContentType = "application/json";
 
                 string codeMsgJson;
@@ -121,22 +122,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                     switch (err)
                     {
                         case "AccountDisabled":
-                            codeMsgJson = "{\"code\":403,\"msg\":\"ÕË»§ÒÑÍ£ÓÃ\"}";
+                            codeMsgJson = "{\"code\":403,\"msg\":\"è´¦æˆ·å·²åœç”¨\"}";
                             break;
                         case "UserNotFound":
-                            codeMsgJson = "{\"code\":403,\"msg\":\"ÕÒ²»µ½ÓÃ»§\"}";
+                            codeMsgJson = "{\"code\":403,\"msg\":\"æ‰¾ä¸åˆ°ç”¨æˆ·\"}";
                             break;
                         case "TokenExpired":
-                            codeMsgJson = "{\"code\":401,\"msg\":\"TokenÒÑ¹ıÆÚ\"}";
+                            codeMsgJson = "{\"code\":401,\"msg\":\"Tokenå·²è¿‡æœŸ\"}";
                             break;
                         default:
-                            codeMsgJson = $"{{\"code\":401,\"msg\":\"Î´µÇÂ¼\",\"path\":\"{httpContext.Request.Path}\"}}";
+                            codeMsgJson = $"{{\"code\":401,\"msg\":\"æœªç™»å½•\",\"path\":\"{httpContext.Request.Path}\"}}";
                             break;
                     }
                 }
                 else
                 {
-                    codeMsgJson = $"{{\"code\":401,\"msg\":\"Î´µÇÂ¼\",\"path\":\"{httpContext.Request.Path}\"}}";
+                    codeMsgJson = $"{{\"code\":401,\"msg\":\"æœªç™»å½•\",\"path\":\"{httpContext.Request.Path}\"}}";
                 }
 
                 return httpContext.Response.WriteAsync(codeMsgJson);
@@ -158,7 +159,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Cors");
 
-// È«¾ÖÒì³£´¦ÀíÖĞ¼ä¼ş
+// å…¨å±€å¼‚å¸¸å¤„ç†ä¸­é—´ä»¶
 app.Use(async (context, next) =>
 {
     try
@@ -180,7 +181,7 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-// À¹½Ø403 ÏìÓ¦²¢·µ»ØÍ³Ò» JSON ¸ñÊ½
+// æ‹¦æˆª403 å“åº”å¹¶è¿”å›ç»Ÿä¸€ JSON æ ¼å¼
 app.Use(async (context, next) =>
 {
     await next();
@@ -188,8 +189,8 @@ app.Use(async (context, next) =>
     if (context.Response.StatusCode == StatusCodes.Status403Forbidden && !context.Response.HasStarted)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = StatusCodes.Status200OK; // ±£³ÖÓëÏîÄ¿ÖĞÆäËû´íÎóÏìÓ¦Ò»ÖÂ
-        await context.Response.WriteAsync("{\"code\":403,\"msg\":\"ÎŞÈ¨ÏŞ\"}");
+        context.Response.StatusCode = StatusCodes.Status200OK; // ä¿æŒä¸é¡¹ç›®ä¸­å…¶ä»–é”™è¯¯å“åº”ä¸€è‡´
+        await context.Response.WriteAsync("{\"code\":403,\"msg\":\"æ— æƒé™\"}");
     }
 });
 
@@ -207,5 +208,13 @@ app.MapControllers();
 GlobalContext.ServiceProvider = app.Services;
 
 NetHepler.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
+
+// IP å½’å±åœ°åˆå§‹åŒ–ï¼ˆxdb æ–‡ä»¶æœªä¸‹è½½æ—¶é™é»˜è·³è¿‡ï¼Œä¸å½±å“å¯åŠ¨ï¼‰
+try
+{
+    var xdbPath = Path.Combine(app.Environment.ContentRootPath, "UploadFile", "IpRegion", "ip2region.xdb");
+    IpLocationHelper.Initialize(xdbPath);
+}
+catch (Exception) { /* æ•°æ®åº“æ–‡ä»¶æœªä¸‹è½½ï¼ŒIP å½’å±åœ°ä¸ºç©º */ }
 
 app.Run();

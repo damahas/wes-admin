@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -12,8 +12,6 @@
     <None Remove="SystemManage\Param\" />
     <None Remove="SystemManage\Result\" />
     <None Remove="MonitorManage\" />
-    <None Remove="GenManage\Param\" />
-    <None Remove="GenManage\Result\" />
     <None Remove="FlowManage\" />
     <None Remove="FlowManage\Param\" />
     <None Remove="FlowManage\Model\" />
@@ -25,6 +23,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FlowManage\Param\" />
-    <Folder Include="GenManage\Param\" />
   </ItemGroup>
 </Project>

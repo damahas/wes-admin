@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Wes.Service;
@@ -95,6 +95,7 @@ namespace Wes.Business
                 CreateTime = DateTime.Now,
                 Status = 0,
                 LoginIp = NetHepler.Ip,
+                LoginLocation = NetHepler.IpLocation,
                 Os = NetHepler.Os,
                 Browser = NetHepler.Browser,
                 ExpirationTime = expireTime,
@@ -423,6 +424,7 @@ namespace Wes.Business
             {
                 UserName = userName,
                 Ipaddr = NetHepler.Ip,
+                LoginLocation = NetHepler.IpLocation,
                 Browser = NetHepler.Browser,
                 Os = NetHepler.Os,
                 Status = status,

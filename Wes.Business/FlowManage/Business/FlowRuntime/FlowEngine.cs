@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using NetTaste;
 using NPOI.HSSF.Record.Chart;
 using SqlSugar;

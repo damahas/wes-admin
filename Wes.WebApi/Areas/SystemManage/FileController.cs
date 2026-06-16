@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +16,11 @@ namespace Wes.WebApi.Areas.SystemManage
     [Route("system/file")]
     public class FileController : ControllerBase
     {
-        private ISysFlieBiz _sysFlieBiz;
+        private ISysFileBiz _sysFileBiz;
 
-        public FileController(ISysFlieBiz sysFlieBiz)
+        public FileController(ISysFileBiz sysFileBiz)
         {
-            _sysFlieBiz = sysFlieBiz;
+            _sysFileBiz = sysFileBiz;
         }
 
         [HttpPost]
@@ -44,7 +44,7 @@ namespace Wes.WebApi.Areas.SystemManage
                 file.CopyTo(fs);
                 fs.Flush();
             }
-            return _sysFlieBiz.Save(new SysFileModel()
+            return _sysFileBiz.Save(new SysFileModel()
             {
                 FileName = file.FileName,
                 FilePath = filePath.Replace(GlobalContext.AppSettings.FilePath.TrimEnd('/'), ""),
