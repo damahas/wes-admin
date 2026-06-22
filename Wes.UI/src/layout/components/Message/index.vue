@@ -387,11 +387,18 @@ onMounted(() => {
   height: 32px;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s;
+  color: var(--text-secondary);
+  font-size: 15px;
+  transition: background-color 0.2s;
+
+  i {
+    color: var(--text-secondary);
+    font-size: 15px;
+  }
 }
 
 .message-trigger:hover {
-  background-color: var(--el-fill-color-light);
+  background-color: var(--bg-hover);
 }
 
 .message-content {

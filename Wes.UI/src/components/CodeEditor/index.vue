@@ -955,9 +955,9 @@ onUnmounted(() => {
 
 <style scoped>
 .code-editor-container {
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  background-color: #fff;
+  background-color: var(--bg-card);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -972,7 +972,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   z-index: 9999;
-  background: white;
+  background: var(--bg-card);
   border: none;
   border-radius: 0;
   height: 100vh !important;
@@ -1002,8 +1002,8 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background-color: #f5f7fa;
-  border-bottom: 1px solid #dcdfe6;
+  background-color: var(--bg-hover);
+  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
 
@@ -1016,10 +1016,10 @@ onUnmounted(() => {
 
 .cursor-info {
   padding: 2px 8px;
-  background-color: #e8f4ff;
+  background-color: var(--theme-color-light);
   border-radius: 3px;
   font-size: 12px;
-  color: #409eff;
+  color: var(--theme-color);
   font-family: "Courier New", monospace;
 }
 
@@ -1058,7 +1058,7 @@ onUnmounted(() => {
   background: transparent;
   box-sizing: border-box;
   color: transparent;
-  caret-color: #333;
+  caret-color: var(--text-primary);
   z-index: 2;
   -webkit-text-fill-color: transparent;
 }
@@ -1110,18 +1110,18 @@ onUnmounted(() => {
 /* 代码提示悬浮下拉框 */
 .suggestion-dropdown {
   position: fixed;
-  background: rgba(248, 249, 250, 0.98);
+  background: var(--bg-card);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(222, 226, 230, 0.9);
+  border: 1px solid var(--border-color-light);
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--shadow-color), 0 2px 8px var(--shadow-color);
   z-index: 99999;
   max-height: 280px;
   overflow-y: auto;
   overflow-x: auto;
   min-width: 220px;
   max-width: 400px;
-  width: auto; /* 允许宽度自适应 */
+  width: auto;
 }
 
 .suggestion-dropdown::-webkit-scrollbar {
@@ -1129,17 +1129,17 @@ onUnmounted(() => {
 }
 
 .suggestion-dropdown::-webkit-scrollbar-track {
-  background: rgba(233, 236, 239, 0.5);
+  background: var(--scrollbar-track);
   border-radius: 3px;
 }
 
 .suggestion-dropdown::-webkit-scrollbar-thumb {
-  background: rgba(173, 181, 189, 0.6);
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 
 .suggestion-dropdown::-webkit-scrollbar-thumb:hover {
-  background: rgba(134, 142, 150, 0.7);
+  background: var(--text-placeholder);
 }
 
 .suggestion-list {
@@ -1159,13 +1159,13 @@ onUnmounted(() => {
 
 .suggestion-item:hover,
 .suggestion-item.active {
-  background-color: rgba(64, 158, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(64, 158, 255, 0.2);
+  background-color: var(--bg-active);
+  box-shadow: inset 0 0 0 1px var(--theme-color);
 }
 
 .suggestion-icon {
   margin-right: 8px;
-  color: #495057;
+  color: var(--text-primary);
   font-size: 12px;
   flex-shrink: 0;
   opacity: 0.9;
@@ -1178,7 +1178,7 @@ onUnmounted(() => {
 
 .suggestion-label {
   font-weight: 500;
-  color: #212529;
+  color: var(--text-title);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1188,7 +1188,7 @@ onUnmounted(() => {
 
 .suggestion-desc {
   font-size: 10px;
-  color: #495057;
+  color: var(--text-secondary);
   margin-top: 1px;
   white-space: nowrap;
   overflow: hidden;
@@ -1203,10 +1203,10 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 6px 12px;
-  background-color: #f5f7fa;
-  border-top: 1px solid #dcdfe6;
+  background-color: var(--bg-hover);
+  border-top: 1px solid var(--border-color);
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
@@ -1217,11 +1217,11 @@ onUnmounted(() => {
 }
 
 .status-right .saved-status {
-  color: #67c23a;
+  color: var(--color-success);
 }
 
 .status-right .unsaved-status {
-  color: #e6a23c;
+  color: var(--color-warning);
 }
 
 
@@ -1245,7 +1245,7 @@ onUnmounted(() => {
 }
 
 .editor-content::-webkit-scrollbar-thumb {
-  background-color: #c0c0c0;
+  background-color: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
@@ -1275,26 +1275,26 @@ onUnmounted(() => {
 
 /* 暗黑主题样式 */
 :global(.dark) .code-editor-container {
-  border-color: #434343;
-  background-color: #141414;
+  border-color: var(--border-color);
+  background-color: var(--bg-card);
 }
 
 :global(.dark) .code-editor-container.fullscreen {
-  background: #141414;
+  background: var(--bg-card);
 }
 
 :global(.dark) .editor-toolbar {
-  background-color: #1f1f1f;
-  border-bottom-color: #434343;
+  background-color: var(--bg-hover);
+  border-bottom-color: var(--border-color);
 }
 
 :global(.dark) .cursor-info {
-  background-color: #262626;
-  color: #69b1ff;
+  background-color: var(--theme-color-light);
+  color: var(--theme-color);
 }
 
 :global(.dark) .editor-textarea {
-  caret-color: #fff;
+  caret-color: var(--text-primary);
 }
 
 :global(.dark) .editor-textarea::selection {
@@ -1302,59 +1302,59 @@ onUnmounted(() => {
 }
 
 :global(.dark) .suggestion-dropdown {
-  background: rgba(36, 37, 38, 0.98);
-  border-color: rgba(66, 66, 66, 0.9);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  background: var(--bg-card);
+  border-color: var(--border-color-light);
+  box-shadow: 0 8px 32px var(--shadow-color), 0 2px 8px var(--shadow-color);
 }
 
 :global(.dark) .suggestion-dropdown::-webkit-scrollbar-track {
-  background: rgba(56, 56, 56, 0.5);
+  background: var(--scrollbar-track);
 }
 
 :global(.dark) .suggestion-dropdown::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 100, 0.6);
+  background: var(--scrollbar-thumb);
 }
 
 :global(.dark) .suggestion-dropdown::-webkit-scrollbar-thumb:hover {
-  background: rgba(120, 120, 120, 0.7);
+  background: var(--text-placeholder);
 }
 
 :global(.dark) .suggestion-item:hover,
 :global(.dark) .suggestion-item.active {
-  background-color: rgba(64, 158, 255, 0.2);
-  box-shadow: inset 0 0 0 1px rgba(64, 158, 255, 0.3);
+  background-color: var(--bg-active);
+  box-shadow: inset 0 0 0 1px var(--theme-color);
 }
 
 :global(.dark) .suggestion-icon {
-  color: #8c8c8c;
+  color: var(--text-primary);
 }
 
 :global(.dark) .suggestion-label {
-  color: #e8e8e8;
+  color: var(--text-title);
 }
 
 :global(.dark) .suggestion-desc {
-  color: #8c8c8c;
+  color: var(--text-primary);
 }
 
 :global(.dark) .editor-statusbar {
-  background-color: #1f1f1f;
-  border-top-color: #434343;
-  color: #8c8c8c;
+  background-color: var(--bg-hover);
+  border-top-color: var(--border-color);
+  color: var(--text-secondary);
 }
 
 :global(.dark) .status-right .saved-status {
-  color: #73d13d;
+  color: var(--color-success);
 }
 
 :global(.dark) .status-right .unsaved-status {
-  color: #ffc53d;
+  color: var(--color-warning);
 }
 
 
 
 :global(.dark) .editor-content::-webkit-scrollbar-thumb {
-  background-color: #555;
+  background-color: var(--scrollbar-thumb);
 }
 
 /* highlight.js 暗黑主题支持 */

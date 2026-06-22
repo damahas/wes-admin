@@ -260,9 +260,9 @@ defineExpose({
 }
 
 .step-card {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 12px;
-  border: 1px solid var(--el-border-color-light);
+  border: 1px solid var(--border-color);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
@@ -272,8 +272,8 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-bottom: 1px solid var(--el-border-color-extra-light);
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-left {
@@ -292,8 +292,8 @@ defineExpose({
 }
 
 .info-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #6BA368 0%, #8CC488 100%);
+  color: #141614;
 }
 
 .header-text h3 {
@@ -317,8 +317,8 @@ defineExpose({
 }
 
 .info-badge {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #6BA368 0%, #8CC488 100%);
+  color: #141614;
 }
 
 .step-card-body {
@@ -335,9 +335,9 @@ defineExpose({
 .form-section {
   margin-bottom: 28px;
   padding: 20px;
-  background: #fafbfc;
+  background: var(--bg-hover);
   border-radius: 10px;
-  border: 1px solid var(--el-border-color-extra-light);
+  border: 1px solid var(--border-color);
 }
 
 .section-title {
@@ -346,10 +346,10 @@ defineExpose({
   gap: 8px;
   margin-bottom: 18px;
   padding-bottom: 12px;
-  border-bottom: 1px dashed var(--el-border-color-light);
+  border-bottom: 1px dashed var(--border-color);
   font-size: 14px;
   font-weight: 600;
-  color: var(--el-text-color-primary);
+  color: var(--text-primary);
 }
 
 .form-grid {
@@ -399,18 +399,19 @@ defineExpose({
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid var(--el-border-color-light);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
-  color: var(--el-text-color-regular);
+  color: var(--text-primary);
   transition: all 0.2s;
+  background: var(--bg-card);
 }
 
 .template-item:hover {
-  border-color: var(--el-color-primary);
-  color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
+  border-color: var(--theme-color);
+  color: var(--theme-color);
+  background: var(--bg-hover);
 }
 
 .template-item .el-icon {

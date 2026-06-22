@@ -42,9 +42,9 @@ const data = computed(() => reactive(props.node?.getData()));
   border-radius: 6px;
   box-sizing: border-box;
   cursor: move;
-  background-color: #fff;
-  border: 1px solid #dcdfe6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .flow-node-icon {
@@ -61,7 +61,7 @@ const data = computed(() => reactive(props.node?.getData()));
 .flow-node-text {
   flex: 1;
   font-size: 12px;
-  color: #303133;
+  color: var(--text-title);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

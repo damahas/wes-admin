@@ -191,14 +191,14 @@ defineExpose({ openDialog });
 
 <style lang="scss" scoped>
 .node-title {
-  color: #606266;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 600;
 }
 
 .node-sub-title {
   margin-left: 16px;
-  color: #606266;
+  color: var(--text-primary);
   font-size: 12px;
 }
 </style>

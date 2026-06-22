@@ -88,7 +88,7 @@ function updatePartConfig(newValue) {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: var(--bg-hover);
   border-radius: 12px 12px 0 0;
 }
 
@@ -108,8 +108,8 @@ function updatePartConfig(newValue) {
 }
 
 .js-icon {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #D4A853 0%, #C49A3C 100%);
+  color: #141614;
 }
 
 .header-text h3 {
@@ -130,20 +130,20 @@ function updatePartConfig(newValue) {
   border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #D4A853 0%, #C49A3C 100%);
+  color: #141614;
 }
 
 .delete-btn {
-  color: #dc2626;
-  border-color: #fca5a5;
+  color: var(--color-danger);
+  border-color: var(--color-danger);
   background: transparent;
 }
 
 .delete-btn:hover {
-  color: #fff;
-  background: #dc2626;
-  border-color: #dc2626;
+  color: #141614;
+  background: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .step-body {
@@ -152,9 +152,9 @@ function updatePartConfig(newValue) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 0 0 12px 12px;
-  border: 1px solid var(--el-border-color-light);
+  border: 1px solid var(--border-color);
   border-top: none;
 }
 

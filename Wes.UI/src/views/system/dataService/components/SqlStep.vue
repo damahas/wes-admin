@@ -387,7 +387,7 @@ function updatePartConfig(newValue) {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: var(--bg-hover);
   border-radius: 12px 12px 0 0;
 }
 
@@ -407,8 +407,8 @@ function updatePartConfig(newValue) {
 }
 
 .sql-icon {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #8BA095 0%, #6E8472 100%);
+  color: #141614;
 }
 
 .header-text h3 {
@@ -425,15 +425,15 @@ function updatePartConfig(newValue) {
 }
 
 .delete-btn {
-  color: #dc2626;
-  border-color: #fca5a5;
+  color: var(--color-danger);
+  border-color: var(--color-danger);
   background: transparent;
 }
 
 .delete-btn:hover {
-  color: #fff;
-  background: #dc2626;
-  border-color: #dc2626;
+  color: #141614;
+  background: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .step-body {
@@ -442,9 +442,9 @@ function updatePartConfig(newValue) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 0 0 12px 12px;
-  border: 1px solid var(--el-border-color-light);
+  border: 1px solid var(--border-color);
   border-top: none;
 }
 
@@ -469,16 +469,17 @@ function updatePartConfig(newValue) {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--el-border-color-light);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
   max-height: calc(100vh - 194px);
+  background: var(--bg-card);
 }
 
 .tree-header {
   padding: 12px;
-  border-bottom: 1px solid var(--el-border-color-light);
-  background: #fafafa;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-hover);
 }
 
 .tree-header .form-label {
@@ -514,7 +515,7 @@ function updatePartConfig(newValue) {
 }
 
 .node-desc {
-  color: #999;
+  color: var(--text-secondary);
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -566,7 +567,7 @@ function updatePartConfig(newValue) {
 }
 
 .form-label .required {
-  color: #f56c6c;
+  color: var(--color-danger);
   margin-right: 4px;
 }
 
@@ -607,7 +608,7 @@ function updatePartConfig(newValue) {
 
 .param-empty {
   text-align: center;
-  color: #999;
+  color: var(--text-secondary);
   font-size: 12px;
   padding: 20px 0;
 }
@@ -634,17 +635,17 @@ function updatePartConfig(newValue) {
 }
 
 .var-label .required {
-  color: #f56c6c;
+  color: var(--color-danger);
 }
 
 .help-icon {
-  color: #909399;
+  color: var(--text-secondary);
   cursor: pointer;
   font-size: 12px;
 }
 
 .inline-help {
-  color: #909399;
+  color: var(--text-secondary);
   cursor: pointer;
   font-size: 10px;
   margin-left: 4px;
@@ -659,7 +660,7 @@ function updatePartConfig(newValue) {
 
 .section-divider {
   height: 1px;
-  background: var(--el-border-color-light);
+  background: var(--border-color);
   margin: 16px 0;
 }
 </style>

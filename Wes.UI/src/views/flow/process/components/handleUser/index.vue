@@ -168,43 +168,43 @@ const handleSelectDept = (rows) => {
   display: flex;
   align-items: center;
   height: 28px;
-  color: #606266;
+  color: var(--text-primary);
   margin-top: 8px;
 
   .drag-icon {
     width: 24px;
-    color: #909399;
+    color: var(--text-secondary);
     font-size: 12px;
     text-align: center;
   }
 
   .row-content {
     border-radius: 4px;
-    background-color: #f4f4f5;
+    background-color: var(--bg-hover);
     flex: 1;
     height: 28px;
     line-height: 28px;
     padding: 0 8px;
     font-size: 13px;
-    color: #606266;
+    color: var(--text-primary);
 
     i {
       margin-right: 6px;
-      color: #909399;
+      color: var(--text-secondary);
       font-size: 13px;
     }
   }
 
   .delete-icon {
     width: 24px;
-    color: #c0c4cc;
+    color: var(--text-placeholder);
     font-size: 14px;
     text-align: center;
     cursor: pointer;
     transition: color 0.2s;
 
     &:hover {
-      color: #909399;
+      color: var(--text-secondary);
     }
   }
 }

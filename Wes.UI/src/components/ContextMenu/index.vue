@@ -130,10 +130,10 @@ onBeforeUnmount(() => {
 .context-menu {
   position: fixed;
   z-index: 9999;
-  background: #fff;
-  border: 1px solid #dcdfe6;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-card);
   padding: 4px 0;
 
   .context-menu-item {
@@ -143,17 +143,17 @@ onBeforeUnmount(() => {
     padding: 8px 16px;
     cursor: pointer;
     font-size: 14px;
-    color: #606266;
+    color: var(--text-primary);
     transition: all 0.2s;
     min-width: 100px;
 
     &:hover:not(.is-disabled) {
-      background-color: #f5f7fa;
-      color: #409eff;
+      background-color: var(--bg-hover);
+      color: var(--theme-color);
     }
 
     &.is-disabled {
-      color: #c0c4cc;
+      color: var(--text-disabled);
       cursor: not-allowed;
     }
 

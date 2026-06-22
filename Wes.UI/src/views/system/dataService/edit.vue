@@ -537,7 +537,7 @@ function handleDialogClosed() {
 
 :deep(.el-dialog__header) {
   padding: 16px 20px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
 
@@ -557,5 +557,10 @@ function handleDialogClosed() {
 
 :deep(.el-dialog__wrapper) {
   overflow: hidden;
+}
+
+/* 暗黑模式：全屏对话框背景适配 */
+html.dark :deep(.el-dialog) {
+  background-color: var(--bg-card);
 }
 </style>

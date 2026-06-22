@@ -180,7 +180,7 @@ const handleLogin = () => {
   background-color: var(--bg-card);
   margin-right: 145px;
   padding: 0 69px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-color);
 }
 
 .lang-dropdown {
@@ -190,7 +190,7 @@ const handleLogin = () => {
 }
 
 .lang-text {
-  color: #999999;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 3px;
@@ -206,7 +206,7 @@ const handleLogin = () => {
 .login-title {
   font-size: 24px;
   font-weight: 700;
-  color: #6c5fb1;
+  color: var(--login-title-color);
   text-align: center;
   margin-top: 103px;
 }
@@ -223,11 +223,11 @@ const handleLogin = () => {
 .form-label {
   font-size: 16px;
   font-weight: 500;
-  color: #5d5a70;
+  color: var(--login-label-color);
 }
 
 .required {
-  color: #ff0000;
+  color: var(--color-danger);
   margin-right: 3px;
 }
 
@@ -236,18 +236,17 @@ const handleLogin = () => {
 }
 
 .form-error {
-  color: #ff0000;
+  color: var(--color-danger);
   font-size: 12px;
   margin-top: 3px;
 }
 
 .login-btn {
-  background: #6c5fb1;
+  background: var(--login-btn-bg);
   border-radius: 7.28px;
   color: white;
   font-size: 18px;
   font-weight: 400;
-  /* margin-top: 89px; */
   margin-top: 59px;
   height: 36px;
   width: 341px;
@@ -258,10 +257,10 @@ const handleLogin = () => {
 }
 
 .login-btn:hover {
-  background: #5d4fa3;
+  background: var(--login-btn-hover-bg);
 }
 
 .login-btn:active {
-  background: #4e4295;
+  background: var(--login-btn-active-bg);
 }
 </style>

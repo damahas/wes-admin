@@ -97,7 +97,7 @@ function handleCurrentChange(val) {
 
 <style scoped>
 .pagination-container {
-  background: #fff;
+  background: var(--bg-card);
   padding: 8px 0px;
   display: flex;
   justify-content: flex-end;

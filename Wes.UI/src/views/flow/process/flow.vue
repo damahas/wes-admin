@@ -24,7 +24,7 @@
               :value="item.versionId"
             >
               <span v-if="item.isLock == 1">
-                <i class="fa fa-lock" style="margin-right: 4px; color: #909399"></i>
+              <i class="fa fa-lock" style="margin-right: 4px; color: var(--text-secondary)"></i>
                 {{ item.version }}
               </span>
               <span v-else>{{ item.version }}</span>
@@ -224,7 +224,7 @@ function initGraph() {
     width: container.clientWidth || 800,
     height: container.clientHeight || 600,
     background: {
-      color: "#f5f7fa",
+      color: getComputedStyle(document.documentElement).getPropertyValue('--bg-hover').trim() || '#f5f7fa',
     },
     grid: {
       size: 20,
@@ -253,7 +253,7 @@ function initGraph() {
         return this.createEdge({
           attrs: {
             line: {
-              stroke: "#c6c9ce",
+              stroke: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#c6c9ce',
               strokeWidth: 2,
               targetMarker: {
                 name: "classic",
@@ -487,7 +487,7 @@ function addEdge(sourceId, targetId) {
       source: sourceId,
       target: targetId,
       attrs: {
-        line: { stroke: "#c6c9ce", strokeWidth: 2 },
+        line: { stroke: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#c6c9ce', strokeWidth: 2 },
       },
     });
   }
@@ -557,7 +557,7 @@ function loadGraphData(nodes, lines) {
         port: findPort(lineData.target, lineData.targetPoint),
       },
       attrs: {
-        line: { stroke: "#c6c9ce", strokeWidth: 2 },
+        line: { stroke: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#c6c9ce', strokeWidth: 2 },
       },
       data: lineData.meta,
       labels: lineData.meta?.name
@@ -698,7 +698,7 @@ defineExpose({ open });
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border-bottom: 1px solid #dcdfe6;
+  border-bottom: 1px solid var(--border-color);
 
   .header-actions {
     display: flex;
@@ -709,7 +709,7 @@ defineExpose({ open });
 .flow-nodes {
   display: flex;
   flex-direction: column;
-  background-color: #fafafa;
+  background-color: var(--bg-hover);
 
   .nodes-header {
     display: flex;
@@ -719,13 +719,13 @@ defineExpose({ open });
     padding: 12px 16px;
     font-size: 14px;
     font-weight: 600;
-    color: #303133;
-    border-bottom: 1px solid #dcdfe6;
-    background-color: #fff;
+    color: var(--text-title);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-card);
 
     > i {
       font-size: 14px;
-      color: #409eff;
+      color: var(--theme-color);
     }
 
     &::after {
@@ -735,7 +735,7 @@ defineExpose({ open });
       left: 16px;
       right: 16px;
       height: 1px;
-      background-color: #dcdfe6;
+      background-color: var(--border-color);
     }
   }
 
@@ -750,7 +750,7 @@ defineExpose({ open });
       .node-group-title {
         padding: 8px 16px 4px;
         font-size: 12px;
-        color: #909399;
+        color: var(--text-secondary);
         font-weight: 500;
       }
 
@@ -764,15 +764,15 @@ defineExpose({ open });
         gap: 8px;
         padding: 8px 12px;
         margin: 4px 0;
-        background-color: #fff;
-        border: 1px solid #e4e7ed;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color-light);
         border-radius: 4px;
         cursor: move;
         transition: all 0.2s;
 
         &:hover {
-          border-color: #409eff;
-          box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+          border-color: var(--theme-color);
+          box-shadow: 0 2px 6px var(--shadow-color);
         }
 
         &.is-disabled {
@@ -780,7 +780,7 @@ defineExpose({ open });
           opacity: 0.5;
 
           &:hover {
-            border-color: #e4e7ed;
+            border-color: var(--border-color-light);
             box-shadow: none;
           }
         }
@@ -798,7 +798,7 @@ defineExpose({ open });
 
         .node-name {
           font-size: 13px;
-          color: #606266;
+          color: var(--text-primary);
           flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -812,14 +812,14 @@ defineExpose({ open });
 main {
   margin-bottom: 0;
   padding: 0;
-  border-left: 1px solid #dcdfe6;
-  border-right: 1px solid #dcdfe6;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
 
   .route-right-flow {
     position: relative;
     width: 100%;
     height: calc(100vh - 53px);
-    background: #f5f7fa;
+    background: var(--bg-hover);
     overflow: hidden;
 
     #flow-canvas {
@@ -839,10 +839,10 @@ main {
 .context-menu {
   position: fixed;
   z-index: 9999;
-  background: #fff;
-  border: 1px solid #dcdfe6;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px var(--shadow-color);
   padding: 4px 0;
 
   .context-menu-item {
@@ -852,12 +852,12 @@ main {
     padding: 8px 16px;
     cursor: pointer;
     font-size: 14px;
-    color: #606266;
+    color: var(--text-primary);
     transition: all 0.2s;
 
     &:hover {
-      background-color: #f5f7fa;
-      color: #409eff;
+      background-color: var(--bg-hover);
+      color: var(--theme-color);
     }
 
     i {

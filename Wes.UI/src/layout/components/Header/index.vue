@@ -1,12 +1,25 @@
 <template>
   <el-header class="header">
+    <div class="header-left">
+      <div class="header-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L24.5 7.5V18.5L14 24L3.5 18.5V7.5L14 2Z" fill="#8CC488" stroke="#6BA368" stroke-width="1.5"/>
+          <path d="M14 8L20 11.2V17.6L14 20.8L8 17.6V11.2L14 8Z" fill="#D6E7D4" stroke="#6BA368" stroke-width="1"/>
+        </svg>
+      </div>
+      <span class="header-title">WES管理系统</span>
+    </div>
     <div class="header-right">
       <Message />
 
+      <span class="header-icon-btn" @click="handleDarkChange(!isDark)">
+        <el-icon v-if="isDark"><Sunny /></el-icon>
+        <el-icon v-else><Moon /></el-icon>
+      </span>
+
       <el-dropdown @command="handleLangChange">
-        <span class="lang-btn">
-          {{ langList.find((p) => p.langCode === currentLang)?.langName }}
-          <el-icon><ArrowDown /></el-icon>
+        <span class="header-icon-btn">
+          <i class="fa fa-globe"></i>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -21,18 +34,8 @@
         </template>
       </el-dropdown>
 
-      <el-switch
-        v-model="isDark"
-        class="dark-switch"
-        inline-prompt
-        :active-icon="Moon"
-        :inactive-icon="Sunny"
-        @change="handleDarkChange"
-      />
-
       <el-dropdown @command="handleCommand">
         <span class="user-info">
-          <el-icon><User /></el-icon>
           {{ userInfo?.userName || t("common.user") }}
           <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </span>
@@ -85,37 +88,66 @@ const handleCommand = (command) => {
 .header {
   height: 48px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   border: none;
   box-shadow: none;
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-title);
+  letter-spacing: 0.01em;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 8px;
 }
 
-.lang-btn {
+.header-icon-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   cursor: pointer;
-  color: var(--text-primary);
+  color: var(--text-secondary);
+  font-size: 15px;
+  transition: background-color 0.2s;
 }
 
-.dark-switch {
-  --el-switch-on-color: #302d39;
-  --el-switch-off-color: var(--theme-color);
+.header-icon-btn:hover {
+  background-color: var(--bg-hover);
 }
 
 .user-info {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-left: 6px;
   cursor: pointer;
   color: var(--text-primary);
 }
+
+
 </style>

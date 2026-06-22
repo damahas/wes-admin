@@ -112,7 +112,7 @@ const handleAddClick = (position) => {
 
 .step-separator {
   margin: 0 6px;
-  color: #dcdfe6;
+  color: var(--text-placeholder);
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -120,47 +120,44 @@ const handleAddClick = (position) => {
   height: 100%;
 }
 
-/* 步骤名称容器样式 */
 .step-name-container {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 0; /* 增加上下距离以改善垂直居中 */
+  padding: 10px 0;
   transition: all 0.3s ease;
   user-select: none;
-  line-height: 1; /* 确保文字行高一致 */
+  line-height: 1;
 
   &.step-name-clickable {
     cursor: pointer;
 
     &:hover .step-name-text {
-      color: #409eff;
+      color: var(--theme-color);
     }
   }
 
   &.step-name-active .step-name-text {
-    color: #409eff;
+    color: var(--theme-color);
     font-weight: 500;
   }
 }
 
-/* 步骤名称文字样式 */
 .step-name-text {
-  font-size: 14px; /* 改回标准大小 */
-  color: #606266; /* 灰色字体 */
+  font-size: 14px;
+  color: var(--text-secondary);
   transition: color 0.3s ease;
-  line-height: 1.5; /* 改善垂直对齐 */
+  line-height: 1.5;
 }
 
-/* 步骤标签样式 */
 .step-name-tag {
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 10px;
-  background-color: #e6f7ff;
-  color: #1890ff;
-  border: 1px solid #91d5ff;
-  line-height: 1.2; /* 改善标签垂直对齐 */
+  background: var(--bg-active);
+  color: var(--theme-color);
+  border: 1px solid var(--theme-color);
+  line-height: 1.2;
   display: inline-flex;
   align-items: center;
 }
@@ -172,18 +169,19 @@ const handleAddClick = (position) => {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #c0c4cc;
+  background-color: var(--text-placeholder);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #141614;
   margin-left: 4px;
   i {
     font-size: 12px;
   }
 
   &:hover {
-    background-color: #409eff;
+    background-color: var(--theme-color);
+    color: #141614;
     transform: scale(1.1);
   }
 }
@@ -192,71 +190,14 @@ const handleAddClick = (position) => {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #dcdfe6;
+  color: var(--text-placeholder);
   font-size: 12px;
   margin-bottom: 4px;
 }
 
 .add-step-text {
   font-size: 12px;
-  color: #909399;
+  color: var(--text-secondary);
   transition: all 0.3s ease;
-}
-
-/* 暗黑主题样式 */
-:global(.dark) .step-separator {
-  color: #434343;
-}
-
-:global(.dark) .step-separator .fa {
-  color: #434343;
-}
-
-:global(.dark) .step-name-text {
-  color: #bfbfbf;
-}
-
-:global(.dark) .step-name-container.step-name-clickable:hover .step-name-text {
-  color: #69b1ff;
-}
-
-:global(.dark) .step-name-container.step-name-active .step-name-text {
-  color: #69b1ff;
-}
-
-:global(.dark) .step-name-tag {
-  background-color: #111d2c;
-  color: #69b1ff;
-  border-color: #153450;
-}
-
-:global(.dark) .add-step-icon {
-  background-color: #434343;
-  color: #bfbfbf;
-}
-
-:global(.dark) .add-step-icon .fa {
-  color: #bfbfbf;
-}
-
-:global(.dark) .add-step-icon:hover {
-  background-color: #409eff;
-  color: #fff;
-}
-
-:global(.dark) .add-step-icon:hover .fa {
-  color: #fff;
-}
-
-:global(.dark) .add-step-separator {
-  color: #434343;
-}
-
-:global(.dark) .add-step-separator .fa {
-  color: #434343;
-}
-
-:global(.dark) .add-step-text {
-  color: #8c8c8c;
 }
 </style>

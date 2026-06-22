@@ -62,12 +62,12 @@ watch(radioValue, (val) => {
   }
 
   :deep(.el-radio__input.is-checked .el-radio__inner) {
-    background-color: #409eff;
-    border-color: #409eff;
+    background-color: var(--theme-color);
+    border-color: var(--theme-color);
   }
 
   :deep(.el-radio__input.is-checked + .el-radio__label) {
-    color: #303133;
+    color: var(--text-title);
   }
 }
 </style>

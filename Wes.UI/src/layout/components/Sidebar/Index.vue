@@ -1,9 +1,5 @@
 <template>
   <el-aside :width="isCollapse ? '52px' : '264px'" class="sidebar">
-    <div class="logo">
-      <span v-if="!isCollapse">WesAdmin</span>
-      <span v-else>WA</span>
-    </div>
     <div class="menu-container">
       <el-menu
         :default-active="activeMenu"
@@ -28,7 +24,7 @@
         />
       </el-menu>
     </div>
-    <div class="collapse-btn" @click="toggleCollapse">
+    <div class="collapse-btn" :class="{ collapsed: isCollapse }" @click="toggleCollapse">
       <i v-if="!isCollapse" class="menu-icon fa fa-fw fa-outdent"></i>
       <i v-else class="menu-icon fa fa-fw fa-indent"></i>
       <span v-if="!isCollapse">{{ t("common.collapse") }}</span>
@@ -75,23 +71,12 @@ const toggleCollapse = () => {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-}
-
-.logo {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-title);
-  border: none;
-  box-shadow: none;
-  font-size: 20px;
-  font-weight: 600;
-  flex-shrink: 0;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
 }
 
 .menu-container {
-  height: calc(100vh - 60px - 40px);
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -109,23 +94,30 @@ const toggleCollapse = () => {
 }
 
 .collapse-btn {
-  height: 40px;
+  height: 44px;
   display: flex;
   align-items: center;
   cursor: pointer;
   color: var(--menu-item-color);
   font-size: 14px;
   font-weight: 500;
+  padding-left: 20px;
+  border-top: 1px solid var(--border-color);
 
   .collapse-icon {
     margin-left: 18px;
   }
 }
 
+.collapse-btn.collapsed {
+  padding-left: 0;
+  justify-content: center;
+}
+
 .sidebar :deep(.el-menu) {
   border: none;
   box-shadow: none;
-  padding: 0 16px;
+  padding: 5px 16px 0;
 }
 
 .sidebar :deep(.el-menu.menu-collapsed) {
@@ -141,25 +133,29 @@ const toggleCollapse = () => {
   height: var(--menu-item-height);
   line-height: var(--menu-item-height);
   margin-bottom: var(--menu-item-gap);
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--menu-item-color);
   font-size: 14px;
   font-weight: 500;
   display: flex;
   align-items: center;
+  padding-left: 20px !important;
 }
 
 .sidebar :deep(.el-menu-item .menu-icon) {
   color: var(--menu-item-icon-color);
+  font-size: 16px;
 }
 
 .sidebar :deep(.el-menu-item:hover) {
   background-color: var(--menu-item-active-bg);
+  color: var(--menu-item-active-color);
 }
 
 .sidebar :deep(.el-menu-item.is-active) {
   background-color: var(--menu-item-active-bg);
   color: var(--menu-item-active-color);
+  font-weight: 600;
 }
 
 .sidebar :deep(.el-menu-item.is-active .menu-icon) {
@@ -170,24 +166,27 @@ const toggleCollapse = () => {
   height: var(--menu-item-height);
   line-height: var(--menu-item-height);
   margin-bottom: var(--menu-item-gap);
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--menu-item-color);
   font-size: 14px;
   font-weight: 500;
   position: relative;
+  padding-left: 20px !important;
 }
 
 .sidebar :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
   position: absolute;
-  right: 10px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
+  color: var(--menu-item-icon-color);
 }
 
 .sidebar :deep(.el-sub-menu__title .menu-icon) {
   color: var(--menu-item-icon-color);
   margin-right: 5px;
   width: var(--el-menu-icon-width);
+  font-size: 16px;
 }
 
 .sidebar :deep(.el-sub-menu__title:hover) {
@@ -221,7 +220,7 @@ const toggleCollapse = () => {
 
 .sidebar :deep(.menu-icon) {
   color: var(--menu-item-icon-color);
-  font-size: 14px;
+  font-size: 16px;
   margin-right: 5px;
   text-align: center;
   vertical-align: middle;
@@ -232,9 +231,58 @@ const toggleCollapse = () => {
   width: 100%;
 }
 
-.sidebar :deep(.menu-collapsed .el-tooltip__trigger) {
+/* 收起状态：只显示图标，居中 */
+.sidebar :deep(.el-menu--collapse .el-menu-item),
+.sidebar :deep(.menu-collapsed .el-menu-item) {
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+.sidebar :deep(.el-menu--collapse .el-menu-item .el-tooltip__trigger),
+.sidebar :deep(.menu-collapsed .el-menu-item .el-tooltip__trigger) {
+  display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+
+.sidebar :deep(.el-menu--collapse .el-menu-item > *),
+.sidebar :deep(.menu-collapsed .el-menu-item > *) {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.sidebar :deep(.el-menu--collapse .el-menu-item span),
+.sidebar :deep(.menu-collapsed .el-menu-item span) {
+  display: none;
+}
+
+.sidebar :deep(.el-menu--collapse .el-sub-menu__title),
+.sidebar :deep(.menu-collapsed .el-sub-menu__title) {
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+.sidebar :deep(.el-menu--collapse .el-sub-menu__title > *),
+.sidebar :deep(.menu-collapsed .el-sub-menu__title > *) {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.sidebar :deep(.el-menu--collapse .el-sub-menu__title span),
+.sidebar :deep(.menu-collapsed .el-sub-menu__title span) {
+  display: none;
+}
+
+.sidebar :deep(.el-menu--collapse .el-sub-menu__icon-arrow),
+.sidebar :deep(.menu-collapsed .el-sub-menu__icon-arrow) {
+  display: none;
+}
+
+.sidebar :deep(.el-menu--collapse .menu-icon),
+.sidebar :deep(.menu-collapsed .menu-icon) {
+  margin-right: 0;
+  width: auto;
 }
 </style>
 
@@ -275,5 +323,36 @@ const toggleCollapse = () => {
 
 .sidebar-menu-popper .el-menu-item.is-active .menu-icon {
   color: var(--menu-item-active-icon-color);
+}
+
+.sidebar-menu-popper .el-sub-menu__title {
+  height: var(--menu-item-height);
+  line-height: var(--menu-item-height);
+  margin: 0;
+  border-radius: 4px;
+  color: var(--menu-item-color);
+  font-size: 14px;
+  padding: 0 20px;
+}
+
+.sidebar-menu-popper .el-sub-menu__title .menu-icon {
+  color: var(--menu-item-icon-color);
+}
+
+.sidebar-menu-popper .el-sub-menu__title:hover {
+  background-color: var(--menu-item-active-bg);
+  color: var(--menu-item-active-color);
+}
+
+.sidebar-menu-popper .el-sub-menu.is-active > .el-sub-menu__title {
+  color: var(--menu-item-active-color);
+}
+
+.sidebar-menu-popper .el-sub-menu .el-menu {
+  background-color: transparent;
+}
+
+.sidebar-menu-popper .el-sub-menu__icon-arrow {
+  color: var(--menu-item-icon-color);
 }
 </style>

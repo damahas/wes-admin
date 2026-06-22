@@ -59,8 +59,8 @@ defineOptions({
 <style lang="scss" scoped>
 .node-attr {
   height: 100%;
-  background-color: #fff;
-  border-left: 1px solid #dcdfe6;
+  background-color: var(--bg-card);
+  border-left: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
 }
@@ -72,12 +72,12 @@ defineOptions({
   padding: 12px 16px;
   font-size: 14px;
   font-weight: 700;
-  color: #303133;
-  background-color: #fafafa;
-  border-bottom: 1px solid #e4e7ed;
+  color: var(--text-title);
+  background-color: var(--bg-hover);
+  border-bottom: 1px solid var(--border-color-light);
 
   > i {
-    color: #409eff;
+    color: var(--theme-color);
   }
 }
 
@@ -100,7 +100,7 @@ defineOptions({
   display: block;
   margin-bottom: 12px;
   font-size: 14px;
-  color: #909399;
+  color: var(--text-secondary);
 }
 
 .form-control {

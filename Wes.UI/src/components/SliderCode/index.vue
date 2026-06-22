@@ -256,7 +256,7 @@ function disabledSelect(event) {
 }
 
 .success-icon {
-  color: #67c23a;
+  color: var(--color-success);
   float: right;
   font-size: 18px;
   margin-right: 6px;
