@@ -217,8 +217,8 @@ function disabledSelect(event) {
   position: absolute;
   height: 170px;
   top: -180px;
-  background-color: #dcdfe6;
-  border: 1px solid #dcdfe6;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
 
   .img-bg {
     position: absolute;
@@ -237,17 +237,28 @@ function disabledSelect(event) {
   position: relative;
   height: 32px;
   width: 100%;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
+  background-color: var(--bg-card);
   .slider-btn {
     position: absolute;
     width: 40px;
     text-align: center;
     cursor: pointer;
-    color: white;
+    color: #FFFFFF;
     border-radius: 4px;
-    background-color: #5d4fa3;
+    background: linear-gradient(135deg, #6BA368 0%, #8CC488 100%);
     line-height: 31px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(107, 163, 104, 0.2);
+
+    &:hover {
+      background: linear-gradient(135deg, #8CC488 0%, #A5D9A1 100%);
+    }
+
+    &:active {
+      background: #528A4E;
+      transform: scale(0.98);
+    }
 
     i {
       font-size: 14px;
@@ -262,9 +273,4 @@ function disabledSelect(event) {
   margin-right: 6px;
   line-height: 32px;
 }
-
-// .slider-way-success {
-//   border: 1px solid white;
-//   background-color: #d0f5e0;
-// }
 </style>

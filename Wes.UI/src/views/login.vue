@@ -264,3 +264,9 @@ const handleLogin = () => {
   background: var(--login-btn-active-bg);
 }
 </style>
+
+<style>
+html.dark .login-container {
+  background-image: url(/images/login/login-bg-b.jpg);
+}
+</style>
