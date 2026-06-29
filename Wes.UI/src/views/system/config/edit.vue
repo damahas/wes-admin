@@ -69,6 +69,7 @@ const configKeys = [
   { value: "sys.integration.wecom", label: "企微集成" },
   { value: "sys.integration.feishu", label: "飞书集成" },
   { value: "sys.integration.mail", label: "邮箱集成" },
+  { value: "sys.login.isCaptchaOn", label: "登录验证码开关" },
   { value: "sys.subSystem", label: "子系统管理" },
 ];
 
@@ -221,6 +222,11 @@ const configSchema = {
         },
       },
       { label: "支持SSL", key: "enableSsl", type: "switch", defaultValue: false },
+    ],
+  },
+  "sys.login.isCaptchaOn": {
+    fields: [
+      { label: "是否启用验证码", key: "enabled", type: "switch", defaultValue: false },
     ],
   },
   "sys.subSystem": {

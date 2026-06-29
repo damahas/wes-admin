@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Wes.WebApi.Extensions
 {
@@ -27,8 +27,27 @@ namespace Wes.WebApi.Extensions
                             Console.WriteLine(sql);//输出sql
                         };
                 });
-            Type[] types = Assembly.LoadFrom(AppContext.BaseDirectory + "Wes.DbModel.dll")
-            .GetTypes().Where(p => p.IsClass && p.FullName.EndsWith("Model")).ToArray();
+            // 自动扫描所有 Wes.* 程序集中带 [SugarTable] 的实体类
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => a.GetName().Name!.StartsWith("Wes."))
+                .ToList();
+
+            // 补充未被 JIT 加载的程序集
+            foreach (var dll in Directory.GetFiles(AppContext.BaseDirectory, "Wes.*.dll"))
+            {
+                var name = Path.GetFileNameWithoutExtension(dll);
+                if (!assemblies.Any(a => a.GetName().Name == name))
+                    assemblies.Add(Assembly.LoadFrom(dll));
+            }
+
+            var types = assemblies
+                .SelectMany(a =>
+                {
+                    try { return a.GetTypes(); }
+                    catch (ReflectionTypeLoadException) { return Type.EmptyTypes; }
+                })
+                .Where(p => p.IsClass && p.GetCustomAttribute<SugarTable>() != null)
+                .ToArray();
             sqlSugar.CodeFirst.SetStringDefaultLength(200).InitTables(types);
             //这边是SqlSugarScope用AddSingleton
             services.AddSingleton<ISqlSugarClient>(sqlSugar);

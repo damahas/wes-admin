@@ -20,11 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wes.Business\Wes.Business.csproj" />
-    <ProjectReference Include="..\Wes.DbModel\Wes.DbModel.csproj" />
-    <ProjectReference Include="..\Wes.Service\Wes.Service.csproj" />
+    <ProjectReference Include="..\Wes.Scheduler\Wes.Scheduler.csproj" />
+    <ProjectReference Include="..\Wes.System\Wes.System.csproj" />
     <ProjectReference Include="..\Wes.Utils\Wes.Utils.csproj" />
-    <ProjectReference Include="..\Wes.ViewModel\Wes.ViewModel.csproj" />
+  </ItemGroup>
+
+  <!-- 排除已迁移到 Wes.System 的源文件，避免重复编译 -->
+  <ItemGroup>
+    <Compile Remove="Areas\**" />
   </ItemGroup>
 
   <ItemGroup>

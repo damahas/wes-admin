@@ -12,7 +12,7 @@ namespace Wes.Utils.Model
 
         public int PageSize { set; get; }
 
-        public string OrderByColumn { set; get; }
+        public string? OrderByColumn { set; get; }
 
         public bool IsAsc { set; get; }
 

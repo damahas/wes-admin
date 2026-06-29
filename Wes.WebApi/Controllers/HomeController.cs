@@ -51,7 +51,7 @@ namespace Wes.WebApi.Controllers
         [AllowAnonymous]
         public ReturnData IsCaptchaOn()
         {
-            return new ResultData<bool>("true".Equals(_sysConfigBiz.GetByConfigKey("sys.login.isCaptchaOn")));
+            return new ResultData<bool>(_sysUserBiz.IsCaptchaEnabled());
         }
 
         /// <summary>

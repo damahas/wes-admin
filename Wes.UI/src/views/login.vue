@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="form-item" style="margin-top: 50px">
+      <div class="form-item" style="margin-top: 50px" v-if="captchaEnabled">
         <slider-code
           ref="sliderCodeRef"
           style="width: 100%"
@@ -63,19 +63,19 @@
         ></slider-code>
       </div>
 
-      <div class="login-btn" @click="handleLogin">{{ t("login.login") }}</div>
+      <div class="login-btn" :class="{ 'login-btn-no-captcha': !captchaEnabled }" @click="handleLogin">{{ t("login.login") }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import { ElMessage } from "element-plus";
 import SliderCode from "@/components/SliderCode";
-import { login } from "@/api/login";
+import { login, isCaptchaOn } from "@/api/login";
 
 const router = useRouter();
 const route = useRoute();
@@ -92,6 +92,16 @@ const sliderCodeRef = ref();
 
 const isUserNameError = ref(false);
 const isPasswordError = ref(false);
+const captchaEnabled = ref(true);
+
+onMounted(async () => {
+  try {
+    const res = await isCaptchaOn();
+    captchaEnabled.value = res.data;
+  } catch {
+    captchaEnabled.value = true;
+  }
+});
 
 const langList = computed(() => store.getters["system/langList"]);
 const currentLangDisplay = computed(() => {
@@ -175,11 +185,12 @@ const handleLogin = () => {
 .login-panel {
   position: relative;
   width: 480px;
-  height: 580px;
+  height: auto;
+  min-height: 580px;
   border-radius: 12px;
   background-color: var(--bg-card);
   margin-right: 145px;
-  padding: 0 69px;
+  padding: 0 69px 30px;
   box-shadow: 0 2px 10px var(--shadow-color);
 }
 
@@ -254,6 +265,10 @@ const handleLogin = () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.login-btn-no-captcha {
+  margin-top: 100px;
 }
 
 .login-btn:hover {
