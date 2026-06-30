@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Wes.Utils;
@@ -29,6 +30,8 @@ builder.Services.AddControllers(opt =>
 .AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
 
 builder.Services.AddMemoryCache();
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "DataProtection")));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // 基础设施

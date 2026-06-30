@@ -12,7 +12,8 @@ public static class QuartzSetup
     public static IServiceCollection AddQuartzSetup(this IServiceCollection services, IConfiguration configuration)
     {
         var connStr = configuration.GetConnectionString("WesConnectionString");
-        var instanceId = $"{Environment.MachineName}_{Guid.NewGuid():N}"[..100]; // 截断到 100 字符以内
+        var rawId = $"{Environment.MachineName}_{Guid.NewGuid():N}";
+        var instanceId = rawId.Length > 100 ? rawId[..100] : rawId;
 
         services.AddSingleton<ISchedulerFactory>(_ => new StdSchedulerFactory(
             new System.Collections.Specialized.NameValueCollection
@@ -35,7 +36,7 @@ public static class QuartzSetup
 
                 // 数据源
                 { "quartz.dataSource.default.connectionString", connStr },
-                { "quartz.dataSource.default.provider", "MySql" },
+                { "quartz.dataSource.default.provider", "MySqlConnector" },
 
                 // 序列化
                 { "quartz.serializer.type", "json" },
