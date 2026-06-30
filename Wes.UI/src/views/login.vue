@@ -49,6 +49,7 @@
           :placeholder="t('login.passwordPlaceholder')"
           type="password"
           @change="isPasswordError = !loginForm.password"
+          @keyup.enter="handleLogin"
         />
         <div class="form-error" v-if="isPasswordError">
           {{ t("login.passwordPlaceholder") }}
@@ -92,14 +93,14 @@ const sliderCodeRef = ref();
 
 const isUserNameError = ref(false);
 const isPasswordError = ref(false);
-const captchaEnabled = ref(true);
+const captchaEnabled = ref(false);
 
 onMounted(async () => {
   try {
     const res = await isCaptchaOn();
     captchaEnabled.value = res.data;
   } catch {
-    captchaEnabled.value = true;
+    captchaEnabled.value = false;
   }
 });
 
