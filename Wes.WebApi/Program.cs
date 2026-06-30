@@ -30,8 +30,20 @@ builder.Services.AddControllers(opt =>
 .AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
 
 builder.Services.AddMemoryCache();
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "DataProtection")));
+
+// DataProtection 密钥持久化：优先使用文件系统，目录不可写时回退到内存（系统仍可正常使用）
+var dataProtectionBuilder = builder.Services.AddDataProtection();
+var keysDir = Path.Combine(builder.Environment.ContentRootPath, "DataProtection");
+try
+{
+    Directory.CreateDirectory(keysDir);
+    dataProtectionBuilder.PersistKeysToFileSystem(new DirectoryInfo(keysDir));
+}
+catch
+{
+    // 密钥目录不可写，使用内存密钥（容器重启后用户需重新登录）
+    _ = dataProtectionBuilder;
+}
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // 基础设施
