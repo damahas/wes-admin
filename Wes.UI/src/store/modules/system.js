@@ -1,5 +1,6 @@
+import { getInitialLocale, LOCALE_KEY } from '@/utils/locale'
+
 const THEME_KEY = 'theme'
-const LOCALE_KEY = 'locale'
 
 const getInitialTheme = () => {
   const saved = localStorage.getItem(THEME_KEY)
@@ -14,7 +15,8 @@ export default {
   namespaced: true,
   state: {
     isDark: getInitialTheme(),
-    locale: localStorage.getItem(LOCALE_KEY) || 'zh-CN',
+    locale: getInitialLocale(),
+    licenseDialogVisible: false,
     // 支持的语言列表
     langList: [
       { langCode: 'zh-CN', langName: '简体中文' },
@@ -24,7 +26,8 @@ export default {
   getters: {
     isDark: state => state.isDark,
     locale: state => state.locale,
-    langList: state => state.langList
+    langList: state => state.langList,
+    licenseDialogVisible: state => state.licenseDialogVisible
   },
   mutations: {
     TOGGLE_DARK(state) {
@@ -51,6 +54,9 @@ export default {
     },
     SET_LANG_LIST(state, languages) {
       state.langList = languages
+    },
+    SET_LICENSE_DIALOG(state, visible) {
+      state.licenseDialogVisible = visible
     }
   },
   actions: {
@@ -65,6 +71,9 @@ export default {
     },
     setLangList({ commit }, languages) {
       commit('SET_LANG_LIST', languages)
+    },
+    setLicenseDialog({ commit }, visible) {
+      commit('SET_LICENSE_DIALOG', visible)
     }
   }
 }

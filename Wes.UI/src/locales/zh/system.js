@@ -4,7 +4,9 @@ export default {
     user: '用户',
     darkMode: '暗黑模式',
     lightMode: '亮色模式',
-    collapse: '收起导航'
+    collapse: '收起导航',
+    cancel: '取消',
+    confirm: '确定'
   },
   request: {
     timeout: '请求超时',
@@ -53,6 +55,7 @@ export default {
     noMore: '没有更多了'
   },
   license: {
+    dialogTitle: '维护许可证',
     title: '许可证',
     platformSystem: '平台系统',
     platformCode: '平台代码',
@@ -64,6 +67,7 @@ export default {
     enterprise: '企业正式版',
     trial: '试用版',
     activationTime: '激活时间',
-    expireTime: '到期日期'
+    expireTime: '到期日期',
+    activateSuccess: '激活成功'
   }
 }

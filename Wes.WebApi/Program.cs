@@ -1,5 +1,7 @@
 using System.Reflection;
-using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Wes.Utils;
@@ -32,18 +34,20 @@ builder.Services.AddControllers(opt =>
 builder.Services.AddMemoryCache();
 
 // DataProtection 密钥持久化：优先使用文件系统，目录不可写时回退到内存（系统仍可正常使用）
-var dataProtectionBuilder = builder.Services.AddDataProtection();
 var keysDir = Path.Combine(builder.Environment.ContentRootPath, "DataProtection");
-try
-{
-    Directory.CreateDirectory(keysDir);
-    dataProtectionBuilder.PersistKeysToFileSystem(new DirectoryInfo(keysDir));
-}
-catch
-{
-    // 密钥目录不可写，使用内存密钥（容器重启后用户需重新登录）
-    _ = dataProtectionBuilder;
-}
+builder.Services.AddDataProtection()
+    .Services.Configure<KeyManagementOptions>(options =>
+    {
+        try
+        {
+            Directory.CreateDirectory(keysDir);
+            options.XmlRepository = new FileSystemXmlRepository(new DirectoryInfo(keysDir), NullLoggerFactory.Instance);
+        }
+        catch
+        {
+            // 密钥目录不可写，使用内存密钥（容器重启后用户需重新登录）
+        }
+    });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // 基础设施

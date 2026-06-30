@@ -58,6 +58,13 @@ service.interceptors.response.use(
       ElMessage.error(msg || t("request.loginExpired"));
       return Promise.reject(new Error(msg || t("request.loginExpired")));
     }
+
+    // code为402表示许可证过期，弹出维护弹窗
+    if (code === 402) {
+      store.dispatch("system/setLicenseDialog", true);
+      return Promise.reject(new Error(msg));
+    }
+
     // 其他错误，根据配置决定是否提示
     if (!response.config?.hideError) {
       ElMessage.error(msg || t("request.requestFailed"));

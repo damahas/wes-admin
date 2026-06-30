@@ -4,7 +4,9 @@ export default {
     user: 'User',
     darkMode: 'Dark Mode',
     lightMode: 'Light Mode',
-    collapse: 'Collapse'
+    collapse: 'Collapse',
+    cancel: 'Cancel',
+    confirm: 'Confirm'
   },
   request: {
     timeout: 'Request timeout',
@@ -53,6 +55,7 @@ export default {
     noMore: 'No more messages'
   },
   license: {
+    dialogTitle: 'License Maintenance',
     title: 'License',
     platformSystem: 'Platform System',
     platformCode: 'Platform Code',
@@ -64,6 +67,7 @@ export default {
     enterprise: 'Enterprise Edition',
     trial: 'Trial Version',
     activationTime: 'Activation Time',
-    expireTime: 'Expire Date'
+    expireTime: 'Expire Date',
+    activateSuccess: 'Activated successfully'
   }
 }

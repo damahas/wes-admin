@@ -1,8 +1,10 @@
 <template>
   <router-view />
+  <LicenseDialog />
 </template>
 
 <script setup>
+import LicenseDialog from '@/views/system/license/dialog.vue'
 </script>
 
 <style>

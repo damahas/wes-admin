@@ -1,4 +1,5 @@
 import { createI18n } from 'vue-i18n'
+import { getInitialLocale } from '../utils/locale'
 import system from './zh/system'
 import systemEn from './en/system'
 
@@ -13,7 +14,7 @@ const messages = {
 
 const i18n = createI18n({
   legacy: false,
-  locale: localStorage.getItem('locale') || 'en-US',
+  locale: getInitialLocale(),
   fallbackLocale: 'en-US',
   messages
 })

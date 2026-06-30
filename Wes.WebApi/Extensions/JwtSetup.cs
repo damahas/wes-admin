@@ -15,7 +15,8 @@ public static class JwtSetup
 {
     public static IServiceCollection AddJwtSetup(this IServiceCollection services)
     {
-        var jwt = GlobalContext.JwtSettings;
+        var jwt = GlobalContext.JwtSettings
+            ?? throw new InvalidOperationException("JwtConfig 配置缺失，请检查 appsettings.json");
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", o =>
