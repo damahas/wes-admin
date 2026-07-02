@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="选择部门" v-model="isOpen" width="800px" append-to-body>
+  <el-dialog :title="t('deptManage.selectDept')" v-model="isOpen" width="800px" append-to-body>
     <el-form
       :model="queryParams"
       ref="queryFormRef"
@@ -8,10 +8,10 @@
       label-width="68px"
       @submit.prevent
     >
-      <el-form-item label="部门名称" prop="deptName">
+      <el-form-item :label="t('deptManage.deptName')" prop="deptName">
         <el-input
           v-model="queryParams.deptName"
-          placeholder="请输入部门名称"
+          :placeholder="t('deptManage.placeholder.deptName')"
           style="width: 160px"
           clearable
           @keyup.enter="getList"
@@ -19,16 +19,16 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" size="small" @click="getList">
-          搜索
+          {{ t('common.search') }}
         </el-button>
         <el-button icon="Refresh" size="small" @click="resetQuery">
-          重置
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <span>已选择：</span>
+      <span>{{ t('common.selectedLabel') }}</span>
       <el-tag
         v-for="(tag, index) in checked"
         :key="index"
@@ -47,14 +47,14 @@
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       @row-click="handleSelectionChange"
     >
-      <el-table-column prop="deptName" label="部门名称" width="260" />
-      <el-table-column prop="orderNum" label="排序" width="200" />
-      <el-table-column prop="status" label="状态" width="100">
+      <el-table-column prop="deptName" :label="t('deptManage.deptName')" width="260" />
+      <el-table-column prop="orderNum" :label="t('common.sort')" width="200" />
+      <el-table-column prop="status" :label="t('common.status')" width="100">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" width="160">
+      <el-table-column :label="t('common.createTime')" align="center" width="160">
         <template #default="scope">
           <span>{{ formatTime(scope.row.createTime) }}</span>
         </template>
@@ -63,8 +63,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="isOpen = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+        <el-button @click="isOpen = false">{{ t('common.cancel') }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -72,9 +72,13 @@
 
 <script setup>
 import { ref, reactive, defineEmits, defineExpose, defineProps } from "vue";
+import { useI18n } from 'vue-i18n'
 import { listDept } from "@/api/system/dept";
 import DictTag from "@/components/DictTag/index.vue";
 import { getDict } from "@/utils";
+import { ElMessage } from "element-plus";
+
+const { t } = useI18n()
 
 const { sys_normal_disable } = getDict("sys_normal_disable");
 
@@ -137,7 +141,7 @@ function handleCloseTag(index) {
 
 function submitForm() {
   if (checked.value.length == 0) {
-    ElMessage.error("请选择部门");
+    ElMessage.error(t("deptManage.pleaseSelectDept"));
     return;
   }
   isOpen.value = false;
@@ -171,7 +175,7 @@ defineExpose({ open });
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-dialog__body) {
+::deep(.el-dialog__body) {
   padding-top: 0;
 }
 </style>

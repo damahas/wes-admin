@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="选择用户" v-model="isOpen" width="998px" append-to-body>
+  <el-dialog :title="t('user.selectUser')" v-model="isOpen" width="998px" append-to-body>
     <query-form
       :config="queryConfig"
       v-model="queryParams.params"
@@ -8,7 +8,7 @@
     />
 
     <el-row :gutter="10" class="mb8" style="margin-top: 10px">
-      <span>已选择：</span>
+      <span>{{ t('common.selectedLabel') }}</span>
       <el-tag
         v-for="(tag, index) in checked"
         :key="index"
@@ -24,36 +24,36 @@
       <el-table-column width="55" align="center">
         <template #default="scope">
           <el-check-tag :checked="isChecked(scope.row)" @change="handleToggle(scope.row)">
-            {{ isChecked(scope.row) ? "已选" : "选择" }}
+            {{ isChecked(scope.row) ? t('user.selected') : t('user.select') }}
           </el-check-tag>
         </template>
       </el-table-column>
-      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column :label="t('user.userId')" align="center" prop="userId" />
       <el-table-column
-        label="账户"
+        :label="t('user.account')"
         align="center"
         prop="userName"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="用户昵称"
+        :label="t('user.nickName')"
         align="center"
         prop="nickName"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        label="部门"
+        :label="t('user.dept')"
         align="center"
         prop="dept.deptName"
         :show-overflow-tooltip="true"
       />
-      <el-table-column label="手机号码" align="center" prop="phonenumber" width="120" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column :label="t('user.phone')" align="center" prop="phonenumber" width="120" />
+      <el-table-column :label="t('common.status')" align="center" prop="status">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" width="160">
+      <el-table-column :label="t('common.createTime')" align="center" width="160">
         <template #default="scope">
           <span>{{ formatTime(scope.row.createTime) }}</span>
         </template>
@@ -70,20 +70,22 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="isOpen = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+        <el-button @click="isOpen = false">{{ t('common.cancel') }}</el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, defineExpose, defineProps } from "vue";
+import { ref, reactive, computed, defineEmits, defineExpose, defineProps } from "vue";
+import { useI18n } from 'vue-i18n'
 import { ElMessage } from "element-plus";
 import { listUser } from "@/api/system/user";
 import { getDict } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 
+const { t } = useI18n()
 const { sys_normal_disable } = getDict("sys_normal_disable");
 
 const loading = ref(true);
@@ -98,16 +100,16 @@ const queryParams = reactive({
   params: {},
 });
 
-const queryConfig = [
-  { label: "账户", prop: "userName", type: "input", placeholder: "请输入账户" },
-  { label: "名称", prop: "nickName", type: "input", placeholder: "请输入名称" },
+const queryConfig = computed(() => [
+  { label: t("user.account"), prop: "userName", type: "input", placeholder: t("user.placeholder.searchAccount") },
+  { label: t("user.nickName"), prop: "nickName", type: "input", placeholder: t("user.placeholder.searchName") },
   {
-    label: "手机号码",
+    label: t("user.phone"),
     prop: "phonenumber",
     type: "input",
-    placeholder: "请输入手机号码",
+    placeholder: t("user.placeholder.phoneSearch"),
   },
-];
+]);
 
 const emit = defineEmits(["handleData"]);
 
@@ -162,7 +164,7 @@ function handleCloseTag(index) {
 
 function submitForm() {
   if (checked.value.length == 0) {
-    ElMessage.error("请选择用户");
+    ElMessage.error(t("user.pleaseSelectUser"));
     return false;
   }
   isOpen.value = false;
@@ -173,7 +175,7 @@ defineExpose({ open });
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-dialog__body) {
+::deep(.el-dialog__body) {
   padding-top: 0;
 }
 </style>

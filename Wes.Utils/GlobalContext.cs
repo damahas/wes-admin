@@ -52,7 +52,7 @@ namespace Wes.Utils
                 {
                     return deviceCode;
                 }
-                deviceCode = new DeviceIdBuilder().AddOsVersion().OnLinux(linux => linux.AddDockerContainerId()).ToString();
+                deviceCode = new DeviceIdBuilder().AddOsVersion().OnLinux(linux => linux.AddMachineId()).ToString();
                 //deviceCode = new DeviceIdBuilder().AddOsVersion().AddMacAddress().ToString();
                 //deviceCode = new DeviceIdBuilder().AddMachineName().AddOsVersion().AddMacAddress().ToString();
                 CacheFactory.Cache.SetCache(CacheKey.DeviceId, deviceCode);
@@ -88,7 +88,7 @@ namespace Wes.Utils
                 {
                     return _licenseModel;
                 }
-                string licensePath = $"{AppSettings.FilePath.TrimEnd('/')}/license.key";
+                string licensePath = $"{AppSettings.FilePath.TrimEnd('/')}/UploadFile/DataProtection/{DeviceId}.key";
                 if (!File.Exists(licensePath))
                 {
                     return null;
@@ -116,7 +116,7 @@ namespace Wes.Utils
     {
         public string CacheDrive { set; get; }
         public string RedisConnectionString { set; get; }
-        public string FilePath { set; get; }
+        public string FilePath => AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
         public long SystemId { set; get; }
         public bool IsLicense
         {

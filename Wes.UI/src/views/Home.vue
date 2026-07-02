@@ -6,7 +6,7 @@
         <div class="banner-text">
           <h1 class="banner-greeting">{{ greeting }}</h1>
           <p class="banner-date">{{ dateText }}</p>
-          <p class="banner-desc">实时掌握系统运行状态，高效完成日常工作</p>
+          <p class="banner-desc">{{ t('home.monitorStatus') }}</p>
         </div>
         <div class="banner-illustration">
           <i class="fa fa-th-large"></i>
@@ -21,11 +21,11 @@
           <div class="stat-icon-wrap">
             <i class="fa fa-user"></i>
           </div>
-          <span class="stat-badge">用户</span>
+          <span class="stat-badge">{{ t('common.user') }}</span>
         </div>
         <div class="stat-number">128</div>
         <div class="stat-footer">
-          <span class="stat-label">系统用户总数</span>
+          <span class="stat-label">{{ t('home.totalUsers') }}</span>
           <span class="stat-trend up"><i class="fa fa-arrow-up"></i> 12%</span>
         </div>
       </div>
@@ -228,21 +228,29 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const greeting = computed(() => {
   const h = new Date().getHours()
-  if (h < 6) return '夜深了 🌙'
-  if (h < 9) return '早上好 ☀️'
-  if (h < 12) return '上午好 🌤️'
-  if (h < 14) return '中午好 ☀️'
-  if (h < 18) return '下午好 🌈'
-  return '晚上好 🌙'
+  if (h < 6) return t('home.lateNight')
+  if (h < 9) return t('home.morning')
+  if (h < 12) return t('home.forenoon')
+  if (h < 14) return t('home.noon')
+  if (h < 18) return t('home.afternoon')
+  return t('home.evening')
 })
 
 const dateText = computed(() => {
   const now = new Date()
-  const w = ['日', '一', '二', '三', '四', '五', '六']
-  return `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 星期${w[now.getDay()]}`
+  const weekdays = [t('home.sunday'), t('home.monday'), t('home.tuesday'), t('home.wednesday'), t('home.thursday'), t('home.friday'), t('home.saturday')]
+  return t('home.dateFormat', {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+    weekday: weekdays[now.getDay()]
+  })
 })
 </script>
 

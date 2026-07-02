@@ -33,7 +33,7 @@ namespace Wes.WebApi.Areas.SystemManage
         [Route("all")]
         public ReturnData GetAll()
         {
-            return new RowData<SysConfigModel>(_sysConfigBiz.GetAll());
+            return _sysConfigBiz.GetAll();
         }
 
         [HttpGet]

@@ -5,7 +5,7 @@
             <el-card class="box-card">
                <template v-slot:header>
                  <div class="clearfix">
-                   <span>个人信息</span>
+                   <span>{{ t('user.profile') }}</span>
                  </div>
                </template>
                <div>
@@ -14,27 +14,27 @@
                   </div>
                   <ul class="list-group list-group-striped">
                      <li class="list-group-item">
-                        <i class="fa fa-user" />用户名称
+                        <i class="fa fa-user" />{{ t('user.userName') }}
                         <div class="pull-right">{{ state.user.userName }}</div>
                      </li>
                      <li class="list-group-item">
-                        <i class="fa fa-mobile" />手机号码
+                        <i class="fa fa-mobile" />{{ t('user.phone') }}
                         <div class="pull-right">{{ state.user.phonenumber }}</div>
                      </li>
                      <li class="list-group-item">
-                        <i class="fa fa-envelope" />用户邮箱
+                        <i class="fa fa-envelope" />{{ t('user.emailAddress') }}
                         <div class="pull-right">{{ state.user.email }}</div>
                      </li>
                      <li class="list-group-item">
-                        <i class="fa fa-sitemap" />所属部门
+                        <i class="fa fa-sitemap" />{{ t('user.belongDept') }}
                         <div class="pull-right" v-if="state.user.dept">{{ state.user.dept.deptName }} / {{ state.postGroup }}</div>
                      </li>
                      <li class="list-group-item">
-                        <i class="fa fa-user-group" />所属角色
+                        <i class="fa fa-user-group" />{{ t('user.belongRole') }}
                         <div class="pull-right">{{ state.roleGroup }}</div>
                      </li>
                      <li class="list-group-item">
-                        <i class="fa fa-calendar-days" />创建日期
+                        <i class="fa fa-calendar-days" />{{ t('user.createDate') }}
                         <div class="pull-right">{{ state.user.createTime }}</div>
                      </li>
                   </ul>
@@ -45,14 +45,14 @@
             <el-card>
                <template v-slot:header>
                  <div class="clearfix">
-                   <span>基本资料</span>
+                   <span>{{ t('user.basicInfo') }}</span>
                  </div>
                </template>
                <el-tabs v-model="activeTab">
-                  <el-tab-pane label="基本资料" name="userinfo">
+                  <el-tab-pane :label="t('user.basicInfo')" name="userinfo">
                      <userInfo :user="state.user" />
                   </el-tab-pane>
-                  <el-tab-pane label="修改密码" name="resetPwd">
+                  <el-tab-pane :label="t('user.modifyPwd')" name="resetPwd">
                      <resetPwd />
                   </el-tab-pane>
                </el-tabs>
@@ -63,10 +63,13 @@
 </template>
 
 <script setup name="Profile">
+import { useI18n } from 'vue-i18n'
 import userAvatar from "./userAvatar";
 import userInfo from "./userInfo";
 import resetPwd from "./resetPwd";
 import { getUserProfile } from "@/api/system/user";
+
+const { t } = useI18n()
 
 const activeTab = ref("userinfo");
 const state = reactive({

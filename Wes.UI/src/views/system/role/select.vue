@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="选择角色" v-model="isOpen" width="800px" append-to-body>
+  <el-dialog :title="t('role.selectRole')" v-model="isOpen" width="800px" append-to-body>
     <el-form
       :model="queryParams"
       ref="queryFormRef"
@@ -7,19 +7,19 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="角色名称" prop="roleName">
+      <el-form-item :label="t('role.roleName')" prop="roleName">
         <el-input
           v-model="queryParams.params.roleName"
-          placeholder="请输入角色名称"
+          :placeholder="t('role.placeholder.roleName')"
           clearable
           style="width: 160px"
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="角色编码" prop="roleKey">
+      <el-form-item :label="t('role.roleCode')" prop="roleKey">
         <el-input
           v-model="queryParams.params.roleKey"
-          placeholder="请输入角色编码"
+          :placeholder="t('role.placeholder.roleCode')"
           clearable
           style="width: 160px"
           @keyup.enter="handleQuery"
@@ -27,16 +27,16 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">
-          搜索
+          {{ t('common.search') }}
         </el-button>
         <el-button icon="el-icon-refresh" size="small" @click="resetQuery">
-          重置
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <span>已选择：</span>
+      <span>{{ t('common.selectedLabel') }}</span>
       <el-tag
         v-for="(tag, index) in checked"
         :key="index"
@@ -55,23 +55,23 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="角色编码"
+        :label="t('role.roleCode')"
         prop="roleKey"
         :show-overflow-tooltip="true"
         width="150"
       />
       <el-table-column
-        label="角色名称"
+        :label="t('role.roleName')"
         prop="roleName"
         :show-overflow-tooltip="true"
         width="150"
       />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column :label="t('common.status')" align="center" prop="status">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" width="160">
+      <el-table-column :label="t('common.createTime')" align="center" width="160">
         <template #default="scope">
           <span>{{ formatTime(scope.row.createTime) }}</span>
         </template>
@@ -88,8 +88,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="isOpen = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+        <el-button @click="isOpen = false">{{ t('common.cancel') }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -97,9 +97,12 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
+import { useI18n } from 'vue-i18n'
 import { listRole } from "@/api/system/role";
 import { ElMessage } from "element-plus";
 import { getDict } from "@/utils";
+
+const { t } = useI18n()
 
 defineOptions({
   name: "RoleSelect",
@@ -182,7 +185,7 @@ function handleSelectionChange(row) {
 /** 提交 */
 function submitForm() {
   if (checked.value.length == 0) {
-    ElMessage.error("请选择角色");
+    ElMessage.error(t("role.pleaseSelectRole"));
     return false;
   }
   isOpen.value = false;
@@ -195,7 +198,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-dialog__body) {
+::deep(.el-dialog__body) {
   padding-top: 0;
 }
 </style>

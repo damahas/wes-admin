@@ -4,11 +4,11 @@
       <!--部门数据-->
       <div class="split-left-panel">
         <div class="split-left__header">
-          <div class="split-left__title">部门</div>
+          <div class="split-left__title">{{ t('user.dept') }}</div>
           <div class="split-left__search">
             <el-input
               v-model="deptName"
-              placeholder="请输入部门名称"
+              :placeholder="t('deptManage.placeholder.deptName')"
               clearable
               prefix-icon="Search"
             />
@@ -47,7 +47,7 @@
               @click="handleAdd"
               v-hasPermi="['system:user:add']"
             >
-              新增
+              {{ t('common.add') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -59,7 +59,7 @@
               @click="handleUpdate"
               v-hasPermi="['system:user:edit']"
             >
-              修改
+              {{ t('common.edit') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -71,13 +71,13 @@
               @click="handleDelete"
               v-hasPermi="['system:user:remove']"
             >
-              删除
+              {{ t('common.delete') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
             <import-file
               button-type="info"
-              button-text="导入"
+              :button-text="t('common.import')"
               :upload-url="upload.uploadUrl"
               :template-url="upload.templateUrl"
               v-hasPermi="['system:user:import']"
@@ -92,7 +92,7 @@
               @click="handleExport"
               v-hasPermi="['system:user:export']"
             >
-              导出
+              {{ t('common.export') }}
             </el-button>
           </el-col>
           <right-toolbar
@@ -111,34 +111,34 @@
           >
             <el-table-column type="selection" width="50" align="center" />
             <el-table-column
-              label="用户账户"
+              :label="t('user.account')"
               align="center"
               prop="account"
               v-if="columns.account.visible"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="用户名称"
+              :label="t('user.userName')"
               align="center"
               prop="userName"
               v-if="columns.userName.visible"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="部门"
+              :label="t('user.dept')"
               align="center"
               prop="dept.deptName"
               v-if="columns.deptName.visible"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="手机号码"
+              :label="t('user.phone')"
               align="center"
               prop="phonenumber"
               v-if="columns.phonenumber.visible"
               width="120"
             />
-            <el-table-column label="状态" align="center" v-if="columns.status.visible">
+            <el-table-column :label="t('common.status')" align="center" v-if="columns.status.visible">
               <template #default="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -150,7 +150,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="创建时间"
+              :label="t('common.createTime')"
               align="center"
               prop="createTime"
               v-if="columns.createTime.visible"
@@ -161,7 +161,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
+              :label="t('common.actions')"
               align="center"
               width="210"
               class-name="small-padding fixed-width"
@@ -174,7 +174,7 @@
                   @click="handleUpdate(scope.row)"
                   v-hasPermi="['system:user:edit']"
                 >
-                  修改
+                  {{ t('common.edit') }}
                 </el-button>
                 <el-button
                   link
@@ -183,13 +183,13 @@
                   @click="handleDelete(scope.row)"
                   v-hasPermi="['system:user:remove']"
                 >
-                  删除
+                  {{ t('common.delete') }}
                 </el-button>
                 <el-dropdown
                   style="display: inline-flex; vertical-align: middle; margin-left: 12px"
                 >
                   <el-button link type="primary">
-                    更多<el-icon><ArrowDown /></el-icon>
+                    {{ t('common.more') }}<el-icon><ArrowDown /></el-icon>
                   </el-button>
                   <template #dropdown>
                     <el-dropdown-menu>
@@ -197,13 +197,13 @@
                         @click="handleResetPwd(scope.row)"
                         v-hasPermi="['system:user:resetPwd']"
                       >
-                        <el-icon><Unlock /></el-icon>重置密码
+                        <el-icon><Unlock /></el-icon>{{ t('user.resetPwd') }}
                       </el-dropdown-item>
                       <el-dropdown-item
                         @click="handleAuthRole(scope.row)"
                         v-hasPermi="['system:user:edit']"
                       >
-                        <el-icon><Files /></el-icon>分配角色
+                        <el-icon><Files /></el-icon>{{ t('user.authRole') }}
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
@@ -227,22 +227,22 @@
       <el-form :model="form" :rules="rules" ref="userRef" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="用户名称" prop="userName">
+            <el-form-item :label="t('user.userName')" prop="userName">
               <el-input
                 v-model="form.userName"
-                placeholder="请输入用户名称"
+                :placeholder="t('user.placeholder.userName')"
                 maxlength="30"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="归属部门" prop="deptId">
+            <el-form-item :label="t('user.deptName')" prop="deptId">
               <el-tree-select
                 v-model="form.deptId"
                 :data="deptOptions"
                 :props="{ value: 'id', label: 'label', children: 'children' }"
                 value-key="id"
-                placeholder="请选择归属部门"
+                :placeholder="t('user.placeholder.deptName')"
                 check-strictly
               />
             </el-form-item>
@@ -250,35 +250,35 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="phonenumber">
+            <el-form-item :label="t('user.phone')" prop="phonenumber">
               <el-input
                 v-model="form.phonenumber"
-                placeholder="请输入手机号码"
+                :placeholder="t('user.placeholder.phone')"
                 maxlength="11"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+            <el-form-item :label="t('user.email')" prop="email">
+              <el-input v-model="form.email" :placeholder="t('user.placeholder.email')" maxlength="50" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" v-if="form.userId == undefined">
-            <el-form-item label="用户账户" prop="account">
+            <el-form-item :label="t('user.account')" prop="account">
               <el-input
                 v-model="form.account"
-                placeholder="请输入用户账户"
+                :placeholder="t('user.placeholder.account')"
                 maxlength="100"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.userId == undefined">
-            <el-form-item label="用户密码" prop="password">
+            <el-form-item :label="t('user.password')" prop="password">
               <el-input
                 v-model="form.password"
-                placeholder="请输入用户密码"
+                :placeholder="t('user.placeholder.password')"
                 type="password"
                 maxlength="20"
                 show-password
@@ -288,16 +288,16 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="用户性别">
-              <el-select v-model="form.sex" placeholder="请选择">
-                <el-option value="0" label="男"></el-option>
-                <el-option value="1" label="女"></el-option>
-                <el-option value="2" label="未知"></el-option>
+            <el-form-item :label="t('user.sex')">
+              <el-select v-model="form.sex" :placeholder="t('common.pleaseSelect')">
+                <el-option value="0" :label="t('common.male')"></el-option>
+                <el-option value="1" :label="t('common.female')"></el-option>
+                <el-option value="2" :label="t('common.unknown')"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态">
+            <el-form-item :label="t('common.status')">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in sys_normal_disable"
@@ -312,8 +312,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择">
+            <el-form-item :label="t('user.post')">
+              <el-select v-model="form.postIds" multiple :placeholder="t('common.pleaseSelect')">
                 <el-option
                   v-for="item in postOptions"
                   :key="item.postId"
@@ -325,8 +325,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择">
+            <el-form-item :label="t('user.role')">
+              <el-select v-model="form.roleIds" multiple :placeholder="t('common.pleaseSelect')">
                 <el-option
                   v-for="item in roleOptions"
                   :key="item.roleId"
@@ -365,7 +365,10 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { ArrowDown, Unlock, Files } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { ref, reactive, toRefs, watch, inject, unref } from "vue";
+import { useI18n } from "vue-i18n";
 import { download, getDict, addDateRange } from "@/utils";
+
+const { t } = useI18n();
 import QueryForm from "@/components/QueryForm/index.vue";
 import ImportFile from "@/components/ImportFile/index.vue";
 import {

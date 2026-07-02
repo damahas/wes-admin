@@ -27,7 +27,7 @@ namespace Wes.WebApi.Areas.SystemManage
         [Route("upload")]
         public ReturnData UploadFile(IFormFile file)
         {
-            string path = $"{GlobalContext.AppSettings.FilePath.TrimEnd('/')}/{DateTime.Now.ToString("yyyyMM")}/{DateTime.Now.ToString("dd")}";
+            string path = $"{GlobalContext.AppSettings.FilePath.TrimEnd('/')}/UploadFile/{DateTime.Now.ToString("yyyyMM")}/{DateTime.Now.ToString("dd")}";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);

@@ -16,11 +16,8 @@ COPY ./Wes.UI/dist /front/
 # Nginx 配置
 COPY ./Wes.UI/nginx.conf /etc/nginx/nginx.conf
 
-# 上传文件目录
+# 上传文件目录（含 DataProtection 密钥）
 COPY ./Wes.WebApi/UploadFile /app/UploadFile/
-
-# DataProtection 密钥（所有实例共享同一份密钥）
-COPY ./Wes.WebApi/DataProtection /app/DataProtection/
 
 # nginx 后台运行 + dotnet 前台运行
 ENTRYPOINT ["sh", "-c", "nginx && exec dotnet Wes.WebApi.dll"]

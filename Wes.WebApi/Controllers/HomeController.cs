@@ -65,7 +65,7 @@ namespace Wes.WebApi.Controllers
         [AllowAnonymous]
         public ReturnData CaptchaImage(decimal width, decimal height)
         {
-            CaptchaModel captchaModel = ImageHelper.GetCaptcha($"{_hostEnvironment.ContentRootPath}/UploadFile/Captcha/captcha1.jpg", width, height);
+            CaptchaModel captchaModel = ImageHelper.GetCaptcha($"{GlobalContext.AppSettings.FilePath}/UploadFile/Captcha/captcha1.jpg", width, height);
             CacheFactory.Cache.SetCache($"{CacheKey.CaptchaImg}{captchaModel.Code}", captchaModel.SliderPositionX, DateTime.Now.AddHours(10));
             CacheFactory.Cache.SetCache($"{CacheKey.CaptchaVaildImg}{captchaModel.Code}", captchaModel.SliderPositionX, DateTime.Now.AddHours(10));
             captchaModel.SliderPositionX = 0;

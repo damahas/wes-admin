@@ -17,7 +17,7 @@
             icon="Plus"
             @click="handleAdd"
             v-hasPermi="['monitor:job:add']"
-          >新增</el-button>
+          >{{ t('common.add') }}</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button
@@ -27,7 +27,7 @@
             :disabled="single"
             @click="handleUpdate"
             v-hasPermi="['monitor:job:edit']"
-          >修改</el-button>
+          >{{ t('common.edit') }}</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button
@@ -37,7 +37,7 @@
             :disabled="multiple"
             @click="handleDelete"
             v-hasPermi="['monitor:job:remove']"
-          >删除</el-button>
+          >{{ t('common.delete') }}</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button
@@ -47,7 +47,7 @@
             :disabled="single"
             @click="handleRun"
             v-hasPermi="['monitor:job:edit']"
-          >执行一次</el-button>
+          >{{ t('job.runOnce') }}</el-button>
         </el-col>
         <right-toolbar
           v-model:showSearch="showSearch"
@@ -62,25 +62,25 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column
-          label="任务名称"
+          :label="t('job.jobName')"
           align="center"
           prop="jobName"
           :show-overflow-tooltip="true"
         />
-        <el-table-column label="任务组名" align="center" prop="jobGroup" />
+        <el-table-column :label="t('job.jobGroup')" align="center" prop="jobGroup" />
         <el-table-column
-          label="调用目标"
+          :label="t('job.invokeTarget')"
           align="center"
           prop="invokeTarget"
           :show-overflow-tooltip="true"
         />
         <el-table-column
-          label="cron表达式"
+          :label="t('job.cronExpression')"
           align="center"
           prop="cronExpression"
           width="140"
         />
-        <el-table-column label="状态" align="center" width="80">
+        <el-table-column :label="t('common.status')" align="center" width="80">
           <template #default="scope">
             <el-switch
               v-model="scope.row.status"
@@ -91,12 +91,12 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="160">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
+        <el-table-column :label="t('common.actions')" align="center" width="220" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-button
               link
@@ -104,21 +104,21 @@
               icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['monitor:job:edit']"
-            >修改</el-button>
+            >{{ t('common.edit') }}</el-button>
             <el-button
               link
               type="danger"
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['monitor:job:remove']"
-            >删除</el-button>
+            >{{ t('common.delete') }}</el-button>
             <el-button
               link
               type="primary"
               icon="View"
               @click="handleLog(scope.row)"
               v-hasPermi="['monitor:job:list']"
-            >日志</el-button>
+            >{{ t('job.log') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -133,7 +133,7 @@
     </div>
 
     <!-- 任务日志对话框 -->
-    <el-dialog title="任务日志" v-model="logOpen" width="85%" append-to-body>
+    <el-dialog :title="t('job.logTitle')" v-model="logOpen" width="85%" append-to-body>
       <query-form
         :config="logQueryConfig"
         v-model:visible="logShowSearch"
@@ -165,7 +165,7 @@
           </template>
         </el-table-column>
         <el-table-column label="耗时(ms)" align="center" prop="elapsedTime" width="90" />
-        <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="160">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
@@ -262,9 +262,12 @@
 
 <script setup name="Job">
 import { ref, reactive, toRefs } from "vue";
+import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { addDateRange } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
+
+const { t } = useI18n();
 import {
   listJob,
   getJob,

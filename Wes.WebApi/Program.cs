@@ -34,7 +34,7 @@ builder.Services.AddControllers(opt =>
 builder.Services.AddMemoryCache();
 
 // DataProtection 密钥持久化：优先使用文件系统，目录不可写时回退到内存（系统仍可正常使用）
-var keysDir = Path.Combine(builder.Environment.ContentRootPath, "DataProtection");
+var keysDir = Path.Combine(GlobalContext.AppSettings.FilePath, "UploadFile", "DataProtection");
 builder.Services.AddDataProtection()
     .Services.Configure<KeyManagementOptions>(options =>
     {
@@ -96,7 +96,7 @@ NetHepler.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 // IP 归属地初始化（xdb 文件缺失时静默跳过）
 try
 {
-    var xdbPath = Path.Combine(app.Environment.ContentRootPath, "UploadFile", "IpRegion", "ip2region.xdb");
+    var xdbPath = Path.Combine(GlobalContext.AppSettings.FilePath, "UploadFile", "IpRegion", "ip2region.xdb");
     IpLocationHelper.Initialize(xdbPath);
 }
 catch (Exception) { /* 数据库文件未下载，IP 归属地为空 */ }

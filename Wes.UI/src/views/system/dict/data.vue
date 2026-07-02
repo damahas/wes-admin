@@ -17,7 +17,7 @@
             icon="Plus"
             @click="handleAdd"
             v-hasPermi="['system:dict:add']"
-            >新增</el-button
+            >{{ t('common.add') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
@@ -28,7 +28,7 @@
             :disabled="single"
             @click="handleUpdate"
             v-hasPermi="['system:dict:edit']"
-            >修改</el-button
+            >{{ t('common.edit') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
@@ -39,7 +39,7 @@
             :disabled="multiple"
             @click="handleDelete"
             v-hasPermi="['system:dict:remove']"
-            >删除</el-button
+            >{{ t('common.delete') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
@@ -49,12 +49,12 @@
             icon="Download"
             @click="handleExport"
             v-hasPermi="['system:dict:export']"
-            >导出</el-button
+            >{{ t('common.export') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
           <el-button type="warning" plain icon="Close" @click="handleClose"
-            >关闭</el-button
+            >{{ t('common.close') }}</el-button
           >
         </el-col>
         <right-toolbar
@@ -71,7 +71,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="字典标签" align="left" prop="dictLabel">
+        <el-table-column :label="t('dictManage.dataLabel')" align="left" prop="dictLabel">
           <template #default="scope">
             <span
               v-if="
@@ -90,26 +90,26 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="字典键值" align="center" prop="dictValue" />
-        <el-table-column label="字典排序" align="center" prop="dictSort" />
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column :label="t('dictManage.dataValue')" align="center" prop="dictValue" />
+        <el-table-column :label="t('dictManage.dataSort')" align="center" prop="dictSort" />
+        <el-table-column :label="t('common.status')" align="center" prop="status">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
         <el-table-column
-          label="备注"
+          :label="t('common.remark')"
           align="center"
           prop="remark"
           :show-overflow-tooltip="true"
         />
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="180">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="t('common.actions')"
           align="center"
           width="160"
           class-name="small-padding fixed-width"
@@ -121,7 +121,7 @@
               icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:dict:edit']"
-              >修改</el-button
+              >{{ t('common.edit') }}</el-button
             >
             <el-button
               link
@@ -129,7 +129,7 @@
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:dict:remove']"
-              >删除</el-button
+              >{{ t('common.delete') }}</el-button
             >
           </template>
         </el-table-column>
@@ -147,33 +147,33 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="dataRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="字典类型">
+        <el-form-item :label="t('dictManage.dictType')">
           <el-input v-model="form.dictType" :disabled="true" />
         </el-form-item>
-        <el-form-item label="上级节点">
+        <el-form-item :label="t('dictManage.parentNode')">
           <el-tree-select
             v-model="form.parentId"
             :data="treeSelectData"
             :props="{ value: 'dictDataId', label: 'dictLabel', children: 'children' }"
-            placeholder="请选择上级节点"
+            :placeholder="t('dictManage.placeholder.parentNode')"
             check-strictly
             clearable
             :render-after-expand="false"
           />
         </el-form-item>
-        <el-form-item label="数据标签" prop="dictLabel">
-          <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+        <el-form-item :label="t('dictManage.dataLabel')" prop="dictLabel">
+          <el-input v-model="form.dictLabel" :placeholder="t('dictManage.placeholder.dataLabel')" />
         </el-form-item>
-        <el-form-item label="数据键值" prop="dictValue">
-          <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
+        <el-form-item :label="t('dictManage.dataValue')" prop="dictValue">
+          <el-input v-model="form.dictValue" :placeholder="t('dictManage.placeholder.dataValue')" />
         </el-form-item>
-        <el-form-item label="样式属性" prop="cssClass">
-          <el-input v-model="form.cssClass" placeholder="请输入样式属性" />
+        <el-form-item :label="t('dictManage.cssClass')" prop="cssClass">
+          <el-input v-model="form.cssClass" :placeholder="t('dictManage.placeholder.cssClass')" />
         </el-form-item>
-        <el-form-item label="显示排序" prop="dictSort">
+        <el-form-item :label="t('dictManage.dataSort')" prop="dictSort">
           <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
         </el-form-item>
-        <el-form-item label="回显样式" prop="listClass">
+        <el-form-item :label="t('dictManage.listClass')" prop="listClass">
           <el-select v-model="form.listClass">
             <el-option
               v-for="item in listClassOptions"
@@ -183,7 +183,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <el-form-item :label="t('common.status')" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in sys_normal_disable"
@@ -194,18 +194,18 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item :label="t('common.remark')" prop="remark">
           <el-input
             v-model="form.remark"
             type="textarea"
-            placeholder="请输入内容"
+            :placeholder="t('common.pleaseInput')"
           ></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -213,7 +213,8 @@
 </template>
 
 <script setup name="Data">
-import { ref, reactive, toRefs, getCurrentInstance, onMounted } from "vue";
+import { ref, reactive, toRefs, getCurrentInstance, onMounted, computed } from "vue";
+import { useI18n } from 'vue-i18n'
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRoute } from "vue-router";
@@ -222,6 +223,7 @@ import QueryForm from "@/components/QueryForm/index.vue";
 import { getAllType, getType } from "@/api/system/dict";
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict";
 
+const { t } = useI18n()
 const { proxy } = getCurrentInstance();
 const store = useStore();
 const { sys_normal_disable } = getDict("sys_normal_disable");
@@ -245,36 +247,36 @@ const dataRef = ref(null);
 const queryRef = ref(null);
 
 // 查询条件配置
-const queryConfig = [
+const queryConfig = computed(() => [
   {
-    label: "字典名称",
+    label: t("dictManage.dictName"),
     prop: "dictType",
     type: "select",
-    placeholder: "请选择字典名称",
+    placeholder: t("dictManage.placeholder.dictName"),
     options: typeOptions,
   },
   {
-    label: "字典标签",
+    label: t("dictManage.dataLabel"),
     prop: "dictLabel",
     type: "input",
-    placeholder: "请输入字典标签",
+    placeholder: t("dictManage.placeholder.dataLabel"),
   },
   {
-    label: "状态",
+    label: t("common.status"),
     prop: "status",
     type: "select",
-    placeholder: "数据状态",
+    placeholder: t("dictManage.placeholder.status"),
     options: sys_normal_disable,
   },
-];
+]);
 // 数据标签回显样式
 const listClassOptions = ref([
-  { value: "default", label: "默认" },
-  { value: "primary", label: "主要" },
-  { value: "success", label: "成功" },
-  { value: "info", label: "信息" },
-  { value: "warning", label: "警告" },
-  { value: "danger", label: "危险" },
+  { value: "default", label: t("dictManage.listClassOption.default") },
+  { value: "primary", label: t("dictManage.listClassOption.primary") },
+  { value: "success", label: t("dictManage.listClassOption.success") },
+  { value: "info", label: t("dictManage.listClassOption.info") },
+  { value: "warning", label: t("dictManage.listClassOption.warning") },
+  { value: "danger", label: t("dictManage.listClassOption.danger") },
 ]);
 
 const data = reactive({
@@ -289,9 +291,9 @@ const data = reactive({
     },
   },
   rules: {
-    dictLabel: [{ required: true, message: "数据标签不能为空", trigger: "blur" }],
-    dictValue: [{ required: true, message: "数据键值不能为空", trigger: "blur" }],
-    dictSort: [{ required: true, message: "数据顺序不能为空", trigger: "blur" }],
+    dictLabel: [{ required: true, message: t("dictManage.rules.dataLabelRequired"), trigger: "blur" }],
+    dictValue: [{ required: true, message: t("dictManage.rules.dataValueRequired"), trigger: "blur" }],
+    dictSort: [{ required: true, message: t("dictManage.rules.dataSortRequired"), trigger: "blur" }],
   },
 });
 
@@ -320,7 +322,7 @@ function getList() {
     flatDataList.value = response.rows;
     dataList.value = handleTree(response.rows, "dictDataId", "parentId", "children");
     treeSelectData.value = [
-      { dictDataId: "0", dictLabel: "根节点", children: dataList.value },
+      { dictDataId: "0", dictLabel: t("dictManage.rootNode"), children: dataList.value },
     ];
     total.value = response.total;
     loading.value = false;
@@ -372,7 +374,7 @@ function handleClose() {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加字典数据";
+  title.value = t("dictManage.addData");
   form.value.dictType = queryParams.value.params.dictType;
 }
 
@@ -390,7 +392,7 @@ function handleUpdate(row) {
   getData(dictDataId).then((response) => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改字典数据";
+    title.value = t("dictManage.editData");
   });
 }
 
@@ -401,7 +403,7 @@ function submitForm() {
       const apiCall = form.value.dictCode ? updateData(form.value) : addData(form.value);
       apiCall.then(() => {
         store.dispatch("dict/deleteDict", queryParams.value.params.dictType);
-        ElMessage.success(form.value.dictCode ? "修改成功" : "新增成功");
+        ElMessage.success(form.value.dictCode ? t("common.editSuccess") : t("common.addSuccess"));
         open.value = false;
         getList();
         store.dispatch("dict/deleteDict", queryParams.value.params.dictType);
@@ -416,16 +418,16 @@ function handleDelete(row) {
   const dictNames = flatDataList.value
     .filter((p) => dictDataIds.includes(p.dictDataId))
     .map((p) => p.dictLabel);
-  ElMessageBox.confirm("是否确认删除字典 " + dictNames.join("，") + " ？", "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t("dictManage.confirm.deleteData", { names: dictNames.join("，") }), t("common.confirmTitle"), {
+    confirmButtonText: t("common.confirmDelete"),
+    cancelButtonText: t("common.cancel"),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delData(dictDataIds))
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t("common.deleteSuccess"));
       store.dispatch("dict/deleteDict", queryParams.value.params.dictType);
     })
     .catch(() => {});

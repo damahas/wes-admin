@@ -36,7 +36,7 @@ namespace Wes.WebApi.Areas.SystemManage
         [AllowAnonymous]
         public ReturnData Save([FromBody]LicenseInfo licenseInfo)
         {
-            string licensePath = $"{GlobalContext.AppSettings.FilePath.TrimEnd('/')}/license.key";
+            string licensePath = $"{GlobalContext.AppSettings.FilePath.TrimEnd('/')}/UploadFile/DataProtection/{GlobalContext.DeviceId}.key";
             try
             {
                 var md5 = MD5Utils.EncryptX32(GlobalContext.DeviceId);
