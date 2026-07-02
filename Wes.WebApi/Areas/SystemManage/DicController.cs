@@ -74,7 +74,7 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpGet]
-        [Route("type/optionselect")]
+        [Route("type/all")]
         public ReturnData GetAllDic()
         {
             return _sysDicTypeBiz.GetAll();

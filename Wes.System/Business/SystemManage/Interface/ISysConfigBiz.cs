@@ -14,6 +14,8 @@ namespace Wes.Business
 
         public RowData<SysConfigModel> GetList(ParamData<ConfigParam> param);
 
+        public RowData<SysConfigModel> GetAll();
+
         public ResultData<SysConfigModel> GetById(long id);
 
         public ReturnData Save(SysConfigModel config);
@@ -24,6 +26,8 @@ namespace Wes.Business
         #endregion
 
         public ReturnData Refresh();
+
+        public ReturnData SaveSort(List<long> configIds);
 
         public string GetByConfigKey(string configKey);
 

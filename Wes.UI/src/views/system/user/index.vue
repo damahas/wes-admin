@@ -2,28 +2,34 @@
   <div class="app-container">
     <div class="split-panel">
       <!--部门数据-->
-      <div class="split-left-panel main-panel">
-        <el-input
-          v-model="deptName"
-          placeholder="请输入部门名称"
-          clearable
-          prefix-icon="Search"
-          style="margin-bottom: 20px"
-        />
-        <el-tree
-          :data="deptOptions"
-          :props="{ label: 'label', children: 'children' }"
-          :expand-on-click-node="false"
-          :filter-node-method="filterNode"
-          ref="deptTreeRef"
-          node-key="id"
-          highlight-current
-          default-expand-all
-          @node-click="handleNodeClick"
-        />
+      <div class="split-left-panel">
+        <div class="split-left__header">
+          <div class="split-left__title">部门</div>
+          <div class="split-left__search">
+            <el-input
+              v-model="deptName"
+              placeholder="请输入部门名称"
+              clearable
+              prefix-icon="Search"
+            />
+          </div>
+        </div>
+        <div class="split-left__body">
+          <el-tree
+            :data="deptOptions"
+            :props="{ label: 'label', children: 'children' }"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            ref="deptTreeRef"
+            node-key="id"
+            highlight-current
+            default-expand-all
+            @node-click="handleNodeClick"
+          />
+        </div>
       </div>
       <!--用户数据-->
-      <div class="split-right-panel main-panel">
+      <div class="split-right-panel">
         <query-form
           :config="queryConfig"
           v-model:visible="showSearch"

@@ -201,22 +201,31 @@ const toggleCollapse = () => {
   color: var(--menu-item-active-icon-color);
 }
 
-// .sidebar :deep(.el-sub-menu .el-menu-item) {
-//   padding-left: 48px !important;
-//   padding-right: 0 !important;
-//   width: 100%;
-//   margin-right: -16px;
-// }
+/* 二级菜单缩进 */
+.sidebar :deep(.el-sub-menu .el-menu-item) {
+  padding-left: 36px !important;
+  height: 40px;
+  line-height: 40px;
+  font-weight: 400;
+}
 
-// /* 三级菜单缩进 */
-// .sidebar :deep(.el-sub-menu .el-sub-menu .el-menu-item) {
-//   padding-left: 68px !important;
-// }
+.sidebar :deep(.el-sub-menu .el-menu .el-sub-menu__title) {
+  padding-left: 36px !important;
+}
 
-// /* 四级菜单缩进 */
-// .sidebar :deep(.el-sub-menu .el-sub-menu .el-sub-menu .el-menu-item) {
-//   padding-left: 88px !important;
-// }
+/* 三级菜单缩进 */
+.sidebar :deep(.el-sub-menu .el-sub-menu .el-menu-item) {
+  padding-left: 52px !important;
+}
+
+.sidebar :deep(.el-sub-menu .el-menu .el-sub-menu .el-menu .el-sub-menu__title) {
+  padding-left: 52px !important;
+}
+
+/* 四级菜单缩进 */
+.sidebar :deep(.el-sub-menu .el-sub-menu .el-sub-menu .el-menu-item) {
+  padding-left: 68px !important;
+}
 
 .sidebar :deep(.menu-icon) {
   color: var(--menu-item-icon-color);

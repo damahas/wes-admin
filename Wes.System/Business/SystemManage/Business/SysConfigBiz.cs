@@ -62,6 +62,11 @@ namespace Wes.Business
             return result;
         }
 
+        public RowData<SysConfigModel> GetAll()
+        {
+            return new RowData<SysConfigModel>(_sysConfigService.GetAll());
+        }
+
         public ReturnData Save(SysConfigModel config)
         {
             var exist = _sysConfigService.GetByConfigKey(config.ConfigKey);
@@ -106,6 +111,12 @@ namespace Wes.Business
             {
                 CacheFactory.Cache.SetCache($"{CacheKey.Config}{item.ConfigKey}", item.ConfigValue, DateTime.Now.AddHours(8));
             }
+            return new ReturnData();
+        }
+
+        public ReturnData SaveSort(List<long> configIds)
+        {
+            _sysConfigService.UpdateSort(configIds);
             return new ReturnData();
         }
 

@@ -25,6 +25,8 @@ namespace Wes.Service
 
         public bool Delete(List<long> ids);
 
+        public void UpdateSort(List<long> configIds);
+
         #endregion
     }
 }

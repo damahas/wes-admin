@@ -68,16 +68,15 @@ const routes = [
         ]
       },
       // {
-      //   path: '/monitor/job-log',
-      //   component: Layout,
+      //   path: '/system/job-log',
       //   hidden: true,
       //   permissions: ['monitor:job:list'],
       //   children: [
       //     {
       //       path: 'index/:jobId(\\d+)',
-      //       component: () => import('@/views/monitor/job/log'),
+      //       component: () => import('@/views/system/job/log'),
       //       name: 'JobLog',
-      //       meta: { title: '调度日志', activeMenu: '/monitor/job' }
+      //       meta: { title: '调度日志', activeMenu: '/system/job' }
       //     }
       //   ]
       // },

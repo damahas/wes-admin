@@ -2,35 +2,41 @@
   <div class="app-container">
     <div class="split-panel">
       <!-- 分类树 -->
-      <div class="split-left-panel main-panel">
-        <el-input
-          v-model="categoryName"
-          placeholder="请输入分类名称"
-          clearable
-          prefix-icon="Search"
-          style="margin-bottom: 20px"
-        />
-        <el-tree
-          :data="categoryOptions"
-          :props="{ label: 'label', children: 'children' }"
-          :expand-on-click-node="false"
-          :filter-node-method="filterNode"
-          ref="categoryTreeRef"
-          node-key="value"
-          highlight-current
-          default-expand-all
-          @node-click="handleNodeClick"
-        >
-          <template #default="{ data }">
-            <span class="tree-node">
-              <el-icon><FolderOpened /></el-icon>
-              <span>{{ data.label }}</span>
-            </span>
-          </template>
-        </el-tree>
+      <div class="split-left-panel">
+        <div class="split-left__header">
+          <div class="split-left__title">分类</div>
+          <div class="split-left__search">
+            <el-input
+              v-model="categoryName"
+              placeholder="请输入分类名称"
+              clearable
+              prefix-icon="Search"
+            />
+          </div>
+        </div>
+        <div class="split-left__body">
+          <el-tree
+            :data="categoryOptions"
+            :props="{ label: 'label', children: 'children' }"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            ref="categoryTreeRef"
+            node-key="value"
+            highlight-current
+            default-expand-all
+            @node-click="handleNodeClick"
+          >
+            <template #default="{ data }">
+              <span class="tree-node">
+                <el-icon><FolderOpened /></el-icon>
+                <span>{{ data.label }}</span>
+              </span>
+            </template>
+          </el-tree>
+        </div>
       </div>
       <!-- 数据服务列表 -->
-      <div class="split-right-panel main-panel">
+      <div class="split-right-panel">
         <query-form
           :config="queryConfig"
           v-model:visible="showSearch"

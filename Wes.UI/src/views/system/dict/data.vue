@@ -219,7 +219,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { useRoute } from "vue-router";
 import { getDict, download, handleTree } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
-import { optionselect as getDictOptionselect, getType } from "@/api/system/dict";
+import { getAllType, getType } from "@/api/system/dict";
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict";
 
 const { proxy } = getCurrentInstance();
@@ -308,7 +308,7 @@ function getTypes(dictId) {
 
 /** 查询字典类型列表 */
 function getTypeList() {
-  getDictOptionselect().then((response) => {
+  getAllType().then((response) => {
     typeOptions.value = response.data;
   });
 }

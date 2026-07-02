@@ -4,7 +4,8 @@ EXPOSE 80
 EXPOSE 8088
 ENV ASPNETCORE_URLS=http://+:8088
 
-RUN apk add --no-cache nginx
+RUN apk add --no-cache nginx tzdata
+ENV TZ=Asia/Shanghai
 
 # API 发布输出（构建上下文 = 解决方案根目录）
 COPY ./Wes.WebApi/bin/Release/net10.0/publish/ ./

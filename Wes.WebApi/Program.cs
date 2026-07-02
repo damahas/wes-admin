@@ -80,11 +80,11 @@ app.UseCors("Cors");
 app.Map("/api", apiApp =>
 {
     apiApp.UseGlobalExceptionHandler();
+    apiApp.UseRouting();
     apiApp.UseAuthentication();
     apiApp.UseAuthorization();
     apiApp.UseForbiddenHandler();
     apiApp.UseTokenExtraction();
-    apiApp.UseRouting();
     apiApp.UseEndpoints(endpoints => endpoints.MapControllers());
 });
 

@@ -78,7 +78,7 @@ function getComponent(type) {
 function getComponentProps(item) {
   const baseProps = {
     clearable: true,
-    style: { width: item.width || '240px' },
+    style: { width: item.width || '212px' },
   };
 
   switch (item.type) {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Wes.DbModel;
 using Wes.Utils;
 using Wes.Utils.Integration;
+using Wes.Utils.Security;
 
 namespace Wes.Service
 {
@@ -17,10 +18,12 @@ namespace Wes.Service
     public class SyncDataSaveService : ISyncDataSaveService, ISyncDataAccess
     {
         private readonly ISqlSugarClient _db;
+        private readonly ISysConfigService _sysConfigService;
 
-        public SyncDataSaveService(ISqlSugarClient db)
+        public SyncDataSaveService(ISqlSugarClient db, ISysConfigService sysConfigService)
         {
             _db = db;
+            _sysConfigService = sysConfigService;
         }
 
         #region ISyncDataSaveService 实现 —— 批量保存部门/用户
@@ -120,6 +123,12 @@ namespace Wes.Service
                         user.UserType = "00";
                         user.Status = "0";
                         user.IsDel = 0;
+
+                        // 使用 sys.user.initPassword 配置作为新用户默认密码
+                        var pwdConfig = _sysConfigService.GetByConfigKey("sys.user.initPassword");
+                        if (pwdConfig != null && !string.IsNullOrWhiteSpace(pwdConfig.ConfigValue))
+                            user.Password = AESUtils.Encrypt(MD5Utils.Encrypt(pwdConfig.ConfigValue));
+
                         user.UserId = _db.Insertable(user).ExecuteReturnSnowflakeId();
                         result.CreatedCount++;
                     }

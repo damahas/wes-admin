@@ -11,7 +11,7 @@ namespace Wes.WebApi.Areas.SystemManage
     /// 定时任务管理
     /// </summary>
     [ApiController]
-    [Route("monitor/job")]
+    [Route("system/job")]
     public class JobController : ControllerBase
     {
         private readonly ISysJobBiz _sysJobBiz;

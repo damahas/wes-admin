@@ -8,10 +8,10 @@ using Wes.DbModel;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
-namespace Wes.WebApi.Areas.MonitorManage
+namespace Wes.WebApi.Areas.SystemManage
 {
     [ApiController]
-    [Route("monitor/online")]
+    [Route("system/online")]
     public class OnlineController : ControllerBase
     {
         private ISysOnlineBiz _onlineBiz;

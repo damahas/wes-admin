@@ -311,7 +311,7 @@ namespace Wes.Service
         {
             Expressionable<SysTokenModel, SysUserModel, SysDeptModel> express = Expressionable.Create<SysTokenModel, SysUserModel, SysDeptModel>();
             express.And((t, u, d) => t.Status == 0);
-            express.And((t, u, d) => t.ExpirationTime <= DateTime.Now);
+            express.And((t, u, d) => t.ExpirationTime >= DateTime.Now);
             if (param.Params != null)
             {
                 if (!string.IsNullOrWhiteSpace(param.Params.LoginLocation))

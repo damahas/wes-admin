@@ -8,7 +8,7 @@ using Wes.Utils;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
-namespace Wes.Service.MonitorManage.Service
+namespace Wes.Service.SystemManage.Service
 {
     public class SysLoginLogService : Repository<SysLoginLogModel>, ISysLoginLogService
     {

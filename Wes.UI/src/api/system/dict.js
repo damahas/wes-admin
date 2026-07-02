@@ -55,10 +55,10 @@ export function refreshCache() {
   })
 }
 
-// 获取字典选择框列表
-export function optionselect() {
+// 获取所有字典类型
+export function getAllType() {
   return request({
-    url: '/system/dict/type/optionselect',
+    url: '/system/dict/type/all',
     method: 'get'
   })
 }

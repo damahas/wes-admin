@@ -9,6 +9,23 @@ export function listConfig(query) {
   })
 }
 
+// 查询全部参数
+export function getAllConfig() {
+  return request({
+    url: '/system/config/all',
+    method: 'get'
+  })
+}
+
+// 更新排序
+export function updateConfigSort(configIds) {
+  return request({
+    url: '/system/config/sort',
+    method: 'post',
+    data: configIds
+  })
+}
+
 // 查询参数详细
 export function getConfig(configId) {
   return request({

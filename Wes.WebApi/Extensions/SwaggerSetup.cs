@@ -56,7 +56,7 @@ public class SwaggerGroup : IControllerModelConvention
 
         // 定时任务控制器 → "Scheduler"
         if (controller.Attributes.OfType<RouteAttribute>().Any(r =>
-            r.Template?.StartsWith("monitor/job") == true))
+            r.Template?.StartsWith("system/job") == true))
         {
             group = "Scheduler";
         }

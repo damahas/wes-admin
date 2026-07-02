@@ -86,5 +86,11 @@ namespace Wes.DbModel
         /// <summary>
         [SugarColumn(ColumnName = "remark", IsNullable = true, Length = 500, ColumnDescription = "备注")]
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// <summary>
+        [SugarColumn(ColumnName = "sort_by", IsNullable = true, ColumnDescription = "排序号")]
+        public int? SortBy { get; set; }
     }
 }

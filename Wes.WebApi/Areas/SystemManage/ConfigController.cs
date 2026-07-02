@@ -30,6 +30,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpGet]
+        [Route("all")]
+        public ReturnData GetAll()
+        {
+            return new RowData<SysConfigModel>(_sysConfigBiz.GetAll());
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public ReturnData GetById(long id)
         {
@@ -46,6 +53,13 @@ namespace Wes.WebApi.Areas.SystemManage
         public ReturnData Insert([FromBody] SysConfigModel config)
         {
             return _sysConfigBiz.Save(config);
+        }
+
+        [HttpPost]
+        [Route("sort")]
+        public ReturnData SaveSort([FromBody] List<long> configIds)
+        {
+            return _sysConfigBiz.SaveSort(configIds);
         }
 
         [HttpDelete]

@@ -23,7 +23,11 @@ namespace Wes.Service
 
         public List<SysConfigModel> GetAll()
         {
-            return GetList(p => p.IsDel == 0);
+            return Context.Queryable<SysConfigModel>()
+                .Where(p => p.IsDel == 0)
+                .OrderBy(p => p.SortBy, OrderByType.Asc)
+                .OrderBy(p => p.ConfigId, OrderByType.Asc)
+                .ToList();
         }
 
         public SysConfigModel GetByConfigKey(string configKey)
@@ -88,6 +92,12 @@ namespace Wes.Service
             config.CreateTime = DateTime.Now;
             config.CreateBy = GlobalContext.CurrentUser.Account;
             return InsertReturnSnowflakeId(config) > 0;
+        }
+
+        public void UpdateSort(List<long> configIds)
+        {
+            var updateList = configIds.Select((id, index) => new SysConfigModel { ConfigId = id, SortBy = index }).ToList();
+            Context.Updateable(updateList).UpdateColumns(p => new { p.SortBy }).ExecuteCommand();
         }
 
         #endregion
