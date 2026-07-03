@@ -1,42 +1,42 @@
-export default {
+export default (t) => ({
   type: "task",
   color: "#409eff",
   icon: "fa-cogs",
-  label: "处理节点",
+  label: t('flow.designer.node.task'),
   components: [
     {
-      label: "节点名称",
+      label: t('flow.designer.nodeName'),
       param: "meta.name",
       type: "input",
     },
     {
-      label: "处理人",
+      label: t('flow.designer.handleUser'),
       param: "meta.handleBy",
       type: "handleUser",
     },
     {
-      label: "处理方式",
+      label: t('flow.designer.handleRule'),
       param: "meta.handleRule",
       type: "radio",
       props: {
         isRow: false,
         options: [
-          { key: "one", label: "一个人同意" },
-          { key: "all", label: "所有人同意" },
-          { key: "select", label: "上一节点最后处理人选择" },
+          { key: "one", label: t('flow.designer.handleRuleOption.one') },
+          { key: "all", label: t('flow.designer.handleRuleOption.all') },
+          { key: "select", label: t('flow.designer.handleRuleOption.select') },
         ],
       },
     },
     {
-      label: "重复审批自动跳过",
+      label: t('flow.designer.skipRepeat'),
       param: "meta.isNoRepeatHandle",
       type: "switch",
     },
   ],
   defaultValue: {
-    name: '处理节点',
+    name: t('flow.designer.node.task'),
     isNoRepeatHandle: true,
     handleBy: [],
     handleRule: 'one',
   }
-};
+});

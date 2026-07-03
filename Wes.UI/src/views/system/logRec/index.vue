@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-tabs v-model="activeTab" @tab-change="handleTabChange">
       <!-- 登录日志 -->
-      <el-tab-pane label="登录日志" name="login">
+      <el-tab-pane :label="t('logRec.loginLog')" name="login">
         <div class="main-panel p16">
           <query-form
             :config="loginQueryConfig"
@@ -19,38 +19,38 @@
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column
-              label="用户名称"
+              :label="t('logRec.column.userName')"
               align="center"
               prop="userName"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="登录地址"
+              :label="t('logRec.column.loginAddress')"
               align="center"
               prop="ipaddr"
               width="130"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="登录地点"
+              :label="t('logRec.column.loginLocation')"
               align="center"
               prop="loginLocation"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="浏览器"
+              :label="t('logRec.column.browser')"
               align="center"
               prop="browser"
               :show-overflow-tooltip="true"
             />
-            <el-table-column label="操作系统" align="center" prop="os" />
-            <el-table-column label="登录状态" align="center" prop="status">
+            <el-table-column :label="t('logRec.os')" align="center" prop="os" />
+            <el-table-column :label="t('logRec.column.loginStatus')" align="center" prop="status">
               <template #default="scope">
                 <dict-tag :options="sys_common_status" :value="scope.row.status" />
               </template>
             </el-table-column>
-            <el-table-column label="操作信息" align="center" prop="msg" />
-            <el-table-column label="登录日期" align="center" prop="loginTime" width="180">
+            <el-table-column :label="t('logRec.column.operInfo')" align="center" prop="msg" />
+            <el-table-column :label="t('logRec.column.loginTime')" align="center" prop="loginTime" width="180">
               <template #default="scope">
                 <span>{{ formatTime(scope.row.loginTime) }}</span>
               </template>
@@ -68,7 +68,7 @@
       </el-tab-pane>
 
       <!-- 操作日志 -->
-      <el-tab-pane label="操作日志" name="oper">
+      <el-tab-pane :label="t('logRec.operLog')" name="oper">
         <div class="main-panel p16">
           <query-form
             :config="operQueryConfig"
@@ -84,45 +84,45 @@
             @selection-change="handleOperSelectionChange"
           >
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column label="系统模块" align="center" prop="title" />
-            <el-table-column label="操作类型" align="center" prop="businessType">
+            <el-table-column :label="t('logRec.column.moduleTitle')" align="center" prop="title" />
+            <el-table-column :label="t('logRec.actionType')" align="center" prop="businessType">
               <template #default="scope">
                 <dict-tag :options="sys_oper_type" :value="scope.row.businessType" />
               </template>
             </el-table-column>
-            <el-table-column label="请求方式" align="center" prop="requestMethod" />
+            <el-table-column :label="t('logRec.requestMethod')" align="center" prop="requestMethod" />
             <el-table-column
-              label="操作人员"
+              :label="t('logRec.column.operName')"
               align="center"
               prop="operName"
               width="100"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="操作地址"
+              :label="t('logRec.column.operUrl')"
               align="center"
               prop="operIp"
               width="130"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="操作地点"
+              :label="t('logRec.column.operLocation')"
               align="center"
               prop="operLocation"
               :show-overflow-tooltip="true"
             />
-            <el-table-column label="操作状态" align="center" prop="status">
+            <el-table-column :label="t('logRec.column.operStatus')" align="center" prop="status">
               <template #default="scope">
                 <dict-tag :options="sys_common_status" :value="scope.row.status" />
               </template>
             </el-table-column>
-            <el-table-column label="操作日期" align="center" prop="operTime" width="180">
+            <el-table-column :label="t('logRec.column.operTime')" align="center" prop="operTime" width="180">
               <template #default="scope">
                 <span>{{ formatTime(scope.row.operTime) }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
+              :label="t('common.actions')"
               align="center"
               class-name="small-padding fixed-width"
             >
@@ -132,7 +132,7 @@
                   type="text"
                   icon="View"
                   @click="handleView(scope.row)"
-                  >详细</el-button
+                  >{{ t('logRec.detail') }}</el-button
                 >
               </template>
             </el-table-column>
@@ -149,59 +149,59 @@
 
         <!-- 操作日志详细 -->
         <el-dialog
-          title="操作日志详细"
+          :title="t('logRec.logDetail')"
           v-model="dialogVisible"
           width="700px"
           append-to-body
         >
-          <el-form :model="operForm" label-width="100px" size="small">
+          <el-form :model="operForm" label-width="auto" size="small">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="操作模块："
-                  >{{ operForm.title }} / {{ typeFormat(operForm) }}</el-form-item
+                <el-form-item :label="t('logRec.moduleTitle') + '：'">
+                  {{ operForm.title }} / {{ typeFormat(operForm) }}</el-form-item
                 >
-                <el-form-item label="登录信息："
-                  >{{ operForm.operName }} / {{ operForm.operIp }} /
+                <el-form-item :label="t('logRec.operInfo') + '：'">
+                  {{ operForm.operName }} / {{ operForm.operIp }} /
                   {{ operForm.operLocation }}</el-form-item
                 >
               </el-col>
               <el-col :span="12">
-                <el-form-item label="请求地址：">{{ operForm.operUrl }}</el-form-item>
-                <el-form-item label="请求方式：">{{
+                <el-form-item :label="t('logRec.operUrl') + '：'">{{ operForm.operUrl }}</el-form-item>
+                <el-form-item :label="t('logRec.requestMethod') + '：'">{{
                   operForm.requestMethod
                 }}</el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="操作方法：">{{ operForm.method }}</el-form-item>
+                <el-form-item :label="t('logRec.method') + '：'">{{ operForm.method }}</el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="请求参数：" class="log-content">{{
+                <el-form-item :label="t('logRec.operParam') + '：'" class="log-content">{{
                   operForm.operParam
                 }}</el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="返回参数：" class="log-content">{{
+                <el-form-item :label="t('logRec.jsonResult') + '：'" class="log-content">{{
                   operForm.jsonResult
                 }}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="操作状态：">
-                  <el-tag v-if="operForm.status === 0" type="success">正常</el-tag>
-                  <el-tag v-else type="danger">失败</el-tag>
+                <el-form-item :label="t('logRec.operStatus') + '：'">
+                  <el-tag v-if="operForm.status === 0" type="success">{{ t('logRec.normal') }}</el-tag>
+                  <el-tag v-else type="danger">{{ t('logRec.failed') }}</el-tag>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="操作时间：">{{
+                <el-form-item :label="t('logRec.operTime') + '：'">{{
                   formatTime(operForm.operTime)
                 }}</el-form-item>
               </el-col>
               <el-col :span="24" v-if="operForm.status === 1">
-                <el-form-item label="异常信息：">{{ operForm.errorMsg }}</el-form-item>
+                <el-form-item :label="t('logRec.errorMsg') + '：'">{{ operForm.errorMsg }}</el-form-item>
               </el-col>
             </el-row>
           </el-form>
           <template #footer>
-            <el-button @click="dialogVisible = false">关 闭</el-button>
+            <el-button @click="dialogVisible = false">{{ t('common.close') }}</el-button>
           </template>
         </el-dialog>
       </el-tab-pane>
@@ -210,12 +210,15 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
 import DictTag from "@/components/DictTag/index.vue";
 import QueryForm from "@/components/QueryForm/index.vue";
 import { getDict, addDateRange } from "@/utils";
 import { loginList as fetchLoginList, operList as fetchOperList } from "@/api/system/log";
+
+const { t } = useI18n();
 
 const { sys_common_status, sys_oper_type } = getDict(
   "sys_common_status",
@@ -242,34 +245,34 @@ const loginParams = reactive({
 });
 
 // 登录日志查询配置
-const loginQueryConfig = [
+const loginQueryConfig = computed(() => [
   {
-    label: "登录地址",
+    label: t('logRec.loginQuery.loginAddress'),
     prop: "ipaddr",
     type: "input",
-    placeholder: "请输入登录地址",
+    placeholder: t('logRec.placeholder.loginAddress'),
   },
   {
-    label: "用户名称",
+    label: t('logRec.loginQuery.userName'),
     prop: "userName",
     type: "input",
-    placeholder: "请输入用户名称",
+    placeholder: t('logRec.placeholder.userName'),
   },
   {
-    label: "状态",
+    label: t('logRec.loginQuery.status'),
     prop: "status",
     type: "select",
-    placeholder: "登录状态",
+    placeholder: t('logRec.placeholder.loginStatus'),
     options: sys_common_status,
   },
   {
-    label: "登录时间",
+    label: t('logRec.loginQuery.loginTime'),
     prop: "dateRange",
     type: "daterange",
-    startPlaceholder: "开始日期",
-    endPlaceholder: "结束日期",
+    startPlaceholder: t('logRec.loginQuery.startDate'),
+    endPlaceholder: t('logRec.loginQuery.endDate'),
   },
-];
+]);
 
 function getLoginList() {
   loginLoading.value = true;
@@ -282,7 +285,7 @@ function getLoginList() {
     .catch((error) => {
       console.error("登录日志请求失败:", error);
       loginLoading.value = false;
-      ElMessage.error("加载登录日志失败");
+      ElMessage.error(t('logRec.message.loadLoginFailed'));
     });
 }
 
@@ -319,41 +322,41 @@ const operParams = reactive({
 });
 
 // 操作日志查询配置
-const operQueryConfig = [
+const operQueryConfig = computed(() => [
   {
-    label: "系统模块",
+    label: t('logRec.operQuery.moduleTitle'),
     prop: "title",
     type: "input",
-    placeholder: "请输入系统模块",
+    placeholder: t('logRec.placeholder.moduleTitle'),
   },
   {
-    label: "操作人员",
+    label: t('logRec.operQuery.operName'),
     prop: "operName",
     type: "input",
-    placeholder: "请输入操作人员",
+    placeholder: t('logRec.placeholder.userName'),
   },
   {
-    label: "类型",
+    label: t('logRec.operQuery.businessType'),
     prop: "businessType",
     type: "select",
-    placeholder: "操作类型",
+    placeholder: t('logRec.placeholder.actionType'),
     options: sys_oper_type,
   },
   {
-    label: "状态",
+    label: t('logRec.operQuery.status'),
     prop: "status",
     type: "select",
-    placeholder: "操作状态",
+    placeholder: t('logRec.placeholder.loginStatus'),
     options: sys_common_status,
   },
   {
-    label: "操作时间",
+    label: t('logRec.operQuery.operTime'),
     prop: "dateRange",
     type: "daterange",
-    startPlaceholder: "开始日期",
-    endPlaceholder: "结束日期",
+    startPlaceholder: t('logRec.operQuery.startDate'),
+    endPlaceholder: t('logRec.operQuery.endDate'),
   },
-];
+]);
 
 function getOperList() {
   operLoading.value = true;
@@ -367,7 +370,7 @@ function getOperList() {
     .catch((error) => {
       console.error("操作日志请求失败:", error);
       operLoading.value = false;
-      ElMessage.error("加载操作日志失败");
+      ElMessage.error(t('logRec.message.loadOperFailed'));
     });
 }
 

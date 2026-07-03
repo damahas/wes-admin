@@ -105,10 +105,14 @@
 </template>
 
 <script setup name="SelectUser">
-import { useI18n } from 'vue-i18n'
+import { ref, reactive } from "vue";
+import { ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
+import { getDict } from "@/utils";
 import { authUserSelectAll, unallocatedUserList } from "@/api/system/role";
 
-const { t } = useI18n()
+const { t } = useI18n();
+const { sys_normal_disable } = getDict("sys_normal_disable");
 
 const props = defineProps({
   roleId: {
@@ -116,9 +120,8 @@ const props = defineProps({
   },
 });
 
-const { proxy } = getCurrentInstance();
-const { sys_normal_disable } = proxy.useDict("sys_normal_disable");
-
+const refTable = ref(null);
+const queryRef = ref(null);
 const userList = ref([]);
 const visible = ref(false);
 const total = ref(0);
@@ -144,7 +147,7 @@ function show() {
 
 /**选择行 */
 function clickRow(row) {
-  proxy.$refs["refTable"].toggleRowSelection(row);
+  refTable.value?.toggleRowSelection(row);
 }
 
 // 多选框选中数据
@@ -168,7 +171,7 @@ function handleQuery() {
 
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy.resetForm("queryRef");
+  queryRef.value?.resetFields();
   handleQuery();
 }
 
@@ -178,11 +181,11 @@ function handleSelectUser() {
   const roleId = queryParams.params.roleId;
   const uIds = userIds.value.join(",");
   if (uIds == "") {
-    proxy.$modal.msgError(t("user.pleaseAssignUser"));
+    ElMessage.error(t("user.pleaseAssignUser"));
     return;
   }
   authUserSelectAll({ roleId: roleId, userIds: uIds }).then((res) => {
-    proxy.$modal.msgSuccess(res.msg);
+    ElMessage.success(res.msg);
     visible.value = false;
     emit("ok");
   });

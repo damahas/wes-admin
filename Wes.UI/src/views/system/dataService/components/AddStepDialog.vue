@@ -6,7 +6,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
-    <el-form :model="formData" label-width="100px">
+    <el-form :model="formData" label-width="auto">
       <el-form-item label="步骤名称" required>
         <el-input
           v-model="formData.partName"

@@ -23,9 +23,13 @@
 
 <script setup>
 import { computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import allComponents from "./index.js";
-import { getElementTrait } from "../config/index.js";
+import { useFlowConfig } from "../config/index.js";
 import { get as _get, set as _set } from "lodash";
+
+const { t } = useI18n();
+const { getElementTrait } = useFlowConfig(t);
 
 const props = defineProps({
   type: String,

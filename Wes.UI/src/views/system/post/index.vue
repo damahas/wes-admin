@@ -17,7 +17,7 @@
             icon="Plus"
             @click="handleAdd"
             v-hasPermi="['system:post:add']"
-            >新增</el-button
+            >{{ t('common.add') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
@@ -28,7 +28,7 @@
             :disabled="single"
             @click="handleUpdate"
             v-hasPermi="['system:post:edit']"
-            >修改</el-button
+            >{{ t('common.edit') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
@@ -39,7 +39,7 @@
             :disabled="multiple"
             @click="handleDelete"
             v-hasPermi="['system:post:remove']"
-            >删除</el-button
+            >{{ t('common.delete') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
@@ -49,7 +49,7 @@
             icon="Download"
             @click="handleExport"
             v-hasPermi="['system:post:export']"
-            >导出</el-button
+            >{{ t('common.export') }}</el-button
           >
         </el-col>
         <right-toolbar
@@ -64,21 +64,21 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="岗位编码" align="center" prop="postCode" />
-        <el-table-column label="岗位名称" align="center" prop="postName" />
-        <el-table-column label="岗位排序" align="center" prop="postSort" />
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column :label="t('post.postCode')" align="center" prop="postCode" />
+        <el-table-column :label="t('post.postName')" align="center" prop="postName" />
+        <el-table-column :label="t('post.postSort')" align="center" prop="postSort" />
+        <el-table-column :label="t('common.status')" align="center" prop="status">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="180">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="t('common.actions')"
           width="180"
           align="center"
           class-name="small-padding fixed-width"
@@ -91,7 +91,7 @@
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:post:edit']"
             >
-              修改
+              {{ t('common.edit') }}
             </el-button>
             <el-button
               link
@@ -100,7 +100,7 @@
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:post:remove']"
             >
-              删除
+              {{ t('common.delete') }}
             </el-button>
           </template>
         </el-table-column>
@@ -117,17 +117,17 @@
 
     <!-- 添加或修改岗位对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="postRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="岗位名称" prop="postName">
-          <el-input v-model="form.postName" placeholder="请输入岗位名称" />
+      <el-form ref="postRef" :model="form" :rules="rules" label-width="auto">
+        <el-form-item :label="t('post.postName')" prop="postName">
+          <el-input v-model="form.postName" :placeholder="t('post.placeholder.postName')" />
         </el-form-item>
-        <el-form-item label="岗位编码" prop="postCode">
-          <el-input v-model="form.postCode" placeholder="请输入编码名称" />
+        <el-form-item :label="t('post.postCode')" prop="postCode">
+          <el-input v-model="form.postCode" :placeholder="t('post.placeholder.postCode')" />
         </el-form-item>
-        <el-form-item label="岗位顺序" prop="postSort">
+        <el-form-item :label="t('post.postSort')" prop="postSort">
           <el-input-number v-model="form.postSort" controls-position="right" :min="0" />
         </el-form-item>
-        <el-form-item label="岗位状态" prop="status">
+        <el-form-item :label="t('post.postStatus')" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in sys_normal_disable"
@@ -137,14 +137,14 @@
             >
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        <el-form-item :label="t('common.remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" :placeholder="t('common.pleaseInput')" />
         </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -152,37 +152,39 @@
 </template>
 
 <script setup name="Post">
-import { ref, reactive, toRefs } from "vue";
+import { ref, reactive, toRefs, computed } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { download, getDict } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 import { listPost, addPost, delPost, getPost, updatePost } from "@/api/system/post";
 
+const { t } = useI18n();
 const { sys_normal_disable } = getDict("sys_normal_disable");
 const postRef = ref(null);
 
 // 查询条件配置
-const queryConfig = [
+const queryConfig = computed(() => [
   {
-    label: "岗位编码",
+    label: t('post.postCode'),
     prop: "postCode",
     type: "input",
-    placeholder: "请输入岗位编码",
+    placeholder: t('post.placeholder.postCode'),
   },
   {
-    label: "岗位名称",
+    label: t('post.postName'),
     prop: "postName",
     type: "input",
-    placeholder: "请输入岗位名称",
+    placeholder: t('post.placeholder.postName'),
   },
   {
-    label: "状态",
+    label: t('common.status'),
     prop: "status",
     type: "select",
-    placeholder: "岗位状态",
+    placeholder: t('post.placeholder.status'),
     options: sys_normal_disable,
   },
-];
+]);
 
 const postList = ref([]);
 const open = ref(false);
@@ -206,9 +208,9 @@ const data = reactive({
     },
   },
   rules: {
-    postName: [{ required: true, message: "岗位名称不能为空", trigger: "blur" }],
-    postCode: [{ required: true, message: "岗位编码不能为空", trigger: "blur" }],
-    postSort: [{ required: true, message: "岗位顺序不能为空", trigger: "blur" }],
+    postName: [{ required: true, message: computed(() => t('post.rules.postNameRequired')), trigger: "blur" }],
+    postCode: [{ required: true, message: computed(() => t('post.rules.postCodeRequired')), trigger: "blur" }],
+    postSort: [{ required: true, message: computed(() => t('post.rules.postSortRequired')), trigger: "blur" }],
   },
 });
 
@@ -265,7 +267,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加岗位";
+  title.value = t('post.addTitle');
 }
 
 /** 修改按钮操作 */
@@ -275,7 +277,7 @@ function handleUpdate(row) {
   getPost(postId).then((response) => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改岗位";
+    title.value = t('post.editTitle');
   });
 }
 
@@ -285,7 +287,7 @@ function submitForm() {
     if (valid) {
       const apiCall = form.value.postId ? updatePost(form.value) : addPost(form.value);
       apiCall.then(() => {
-        ElMessage.success(form.value.postId ? "修改成功" : "新增成功");
+        ElMessage.success(form.value.postId ? t('common.editSuccess') : t('common.addSuccess'));
         open.value = false;
         getList();
       });
@@ -299,16 +301,16 @@ function handleDelete(row) {
   const formNames = postList.value
     .filter((p) => postIds.includes(p.postId))
     .map((p) => p.postName);
-  ElMessageBox.confirm('是否确认删除岗位 "' + formNames.join("，") + '"？', "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('post.confirm.delete', { names: formNames.join(", ") }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delPost(postIds))
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('common.deleteSuccess'));
     })
     .catch(() => {});
 }

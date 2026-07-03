@@ -15,7 +15,9 @@
           />
         </el-icon> -->
         <template #title>
-          <span>{{ onlyOneChild.meta.title }}</span>
+          <el-tooltip :content="onlyOneChild.meta.title" placement="right" :disabled="collapse">
+            <span class="menu-title-text">{{ onlyOneChild.meta.title }}</span>
+          </el-tooltip>
         </template>
       </el-menu-item>
     </template>
@@ -26,7 +28,9 @@
         <!-- <el-icon>
           <component :is="getIconComponent(menu.meta.icon)" />
         </el-icon> -->
-        <span>{{ menu.meta.title }}</span>
+        <el-tooltip :content="menu.meta.title" placement="right" :disabled="collapse">
+          <span class="menu-title-text">{{ menu.meta.title }}</span>
+        </el-tooltip>
       </template>
       <menu-item
         v-for="(child, index) in menu.children"

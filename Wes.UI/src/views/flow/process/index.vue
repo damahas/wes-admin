@@ -18,7 +18,7 @@
             @click="handleAdd"
             v-hasPermi="['flow:version:edit']"
           >
-            新增
+            {{ t('common.add') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
@@ -30,7 +30,7 @@
             @click="handleUpdate"
             v-hasPermi="['flow:version:edit']"
           >
-            修改
+            {{ t('common.edit') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
@@ -42,7 +42,7 @@
             @click="handleDelete"
             v-hasPermi="['flow:process:list']"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </el-col>
         <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" />
@@ -54,23 +54,23 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="流程编码" width="140" align="center" prop="processCode" />
-        <el-table-column label="流程名称" align="center" prop="processName" />
-        <el-table-column label="业务模块" width="120" align="center" prop="businessField">
+        <el-table-column :label="t('flow.process.processCode')" width="140" align="center" prop="processCode" />
+        <el-table-column :label="t('flow.process.processName')" align="center" prop="processName" />
+        <el-table-column :label="t('flow.process.businessField')" width="120" align="center" prop="businessField">
           <template #default="scope">
             <dict-tag :options="sys_flow_field" :value="scope.row.businessField" />
           </template>
         </el-table-column>
-        <el-table-column label="当前流程图" align="center">
+        <el-table-column :label="t('flow.process.currentFlowchart')" align="center">
           <template #default="scope">
             <el-link type="primary" @click="handleToVersion(scope.row.version)">
               {{ scope.row.version?.version }}
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="描述" align="center" prop="remark" />
+        <el-table-column :label="t('flow.process.description')" align="center" prop="remark" />
         <el-table-column
-          label="操作"
+          :label="t('common.actions')"
           align="center"
           class-name="small-padding fixed-width"
         >
@@ -82,7 +82,7 @@
               v-hasPermi="['flow:version:edit']"
               @click="handleUpdate(scope.row)"
             >
-              修改
+              {{ t('common.edit') }}
             </el-button>
             <el-button
               link
@@ -91,10 +91,10 @@
               v-hasPermi="['flow:version:edit']"
               @click="handleToVersion(scope.row.version)"
             >
-              编排
+              {{ t('flow.process.steps') }}
             </el-button>
             <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">
-              删除
+              {{ t('common.delete') }}
             </el-button>
           </template>
         </el-table-column>
@@ -111,15 +111,15 @@
 
     <!-- 添加或修改数据对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="流程编码" prop="processCode">
-          <el-input v-model="form.processCode" placeholder="请输入流程编码" />
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
+        <el-form-item :label="t('flow.process.processCode')" prop="processCode">
+          <el-input v-model="form.processCode" :placeholder="t('flow.process.queryConfig.processCode')" />
         </el-form-item>
-        <el-form-item label="流程名称" prop="processName">
-          <el-input v-model="form.processName" placeholder="请输入流程名称" />
+        <el-form-item :label="t('flow.process.processName')" prop="processName">
+          <el-input v-model="form.processName" :placeholder="t('flow.process.queryConfig.processName')" />
         </el-form-item>
-        <el-form-item label="业务模块" prop="businessField">
-          <el-select v-model="form.businessField" placeholder="请选择业务模块">
+        <el-form-item :label="t('flow.process.businessField')" prop="businessField">
+          <el-select v-model="form.businessField" :placeholder="t('flow.process.queryConfig.businessField')">
             <el-option
               v-for="dict in sys_flow_field"
               :key="dict.value"
@@ -128,25 +128,25 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="页面地址" prop="formUrl">
-          <el-input v-model="form.formUrl" placeholder="请输入页面地址" />
+        <el-form-item :label="t('flow.process.pageUrl')" prop="formUrl">
+          <el-input v-model="form.formUrl" :placeholder="t('flow.process.queryConfig.processName')" />
         </el-form-item>
-        <el-form-item label="业务模块" prop="backUrl">
-          <el-input v-model="form.backUrl" placeholder="请输入业务模块" />
+        <el-form-item :label="t('flow.process.backUrl')" prop="backUrl">
+          <el-input v-model="form.backUrl" :placeholder="t('flow.process.queryConfig.businessField')" />
         </el-form-item>
-        <el-form-item label="描述" prop="remark">
+        <el-form-item :label="t('flow.process.description')" prop="remark">
           <el-input
             type="textarea"
             :rows="5"
             v-model="form.remark"
-            placeholder="请输入描述"
+            :placeholder="t('flow.process.description')"
           />
         </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.confirm') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -159,6 +159,7 @@
 <script setup>
 import { ref, reactive, toRefs, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { getDict } from "@/utils";
 import {
   listProcess,
@@ -171,6 +172,7 @@ import QueryForm from "@/components/QueryForm/index.vue";
 import DictTag from "@/components/DictTag/index.vue";
 import FlowDesigner from "./flow.vue";
 
+const { t } = useI18n();
 const flowRef = ref(null);
 
 const { sys_flow_field } = getDict("sys_flow_field");
@@ -196,32 +198,34 @@ const queryParams = reactive({
 const form = ref({});
 
 const rules = reactive({
-  processCode: [{ required: true, message: "流程编码不能为空", trigger: "blur" }],
-  processName: [{ required: true, message: "流程名称不能为空", trigger: "blur" }],
-  businessField: [{ required: true, message: "业务模块不能为空", trigger: "blur" }],
+  processCode: [{ required: true, message: t('flow.process.rules.processCodeRequired'), trigger: "blur" }],
+  processName: [{ required: true, message: t('flow.process.rules.processNameRequired'), trigger: "blur" }],
+  businessField: [{ required: true, message: t('flow.process.rules.businessFieldRequired'), trigger: "blur" }],
 });
 
-const queryConfig = [
+const queryConfig = computed(() => [
   {
-    label: "流程编码",
+    label: t('flow.process.queryConfig.processCode'),
     prop: "processCode",
     type: "input",
-    placeholder: "请输入流程编码",
+    placeholder: t('flow.process.queryConfig.processCode'),
   },
   {
-    label: "流程名称",
+    label: t('flow.process.queryConfig.processName'),
     prop: "processName",
     type: "input",
-    placeholder: "请输入流程名称",
+    placeholder: t('flow.process.queryConfig.processName'),
   },
   {
-    label: "业务模块",
+    label: t('flow.process.queryConfig.businessField'),
     prop: "businessField",
     type: "select",
-    placeholder: "请选择业务模块",
+    placeholder: t('flow.process.queryConfig.businessField'),
     options: sys_flow_field,
   },
-];
+]);
+
+import { computed } from 'vue';
 
 /** 查询列表 */
 function getList() {
@@ -271,7 +275,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加审批流";
+  title.value = t('flow.process.addTitle');
 }
 
 /** 修改按钮操作 */
@@ -281,7 +285,7 @@ function handleUpdate(row) {
   getProcess(processId).then((response) => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改审批流";
+    title.value = t('flow.process.editTitle');
   });
 }
 
@@ -291,13 +295,13 @@ function submitForm() {
     if (valid) {
       if (form.value.processId !== undefined) {
         updateProcess(form.value).then((response) => {
-          ElMessage.success("修改成功");
+          ElMessage.success(t('flow.process.message.editSuccess'));
           open.value = false;
           getList();
         });
       } else {
         addProcess(form.value).then((response) => {
-          ElMessage.success("新增成功");
+          ElMessage.success(t('flow.process.message.addSuccess'));
           open.value = false;
           getList();
         });
@@ -309,9 +313,9 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const processIds = row.processId || ids.value;
-  ElMessageBox.confirm(`是否确认删除编号为"${processIds}"的数据项？`, "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('flow.process.confirm.delete', { ids: processIds }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
@@ -320,7 +324,7 @@ function handleDelete(row) {
     })
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('flow.process.message.deleteSuccess'));
     })
     .catch(() => {});
 }

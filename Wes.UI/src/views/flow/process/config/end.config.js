@@ -1,16 +1,16 @@
-export default {
+export default (t) => ({
   type: "end",
   color: "#909399",
   icon: "fa-stop-circle",
-  label: "结束节点",
+  label: t('flow.designer.node.end'),
   components: [
     {
-      label: "节点名称",
+      label: t('flow.designer.nodeName'),
       param: "meta.name",
       type: "input",
     },
   ],
   defaultValue: {
-    name: '结束节点',
+    name: t('flow.designer.node.end'),
   }
-};
+});

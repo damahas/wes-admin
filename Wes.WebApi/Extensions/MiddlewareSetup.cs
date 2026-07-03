@@ -48,13 +48,15 @@ public static class MiddlewareSetup
     }
 
     /// <summary>
-    /// 从请求头提取 Token 并注入 GlobalContext
+    /// 从请求头提取 Token 和语言并注入 GlobalContext
     /// </summary>
     public static IApplicationBuilder UseTokenExtraction(this IApplicationBuilder app)
     {
         return app.Use(next => context =>
         {
             GlobalContext.Token.Value = JWTUtils.GetToken(context.Request.Headers["authorization"]);
+            var lang = context.Request.Headers["Accept-Language"].FirstOrDefault() ?? "zh-CN";
+            GlobalContext.Lang.Value = lang.StartsWith("en") ? "en-US" : "zh-CN";
             return next(context);
         });
     }

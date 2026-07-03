@@ -1,5 +1,5 @@
 <template>
-   <el-form ref="userRef" :model="form" :rules="rules" label-width="80px">
+   <el-form ref="userRef" :model="form" :rules="rules" label-width="auto">
       <el-form-item :label="t('user.userName')" prop="userName">
          <el-input v-model="form.userName" maxlength="30" />
       </el-form-item>
@@ -23,10 +23,14 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n'
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { updateUserProfile } from "@/api/system/user";
 
-const { t } = useI18n()
+const { t } = useI18n();
+const router = useRouter();
 
 const props = defineProps({
   user: {
@@ -34,8 +38,7 @@ const props = defineProps({
   }
 });
 
-const { proxy } = getCurrentInstance();
-
+const userRef = ref(null);
 const form = ref({});
 const rules = ref({
   userName: [{ required: true, message: t("user.rules.userNameRequired"), trigger: "blur" }],
@@ -45,10 +48,10 @@ const rules = ref({
 
 /** 提交按钮 */
 function submit() {
-  proxy.$refs.userRef.validate(valid => {
+  userRef.value?.validate(valid => {
     if (valid) {
-      updateUserProfile(form.value).then(response => {
-        proxy.$modal.msgSuccess(t("common.editSuccess"));
+      updateUserProfile(form.value).then(() => {
+        ElMessage.success(t("common.editSuccess"));
         props.user.phonenumber = form.value.phonenumber;
         props.user.email = form.value.email;
       });
@@ -58,7 +61,7 @@ function submit() {
 
 /** 关闭按钮 */
 function close() {
-  proxy.$tab.closePage();
+  router.back();
 };
 
 // 回显当前登录用户信息

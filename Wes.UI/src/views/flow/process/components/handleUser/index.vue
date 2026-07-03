@@ -3,15 +3,15 @@
     <div class="link_add_btn">
       <el-dropdown trigger="hover" @command="handleSlected">
         <el-link type="primary" style="font-size: 14px" :disabled="readonly">
-          添加
+          {{ t('flow.designer.add') }}
         </el-link>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="author">发起人</el-dropdown-item>
-            <el-dropdown-item command="role">角色</el-dropdown-item>
-            <el-dropdown-item command="dept">部门</el-dropdown-item>
-            <el-dropdown-item command="leader">部门负责人</el-dropdown-item>
-            <el-dropdown-item command="user">指定人</el-dropdown-item>
+            <el-dropdown-item command="author">{{ t('flow.designer.userType.author') }}</el-dropdown-item>
+            <el-dropdown-item command="role">{{ t('flow.designer.userType.role') }}</el-dropdown-item>
+            <el-dropdown-item command="dept">{{ t('flow.designer.userType.dept') }}</el-dropdown-item>
+            <el-dropdown-item command="leader">{{ t('flow.designer.userType.leader') }}</el-dropdown-item>
+            <el-dropdown-item command="user">{{ t('flow.designer.userType.user') }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -33,10 +33,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import selectUser from "@/views/system/user/select.vue";
 import selectRole from "@/views/system/role/select.vue";
 import selectDept from "@/views/system/dept/select.vue";
+
+const { t } = useI18n();
 
 const props = defineProps({
   value: {
@@ -73,17 +76,18 @@ const toIcon = (icon) => {
 };
 
 const toShowName = (row) => {
+  const typeLabel = t('flow.designer.userType.' + row.type);
   switch (row.type) {
     case "author":
-      return "发起人";
+      return typeLabel;
     case "leader":
-      return "部门负责人(为空往上级找)";
+      return t('flow.designer.leaderDesc');
     case "role":
-      return "角色：" + row.handleName;
+      return typeLabel + "：" + row.handleName;
     case "dept":
-      return "部门：" + row.handleName;
+      return typeLabel + "：" + row.handleName;
     case "user":
-      return "用户：" + row.handleName;
+      return typeLabel + "：" + row.handleName;
     default:
       return "";
   }

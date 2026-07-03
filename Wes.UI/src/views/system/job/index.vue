@@ -144,36 +144,36 @@
 
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="danger" plain icon="Delete" :disabled="logMultiple" @click="handleLogDelete()">删除</el-button>
+          <el-button type="danger" plain icon="Delete" :disabled="logMultiple" @click="handleLogDelete()">{{ t('common.delete') }}</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="danger" plain icon="Delete" @click="handleLogClean">清空</el-button>
+          <el-button type="danger" plain icon="Delete" @click="handleLogClean">{{ t('common.clear') }}</el-button>
         </el-col>
       </el-row>
 
       <el-table v-loading="logLoading" :data="logList" @selection-change="handleLogSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
-        <el-table-column label="任务组名" align="center" prop="jobGroup" />
-        <el-table-column label="调用目标" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
-        <el-table-column label="日志信息" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
-        <el-table-column label="执行状态" align="center" width="90">
+        <el-table-column :label="t('job.jobName')" align="center" prop="jobName" :show-overflow-tooltip="true" />
+        <el-table-column :label="t('job.jobGroup')" align="center" prop="jobGroup" />
+        <el-table-column :label="t('job.invokeTarget')" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
+        <el-table-column :label="t('job.logMessage')" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
+        <el-table-column :label="t('job.execStatus')" align="center" width="90">
           <template #default="scope">
             <el-tag :type="scope.row.status === '0' ? 'success' : 'danger'" size="small">
-              {{ scope.row.status === '0' ? '正常' : '失败' }}
+              {{ scope.row.status === '0' ? t('common.normal') : t('common.failed') }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="耗时(ms)" align="center" prop="elapsedTime" width="90" />
+        <el-table-column :label="t('job.elapsedTime')" align="center" prop="elapsedTime" width="90" />
         <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="160">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
+        <el-table-column :label="t('common.actions')" align="center" width="120" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-button link type="primary" icon="View" @click="handleLogDetail(scope.row)">详情</el-button>
-            <el-button link type="danger" icon="Delete" @click="handleLogDelete(scope.row)">删除</el-button>
+            <el-button link type="primary" icon="View" @click="handleLogDetail(scope.row)">{{ t('common.detail') }}</el-button>
+            <el-button link type="danger" icon="Delete" @click="handleLogDelete(scope.row)">{{ t('common.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -187,73 +187,73 @@
       />
 
       <!-- 日志详情对话框 -->
-      <el-dialog title="日志详情" v-model="logDetailOpen" width="700px" append-to-body>
-        <el-form :model="logDetailForm" label-width="110px">
-          <el-form-item label="任务名称">{{ logDetailForm.jobName }}</el-form-item>
-          <el-form-item label="任务组名">{{ logDetailForm.jobGroup }}</el-form-item>
-          <el-form-item label="调用目标">{{ logDetailForm.invokeTarget }}</el-form-item>
-          <el-form-item label="日志信息">{{ logDetailForm.jobMessage }}</el-form-item>
-          <el-form-item label="执行状态">
+      <el-dialog :title="t('job.logDetail')" v-model="logDetailOpen" width="700px" append-to-body>
+        <el-form :model="logDetailForm" label-width="auto">
+          <el-form-item :label="t('job.jobName')">{{ logDetailForm.jobName }}</el-form-item>
+          <el-form-item :label="t('job.jobGroup')">{{ logDetailForm.jobGroup }}</el-form-item>
+          <el-form-item :label="t('job.invokeTarget')">{{ logDetailForm.invokeTarget }}</el-form-item>
+          <el-form-item :label="t('job.logMessage')">{{ logDetailForm.jobMessage }}</el-form-item>
+          <el-form-item :label="t('job.execStatus')">
             <el-tag :type="logDetailForm.status === '0' ? 'success' : 'danger'" size="small">
-              {{ logDetailForm.status === '0' ? '正常' : '失败' }}
+              {{ logDetailForm.status === '0' ? t('common.normal') : t('common.failed') }}
             </el-tag>
           </el-form-item>
-          <el-form-item label="执行耗时">{{ logDetailForm.elapsedTime }} ms</el-form-item>
-          <el-form-item label="创建时间">{{ formatTime(logDetailForm.createTime) }}</el-form-item>
-          <el-form-item v-if="logDetailForm.exceptionInfo" label="异常信息">
+          <el-form-item :label="t('job.execDuration')">{{ logDetailForm.elapsedTime }} ms</el-form-item>
+          <el-form-item :label="t('common.createTime')">{{ formatTime(logDetailForm.createTime) }}</el-form-item>
+          <el-form-item v-if="logDetailForm.exceptionInfo" :label="t('job.exceptionInfo')">
             <div style="max-height:200px;overflow:auto;white-space:pre-wrap;color:var(--el-color-danger);font-size:13px;">
               {{ logDetailForm.exceptionInfo }}
             </div>
           </el-form-item>
         </el-form>
         <template #footer>
-          <el-button @click="logDetailOpen = false">关 闭</el-button>
+          <el-button @click="logDetailOpen = false">{{ t('common.close') }}</el-button>
         </template>
       </el-dialog>
     </el-dialog>
 
     <!-- 添加或修改任务对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form ref="jobRef" :model="form" :rules="rules" label-width="110px">
-        <el-form-item label="任务名称" prop="jobName">
-          <el-input v-model="form.jobName" placeholder="请输入任务名称" maxlength="64" />
+      <el-form ref="jobRef" :model="form" :rules="rules" label-width="auto">
+        <el-form-item :label="t('job.jobName')" prop="jobName">
+          <el-input v-model="form.jobName" :placeholder="t('job.placeholder.jobName')" maxlength="64" />
         </el-form-item>
-        <el-form-item label="任务组名" prop="jobGroup">
-          <el-input v-model="form.jobGroup" placeholder="请输入任务组名" maxlength="64" />
+        <el-form-item :label="t('job.jobGroup')" prop="jobGroup">
+          <el-input v-model="form.jobGroup" :placeholder="t('job.placeholder.jobGroup')" maxlength="64" />
         </el-form-item>
-        <el-form-item label="调用目标" prop="invokeTarget">
-          <el-input v-model="form.invokeTarget" placeholder="请输入调用目标字符串" maxlength="500" />
+        <el-form-item :label="t('job.invokeTarget')" prop="invokeTarget">
+          <el-input v-model="form.invokeTarget" :placeholder="t('job.placeholder.invokeTarget')" maxlength="500" />
         </el-form-item>
-        <el-form-item label="cron表达式" prop="cronExpression">
-          <el-input v-model="form.cronExpression" placeholder="请输入cron执行表达式" maxlength="255" />
+        <el-form-item :label="t('job.cronExpression')" prop="cronExpression">
+          <el-input v-model="form.cronExpression" :placeholder="t('job.placeholder.cronExpression')" maxlength="255" />
         </el-form-item>
-        <el-form-item label="错误策略" prop="misfirePolicy">
-          <el-select v-model="form.misfirePolicy" placeholder="请选择错误策略">
-            <el-option label="立即执行" value="1" />
-            <el-option label="执行一次" value="2" />
-            <el-option label="放弃执行" value="3" />
+        <el-form-item :label="t('job.misfirePolicy')" prop="misfirePolicy">
+          <el-select v-model="form.misfirePolicy" :placeholder="t('job.placeholder.misfirePolicy')">
+            <el-option :label="t('job.misfireOption.immediate')" value="1" />
+            <el-option :label="t('job.misfireOption.once')" value="2" />
+            <el-option :label="t('job.misfireOption.discard')" value="3" />
           </el-select>
         </el-form-item>
-        <el-form-item label="是否并发" prop="concurrent">
+        <el-form-item :label="t('job.concurrent')" prop="concurrent">
           <el-radio-group v-model="form.concurrent">
-            <el-radio value="0">允许</el-radio>
-            <el-radio value="1">禁止</el-radio>
+            <el-radio value="0">{{ t('job.concurrentOption.allow') }}</el-radio>
+            <el-radio value="1">{{ t('job.concurrentOption.forbid') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <el-form-item :label="t('common.status')" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio value="0">正常</el-radio>
-            <el-radio value="1">暂停</el-radio>
+            <el-radio value="0">{{ t('common.normal') }}</el-radio>
+            <el-radio value="1">{{ t('common.paused') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" maxlength="500" />
+        <el-form-item :label="t('common.remark')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" :placeholder="t('job.placeholder.remark')" maxlength="500" />
         </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -261,7 +261,7 @@
 </template>
 
 <script setup name="Job">
-import { ref, reactive, toRefs } from "vue";
+import { ref, reactive, toRefs, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { addDateRange } from "@/utils";
@@ -305,31 +305,31 @@ const logShowSearch = ref(true);
 const logDetailOpen = ref(false);
 const logDetailForm = ref({});
 
-const logQueryConfig = [
+const logQueryConfig = computed(() => [
   {
-    label: "任务名称",
+    label: t('job.jobName'),
     prop: "jobName",
     type: "input",
-    placeholder: "请输入任务名称",
+    placeholder: t('job.placeholder.jobName'),
   },
   {
-    label: "执行状态",
+    label: t('job.execStatus'),
     prop: "status",
     type: "select",
-    placeholder: "执行状态",
+    placeholder: t('job.placeholder.execStatus'),
     options: [
-      { value: "0", label: "正常" },
-      { value: "1", label: "失败" },
+      { value: "0", label: t('common.normal') },
+      { value: "1", label: t('common.failed') },
     ],
   },
   {
-    label: "创建时间",
+    label: t('common.createTime'),
     prop: "dateRange",
     type: "daterange",
-    startPlaceholder: "开始日期",
-    endPlaceholder: "结束日期",
+    startPlaceholder: t('common.startDate'),
+    endPlaceholder: t('common.endDate'),
   },
-];
+]);
 
 const logQueryParams = ref({
   pageNum: 1,
@@ -340,37 +340,37 @@ const logQueryParams = ref({
   },
 });
 
-const queryConfig = [
+const queryConfig = computed(() => [
   {
-    label: "任务名称",
+    label: t('job.jobName'),
     prop: "jobName",
     type: "input",
-    placeholder: "请输入任务名称",
+    placeholder: t('job.placeholder.jobName'),
   },
   {
-    label: "任务组名",
+    label: t('job.jobGroup'),
     prop: "jobGroup",
     type: "input",
-    placeholder: "请输入任务组名",
+    placeholder: t('job.placeholder.jobGroup'),
   },
   {
-    label: "状态",
+    label: t('common.status'),
     prop: "status",
     type: "select",
-    placeholder: "任务状态",
+    placeholder: t('job.placeholder.jobStatus'),
     options: [
-      { value: "0", label: "正常" },
-      { value: "1", label: "暂停" },
+      { value: "0", label: t('common.normal') },
+      { value: "1", label: t('common.paused') },
     ],
   },
   {
-    label: "创建时间",
+    label: t('common.createTime'),
     prop: "dateRange",
     type: "daterange",
-    startPlaceholder: "开始日期",
-    endPlaceholder: "结束日期",
+    startPlaceholder: t('common.startDate'),
+    endPlaceholder: t('common.endDate'),
   },
-];
+]);
 
 const queryParams = ref({
   pageNum: 1,
@@ -385,9 +385,9 @@ const queryParams = ref({
 const data = reactive({
   form: {},
   rules: {
-    jobName: [{ required: true, message: "任务名称不能为空", trigger: "blur" }],
-    invokeTarget: [{ required: true, message: "调用目标不能为空", trigger: "blur" }],
-    cronExpression: [{ required: true, message: "cron表达式不能为空", trigger: "blur" }],
+    jobName: [{ required: true, message: computed(() => t('job.rules.jobNameRequired')), trigger: "blur" }],
+    invokeTarget: [{ required: true, message: computed(() => t('job.rules.invokeTargetRequired')), trigger: "blur" }],
+    cronExpression: [{ required: true, message: computed(() => t('job.rules.cronExpressionRequired')), trigger: "blur" }],
   },
 });
 
@@ -440,7 +440,7 @@ function reset() {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加任务";
+  title.value = t('job.addTitle');
 }
 
 /** 多选框选中数据 */
@@ -457,7 +457,7 @@ function handleUpdate(row) {
   getJob(jobId).then((res) => {
     form.value = res.data;
     open.value = true;
-    title.value = "修改任务";
+    title.value = t('job.editTitle');
   });
 }
 
@@ -467,7 +467,7 @@ function submitForm() {
     if (valid) {
       const apiCall = form.value.jobId ? updateJob(form.value) : addJob(form.value);
       apiCall.then(() => {
-        ElMessage.success(form.value.jobId ? "修改成功" : "新增成功");
+        ElMessage.success(form.value.jobId ? t('common.editSuccess') : t('common.addSuccess'));
         open.value = false;
         getList();
       });
@@ -478,31 +478,31 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const jobIds = row.jobId || ids.value.join(",");
-  ElMessageBox.confirm('是否确认删除任务编号为"' + jobIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('job.confirm.delete', { id: jobIds }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delJob(jobIds))
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('common.deleteSuccess'));
     })
     .catch(() => {});
 }
 
 /** 任务状态修改 */
 function handleStatusChange(row) {
-  const text = row.status === "0" ? "启用" : "暂停";
-  ElMessageBox.confirm('确认要"' + text + '""' + row.jobName + '"任务吗？', "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  const statusText = row.status === "0" ? t('common.enable') : t('common.disable');
+  ElMessageBox.confirm(t('job.confirm.status', { status: statusText, name: row.jobName }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     type: "warning",
   })
     .then(() => changeJobStatus({ jobId: row.jobId, status: row.status }))
     .then(() => {
-      ElMessage.success(text + "成功");
+      ElMessage.success(statusText + t('common.disableSuccess').substring(1));
     })
     .catch(() => {
       row.status = row.status === "0" ? "1" : "0";
@@ -512,14 +512,14 @@ function handleStatusChange(row) {
 /** 执行一次 */
 function handleRun(row) {
   const jobId = row.jobId || ids.value[0];
-  ElMessageBox.confirm('确认要立即执行"' + (row.jobName || "") + '"任务吗？', "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('job.confirm.run', { name: row.jobName || "" }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     type: "warning",
   })
     .then(() => runJob(jobId))
     .then(() => {
-      ElMessage.success("执行成功");
+      ElMessage.success(t('common.executeSuccess'));
     })
     .catch(() => {});
 }
@@ -578,32 +578,32 @@ function handleLogDetail(row) {
 /** 日志删除 */
 function handleLogDelete(row) {
   const jobLogIds = row ? row.jobLogId : logIds.value.join(",");
-  ElMessageBox.confirm('是否确认删除日志编号为"' + jobLogIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('job.confirm.deleteLog', { id: jobLogIds }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delJobLog(jobLogIds))
     .then(() => {
       getLogList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('common.deleteSuccess'));
     })
     .catch(() => {});
 }
 
 /** 清空日志 */
 function handleLogClean() {
-  ElMessageBox.confirm("是否确认清空所有任务日志？", "提示", {
-    confirmButtonText: "确定清空",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('job.confirm.clearLog'), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => cleanJobLog())
     .then(() => {
       getLogList();
-      ElMessage.success("清空成功");
+      ElMessage.success(t('common.clearSuccess'));
     })
     .catch(() => {});
 }

@@ -190,7 +190,7 @@ namespace Wes.Business
             client.Ado.BeginTran();
             try
             {
-                if (!_sysCodeRuleService.Save(model, client))
+                if (!_sysCodeRuleService.Save(model.ToEntityCopy<CodeRuleInfo, SysCodeRuleModel>(), client))
                 {
                     client.Ado.RollbackTran();
                     return new ReturnData(500, "保存失败！");

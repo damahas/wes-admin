@@ -14,7 +14,11 @@
       >
         <el-menu-item index="/home">
           <i class="menu-icon fa fa-fw fa-house"></i>
-          <template #title>{{ t("menu.home") }}</template>
+          <template #title>
+            <el-tooltip :content="t('menu.home')" placement="right" :disabled="isCollapse">
+              <span class="menu-title-text">{{ t("menu.home") }}</span>
+            </el-tooltip>
+          </template>
         </el-menu-item>
         <MenuItem
           v-for="item in menuList"
@@ -140,6 +144,21 @@ const toggleCollapse = () => {
   display: flex;
   align-items: center;
   padding-left: 20px !important;
+  overflow: hidden;
+}
+
+.sidebar :deep(.menu-title-text) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* tooltip 触发元素撑满剩余空间，保证文字省略生效 */
+.sidebar :deep(.el-menu-item .el-tooltip__trigger),
+.sidebar :deep(.el-sub-menu__title .el-tooltip__trigger) {
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
 }
 
 .sidebar :deep(.el-menu-item .menu-icon) {

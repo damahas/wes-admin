@@ -224,7 +224,7 @@
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form :model="form" :rules="rules" ref="userRef" label-width="80px">
+      <el-form :model="form" :rules="rules" ref="userRef" label-width="auto">
         <el-row>
           <el-col :span="12">
             <el-form-item :label="t('user.userName')" prop="userName">
@@ -340,11 +340,11 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="备注">
+            <el-form-item :label="t('user.remark')">
               <el-input
                 v-model="form.remark"
                 type="textarea"
-                placeholder="请输入内容"
+                :placeholder="t('common.pleaseInput')"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -352,8 +352,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.confirm') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -410,43 +410,44 @@ const upload = reactive({
 });
 
 // 查询条件配置
-const queryConfig = [
+import { computed } from 'vue';
+const queryConfig = computed(() => [
   {
-    label: "用户名称",
+    label: t('user.query.userName'),
     prop: "userName",
     type: "input",
-    placeholder: "请输入用户名称",
+    placeholder: t('user.placeholder.userName'),
   },
   {
-    label: "手机号码",
+    label: t('user.query.phone'),
     prop: "phonenumber",
     type: "input",
-    placeholder: "请输入手机号码",
+    placeholder: t('user.placeholder.phone'),
   },
   {
-    label: "状态",
+    label: t('user.query.status'),
     prop: "status",
     type: "select",
-    placeholder: "用户状态",
+    placeholder: t('user.placeholder.status'),
     options: sys_normal_disable,
   },
   {
-    label: "创建时间",
+    label: t('user.query.createTime'),
     prop: "dateRange",
     type: "daterange",
-    startPlaceholder: "开始日期",
-    endPlaceholder: "结束日期",
+    startPlaceholder: t('user.query.startDate'),
+    endPlaceholder: t('user.query.endDate'),
   },
-];
+]);
 
 // 列显隐信息
 const columns = ref({
-  account: { label: "用户账号", visible: true },
-  userName: { label: "用户名称", visible: true },
-  deptName: { label: "部门", visible: true },
-  phonenumber: { label: "手机号码", visible: true },
-  status: { label: "状态", visible: true },
-  createTime: { label: "创建时间", visible: true },
+  account: { label: computed(() => t('user.column.account')), visible: true },
+  userName: { label: computed(() => t('user.column.userName')), visible: true },
+  deptName: { label: computed(() => t('user.column.deptName')), visible: true },
+  phonenumber: { label: computed(() => t('user.column.phonenumber')), visible: true },
+  status: { label: computed(() => t('common.status')), visible: true },
+  createTime: { label: computed(() => t('common.createTime')), visible: true },
 });
 
 const data = reactive({
@@ -463,48 +464,48 @@ const data = reactive({
   },
   rules: {
     userName: [
-      { required: true, message: "用户名称不能为空", trigger: "blur" },
+      { required: true, message: computed(() => t('user.rules.userNameRequired')), trigger: "blur" },
       {
         min: 2,
         max: 20,
-        message: "用户名称长度必须介于 2 和 20 之间",
+        message: computed(() => t('user.rules.userNameLength')),
         trigger: "blur",
       },
     ],
     account: [
-      { required: true, message: "用户账户不能为空", trigger: "blur" },
+      { required: true, message: computed(() => t('user.rules.accountRequired')), trigger: "blur" },
       {
         min: 2,
         max: 100,
-        message: "用户账户长度必须介于 2 和 100 之间",
+        message: computed(() => t('user.rules.accountLength')),
         trigger: "blur",
       },
     ],
     password: [
-      { required: true, message: "用户密码不能为空", trigger: "blur" },
+      { required: true, message: computed(() => t('user.rules.passwordRequired')), trigger: "blur" },
       {
         min: 5,
         max: 20,
-        message: "用户密码长度必须介于 5 和 20 之间",
+        message: computed(() => t('user.rules.passwordLength')),
         trigger: "blur",
       },
       {
         pattern: /^[^<>"'|\\]+$/,
-        message: "不能包含非法字符：< > \" ' \\ |",
+        message: computed(() => t('user.rules.invalidChars')),
         trigger: "blur",
       },
     ],
     email: [
       {
         type: "email",
-        message: "请输入正确的邮箱地址",
+        message: computed(() => t('user.rules.emailInvalid')),
         trigger: ["blur", "change"],
       },
     ],
     phonenumber: [
       {
         pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-        message: "请输入正确的手机号码",
+        message: computed(() => t('user.rules.phoneInvalid')),
         trigger: "blur",
       },
     ],
@@ -566,9 +567,9 @@ function resetQuery() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const userIds = row.userId || ids.value;
-  ElMessageBox.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('user.confirm.deleteBatch', { ids: userIds }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirmDelete'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
@@ -577,7 +578,7 @@ function handleDelete(row) {
     })
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('user.message.deleteSuccess'));
     })
     .catch(() => {});
 }
@@ -595,17 +596,18 @@ function handleExport() {
 
 /** 用户状态修改  */
 function handleStatusChange(row) {
-  let text = row.status === "0" ? "启用" : "停用";
-  ElMessageBox.confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  let text = row.status === "0" ? t('common.enable') : t('common.disable');
+  let statusText = row.status === "0" ? t('user.message.statusSuccess') : t('user.message.statusFail');
+  ElMessageBox.confirm(t('user.confirm.status', { status: text, name: row.userName }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     type: "warning",
   })
     .then(function () {
       return changeUserStatus(row.userId, row.status);
     })
     .then(() => {
-      ElMessage.success(text + "成功");
+      ElMessage.success(statusText);
     })
     .catch(function () {
       row.status = row.status === "0" ? "1" : "0";
@@ -634,21 +636,21 @@ function handleAuthRole(row) {
 
 /** 重置密码按钮操作 */
 function handleResetPwd(row) {
-  ElMessageBox.prompt('请输入"' + row.userName + '"的新密码', "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.prompt(t('user.confirm.resetPwd', { name: row.userName }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     closeOnClickModal: false,
     inputPattern: /^.{5,20}$/,
-    inputErrorMessage: "用户密码长度必须介于 5 和 20 之间",
+    inputErrorMessage: t('user.confirm.resetPwdError'),
     inputValidator: (value) => {
       if (/<|>|"|'|\||\\/.test(value)) {
-        return "不能包含非法字符：< > \" ' \\ |";
+        return t('user.rules.invalidChars');
       }
     },
   })
     .then(({ value }) => {
       resetUserPwd(row.userId, value).then(() => {
-        ElMessage.success("修改成功，新密码是：" + value);
+        ElMessage.success(t('user.pwdResetSuccess') + value);
       });
     })
     .catch(() => {});
@@ -667,7 +669,7 @@ function handleImportSuccess(response) {
     "<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" +
       response.msg +
       "</div>",
-    "导入结果",
+    t('user.message.importResult'),
     { dangerouslyUseHTMLString: true }
   );
   getList();
@@ -705,7 +707,7 @@ function handleAdd() {
     postOptions.value = response.posts;
     roleOptions.value = response.roles;
     open.value = true;
-    title.value = "添加用户";
+    title.value = t('user.addTitle');
     form.value.password = undefined;
   });
 }
@@ -721,7 +723,7 @@ function handleUpdate(row) {
     form.value.postIds = response.postIds;
     form.value.roleIds = response.roleIds;
     open.value = true;
-    title.value = "修改用户";
+    title.value = t('user.editTitle');
     form.password = "";
   });
 }
@@ -732,13 +734,13 @@ function submitForm() {
     if (valid) {
       if (form.value.userId != undefined) {
         updateUser(form.value).then(() => {
-          ElMessage.success("修改成功");
+          ElMessage.success(t('common.editSuccess'));
           open.value = false;
           getList();
         });
       } else {
         addUser(form.value).then(() => {
-          ElMessage.success("新增成功");
+          ElMessage.success(t('common.addSuccess'));
           open.value = false;
           getList();
         });

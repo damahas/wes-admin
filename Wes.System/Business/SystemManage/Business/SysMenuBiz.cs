@@ -18,11 +18,13 @@ namespace Wes.Business
     {
         private ISysMenuService _sysMenuService;
         private ISysRoleService _sysRoleService;
+        private ISysI18nBiz _sysI18nBiz;
 
-        public SysMenuBiz(ISysMenuService sysMenuService, ISysRoleService sysRoleService)
+        public SysMenuBiz(ISysMenuService sysMenuService, ISysRoleService sysRoleService, ISysI18nBiz sysI18nBiz)
         {
             _sysMenuService = sysMenuService;
             _sysRoleService = sysRoleService;
+            _sysI18nBiz = sysI18nBiz;
         }
 
         #region 菜单操作
@@ -64,99 +66,80 @@ namespace Wes.Business
 
         public List<MenuRootInfo> GetUserMenu()
         {
-            List<MenuRootInfo> result = new List<MenuRootInfo>();
-            // 处理目录
-            List<SysMenuModel> queryMenus;
-            if (GlobalContext.CurrentUser.IsAdmin)
-            {
-                queryMenus = _sysMenuService.GetByMenuType("M");
-            }
-            else
-            {
-                queryMenus = _sysMenuService.GetByUserId(GlobalContext.CurrentUser.UserId, "M");
-            }
-            List<MenuRootInfo> menus = queryMenus.Select(p =>
-                 {
-                     return new MenuRootInfo()
-                     {
-                         MenuId = p.MenuId,
-                         ParentId = p.ParentId,
-                         Component = GetComponent(p),
-                         Hidden = p.Visible == "1",
-                         Name = GetMenuName(p),
-                         Path = $"{(p.ParentId == 0 ? "/" : "")}{p.Path}",
-                         OrderNum = p.OrderNum ?? 0,
-                         Redirect = p.IsFrame == 1 ? "noRedirect" : null,
-                         Meta = new MenuMetaInfo()
-                         {
-                             Title = p.MenuName,
-                             NoCache = p.IsCache == 1,
-                             Icon = p.Icon,
-                             Link = p.IsFrame == 1 ? p.Path : null
-                         }
-                     };
+            var isAdmin = GlobalContext.CurrentUser.IsAdmin;
+            var userId = GlobalContext.CurrentUser.UserId;
+            
+            var dirMenus  = isAdmin ? _sysMenuService.GetByMenuType("M") : _sysMenuService.GetByUserId(userId, "M");
+            var pageMenus = isAdmin ? _sysMenuService.GetByMenuType("C") : _sysMenuService.GetByUserId(userId, "C");
 
-                 }).ToList();
-            Dictionary<long, MenuRootInfo> menuDics = menus.ToDictionary(p => p.MenuId, p => p);
-            foreach (var menu in menus)
+            var result   = new List<MenuRootInfo>();
+            var menuMap  = new Dictionary<long, MenuRootInfo>();
+
+            AttachToTree(dirMenus,  result, menuMap);
+            AttachToTree(pageMenus, result, menuMap);
+
+            // 子菜单排序
+            foreach (var item in menuMap.Values)
             {
-                if (menu.ParentId == 0)
-                {
-                    result.Add(menu);
-                    continue;
-                }
-                if (menuDics.ContainsKey(menu.ParentId))
-                {
-                    if (menuDics[menu.ParentId].Children == null)
-                    {
-                        menuDics[menu.ParentId].Children = new List<MenuRootInfo>();
-                    }
-                    menuDics[menu.ParentId].Children.Add(menu);
-                }
+                if (item.Children?.Count > 0)
+                    item.Children = item.Children.OrderBy(p => p.OrderNum).ToList();
             }
-            // 处理页面
-            if (GlobalContext.CurrentUser.IsAdmin)
-            {
-                queryMenus = _sysMenuService.GetByMenuType("C");
-            }
-            else
-            {
-                queryMenus = _sysMenuService.GetByUserId(GlobalContext.CurrentUser.UserId, "C");
-            }
-            List<MenuRootInfo> pages = queryMenus.Select(p =>
-                {
-                    return new MenuRootInfo()
-                    {
-                        MenuId = p.MenuId,
-                        ParentId = p.ParentId,
-                        Component = GetComponent(p),
-                        Hidden = p.Visible == "1",
-                        Name = GetMenuName(p),
-                        Path = p.Path,
-                        OrderNum = p.OrderNum ?? 0,
-                        Meta = new MenuMetaInfo()
-                        {
-                            Title = p.MenuName,
-                            NoCache = p.IsCache == 1,
-                            Icon = p.Icon,
-                            Link = p.IsFrame == 1 ? p.Path : null
-                        }
-                    };
-                }).ToList();
-            foreach (var page in pages)
-            {
-                if (menuDics.ContainsKey(page.ParentId))
-                {
-                    if (menuDics[page.ParentId].Children == null)
-                    {
-                        menuDics[page.ParentId].Children = new List<MenuRootInfo>();
-                    }
-                    menuDics[page.ParentId].Children.Add(page);
-                    //TODO 优化排序，这个排序太辣鸡了
-                    menuDics[page.ParentId].Children = menuDics[page.ParentId].Children.OrderBy(p => p.OrderNum).ToList();
-                }
-            }
+
             return result.OrderBy(p => p.OrderNum).ToList();
+        }
+
+        /// <summary>将菜单列表挂到树结构中</summary>
+        private void AttachToTree(List<SysMenuModel> menus, List<MenuRootInfo> result, Dictionary<long, MenuRootInfo> menuMap)
+        {
+            foreach (var m in menus)
+            {
+                var info = BuildMenuRootInfo(m);
+                menuMap[info.MenuId] = info;
+
+                if (info.ParentId == 0)
+                {
+                    result.Add(info);
+                }
+                else if (menuMap.TryGetValue(info.ParentId, out var parent))
+                {
+                    parent.Children ??= new List<MenuRootInfo>();
+                    parent.Children.Add(info);
+                }
+            }
+        }
+
+        /// <summary>构建单个菜单节点</summary>
+        private MenuRootInfo BuildMenuRootInfo(SysMenuModel menu)
+        {
+            return new MenuRootInfo
+            {
+                MenuId    = menu.MenuId,
+                ParentId  = menu.ParentId,
+                Component = GetComponent(menu),
+                Hidden    = menu.Visible == "1",
+                Name      = GetMenuName(menu),
+                Path      = menu.ParentId == 0 ? $"/{menu.Path}" : menu.Path,
+                OrderNum  = menu.OrderNum ?? 0,
+                Redirect  = menu.IsFrame == 1 ? "noRedirect" : null,
+                Meta = new MenuMetaInfo
+                {
+                    Title   = GetMenuTitle(menu),
+                    NoCache = menu.IsCache == 1,
+                    Icon    = menu.Icon,
+                    Link    = menu.IsFrame == 1 ? menu.Path : null
+                }
+            };
+        }
+
+        /// <summary>获取菜单标题（支持国际化）</summary>
+        private string GetMenuTitle(SysMenuModel menu)
+        {
+            var lang = GlobalContext.Lang.Value;
+            if (string.IsNullOrWhiteSpace(lang) || lang == "zh-CN")
+                return menu.MenuName;
+
+            var translated = _sysI18nBiz.GetTranslation($"sys.menu.{menu.MenuId}", lang);
+            return !string.IsNullOrWhiteSpace(translated) ? translated : menu.MenuName;
         }
 
         public ResultData<RoleTreeInfo> GetRoleMenu(long roleId)

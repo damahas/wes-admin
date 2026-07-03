@@ -1,21 +1,21 @@
-export default {
+export default (t) => ({
   type: "notice",
   color: "#e6a23c",
   icon: "fa-bell",
-  label: "通知节点",
+  label: t('flow.designer.node.notice'),
   components: [
     {
-      label: "节点名称",
+      label: t('flow.designer.nodeName'),
       param: "meta.name",
       type: "input",
     },
     {
-      label: "处理人",
+      label: t('flow.designer.handleUser'),
       param: "meta.handleBy",
       type: "handleUser",
     },
   ],
   defaultValue: {
-    name: '通知节点',
+    name: t('flow.designer.node.notice'),
   },
-};
+});

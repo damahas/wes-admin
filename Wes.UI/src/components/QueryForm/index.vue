@@ -25,15 +25,18 @@
       </el-form-item>
     </template>
     <el-form-item>
-      <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-      <el-button icon="Refresh" @click="handleReset">重置</el-button>
+      <el-button type="primary" icon="Search" @click="handleQuery">{{ t('common.search') }}</el-button>
+      <el-button icon="Refresh" @click="handleReset">{{ t('common.reset') }}</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup>
 import { ref, reactive, defineEmits, isRef } from "vue";
+import { useI18n } from "vue-i18n";
 import { ElInput, ElSelect, ElDatePicker } from "element-plus";
+
+const { t } = useI18n();
 
 const props = defineProps({
   config: {
@@ -51,7 +54,7 @@ const props = defineProps({
   },
   labelWidth: {
     type: [String, Number],
-    default: "68px",
+    default: "auto",
   },
 });
 
@@ -85,12 +88,12 @@ function getComponentProps(item) {
     case 'input':
       return {
         ...baseProps,
-        placeholder: item.placeholder || '请输入' + item.label,
+        placeholder: item.placeholder || t('common.input') + item.label,
       };
     case 'select':
       return {
         ...baseProps,
-        placeholder: item.placeholder || '请选择' + item.label,
+        placeholder: item.placeholder || t('common.select') + item.label,
       };
     case 'daterange':
       return {
@@ -98,8 +101,8 @@ function getComponentProps(item) {
         'value-format': 'YYYY-MM-DD',
         type: 'daterange',
         'range-separator': '-',
-        'start-placeholder': item.startPlaceholder || '开始日期',
-        'end-placeholder': item.endPlaceholder || '结束日期',
+        'start-placeholder': item.startPlaceholder || t('common.startDate'),
+        'end-placeholder': item.endPlaceholder || t('common.endDate'),
       };
     default:
       return baseProps;

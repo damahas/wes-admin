@@ -1,23 +1,23 @@
-export default {
-  label: "流程配置",
+export default (t) => ({
+  label: t('flow.designer.flowConfig'),
   components: [
     {
-      label: "流程版本",
+      label: t('flow.designer.version'),
       param: "version",
       type: "label",
     },
     {
-      label: "启用版本",
+      label: t('flow.designer.enableVersion'),
       param: "enableVersionId",
       type: "enableVersion",
     },
     {
-      label: "创建时间",
+      label: t('flow.designer.createTime'),
       param: "createTime",
       type: "label",
     },
     {
-      label: "备注",
+      label: t('flow.designer.remark'),
       param: "remark",
       type: "input",
       props: {
@@ -26,4 +26,4 @@ export default {
       },
     },
   ],
-};
+});

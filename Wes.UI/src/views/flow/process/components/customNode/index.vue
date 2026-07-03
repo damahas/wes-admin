@@ -5,17 +5,20 @@
       width: size.width + 'px',
       height: size.height + 'px',
     }"
-    :title="data?.meta?.name || `节点`"
+    :title="data?.meta?.name || t('flow.designer.node.general')"
   >
     <div class="flow-node-icon" :style="{ backgroundColor: data?.color || '#409eff' }">
       <i :class="'fa ' + (data?.icon || 'fa-tasks')"></i>
     </div>
-    <span class="flow-node-text">{{ data?.meta?.name || "节点" }}</span>
+    <span class="flow-node-text">{{ data?.meta?.name || t('flow.designer.node.general') }}</span>
   </div>
 </template>
 
 <script setup>
 import { computed, reactive } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
   node: {

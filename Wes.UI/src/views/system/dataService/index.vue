@@ -4,11 +4,11 @@
       <!-- 分类树 -->
       <div class="split-left-panel">
         <div class="split-left__header">
-          <div class="split-left__title">分类</div>
+          <div class="split-left__title">{{ t('dataService.category') }}</div>
           <div class="split-left__search">
             <el-input
               v-model="categoryName"
-              placeholder="请输入分类名称"
+              :placeholder="t('dataService.placeholder.category')"
               clearable
               prefix-icon="Search"
             />
@@ -54,7 +54,7 @@
               @click="handleAdd"
               v-hasPermi="['system:dataService:add']"
             >
-              新增
+              {{ t('common.add') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -66,7 +66,7 @@
               @click="handleUpdate"
               v-hasPermi="['system:dataService:edit']"
             >
-              修改
+              {{ t('common.edit') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -78,7 +78,7 @@
               @click="handleDelete"
               v-hasPermi="['system:dataService:remove']"
             >
-              删除
+              {{ t('common.delete') }}
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -89,7 +89,7 @@
               @click="handleExport"
               v-hasPermi="['system:dataService:export']"
             >
-              导出
+              {{ t('common.export') }}
             </el-button>
           </el-col>
           <right-toolbar
@@ -106,21 +106,21 @@
           >
             <el-table-column type="selection" width="50" align="center" />
             <el-table-column
-              label="服务编码"
+              :label="columns.serviceCode.label"
               align="center"
               prop="serviceCode"
               v-if="columns.serviceCode && columns.serviceCode.visible"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="服务名称"
+              :label="columns.serviceName.label"
               align="center"
               prop="serviceName"
               v-if="columns.serviceName && columns.serviceName.visible"
               :show-overflow-tooltip="true"
             />
             <el-table-column
-              label="分类"
+              :label="columns.category.label"
               align="center"
               prop="category"
               v-if="columns.category && columns.category.visible"
@@ -135,7 +135,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="状态"
+              :label="columns.status.label"
               align="center"
               prop="status"
               v-if="columns.status && columns.status.visible"
@@ -149,7 +149,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="创建时间"
+              :label="columns.createTime.label"
               align="center"
               prop="createTime"
               v-if="columns.createTime && columns.createTime.visible"
@@ -160,37 +160,37 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
+              :label="t('common.actions')"
               align="center"
-              width="210"
+              width="240"
               class-name="small-padding fixed-width"
             >
               <template #default="scope">
-                <el-tooltip content="预览" placement="top">
+                <el-tooltip :content="t('dataService.preview')" placement="top">
                   <el-button
                     link
                     type="primary"
                     icon="View"
                     @click="handlePreview(scope.row)"
-                  >预览</el-button>
+                  >{{ t('dataService.preview') }}</el-button>
                 </el-tooltip>
-                <el-tooltip content="修改" placement="top">
+                <el-tooltip :content="t('common.edit')" placement="top">
                   <el-button
                     link
                     type="primary"
                     icon="Edit"
                     @click="handleUpdate(scope.row)"
                     v-hasPermi="['system:dataService:edit']"
-                  >修改</el-button>
+                  >{{ t('common.edit') }}</el-button>
                 </el-tooltip>
-                <el-tooltip content="删除" placement="top">
+                <el-tooltip :content="t('common.delete')" placement="top">
                   <el-button
                     link
                     type="danger"
                     icon="Delete"
                     @click="handleDelete(scope.row)"
                     v-hasPermi="['system:dataService:remove']"
-                  >删除</el-button>
+                  >{{ t('common.delete') }}</el-button>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -227,12 +227,15 @@
 import { ref, reactive, toRefs, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { getDict, handleTree } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 import DictTag from "@/components/DictTag/index.vue";
 import DataServiceEditDialog from "./edit.vue";
 import DataServicePreviewDialog from "./preview.vue";
 import { listDataService, delDataService } from "@/api/system/dataService";
+
+const { t } = useI18n();
 
 const categoryName = ref("");
 const categoryTreeRef = ref(null);
@@ -263,34 +266,34 @@ const categoryOptions = computed(() => {
 // 查询条件配置
 const queryConfig = computed(() => [
   {
-    label: "服务编码",
+    label: t('dataService.serviceCode'),
     prop: "serviceCode",
     type: "input",
-    placeholder: "请输入服务编码",
+    placeholder: t('dataService.placeholder.serviceCode'),
   },
   {
-    label: "服务名称",
+    label: t('dataService.serviceName'),
     prop: "serviceName",
     type: "input",
-    placeholder: "请输入服务名称",
+    placeholder: t('dataService.placeholder.serviceName'),
   },
   {
-    label: "状态",
+    label: t('common.status'),
     prop: "status",
     type: "select",
-    placeholder: "状态",
+    placeholder: t('common.status'),
     options: sys_normal_disable?.value || [],
   },
 ]);
 
 // 列显隐信息
-const columns = ref({
-  serviceCode: { label: "服务编码", visible: true },
-  serviceName: { label: "服务名称", visible: true },
-  category: { label: "分类", visible: true },
-  status: { label: "状态", visible: true },
-  createTime: { label: "创建时间", visible: true },
-});
+const columns = computed(() => ({
+  serviceCode: { label: t('dataService.serviceCode'), visible: true },
+  serviceName: { label: t('dataService.serviceName'), visible: true },
+  category: { label: t('dataService.category'), visible: true },
+  status: { label: t('common.status'), visible: true },
+  createTime: { label: t('common.createTime'), visible: true },
+}));
 
 const data = reactive({
   queryParams: {
@@ -359,7 +362,7 @@ function resetQuery() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const serviceIds = row.dsId || ids.value;
-  
+
   // 获取服务编码用于提示信息
   let serviceCodes = [];
   if (row.dsId) {
@@ -369,15 +372,15 @@ function handleDelete(row) {
       .filter(item => ids.value.includes(item.dsId))
       .map(item => item.serviceCode || `ID:${item.dsId}`);
   }
-  
+
   const codeText = serviceCodes.length > 0 ? serviceCodes.join(", ") : serviceIds;
-  
+
   ElMessageBox.confirm(
-    `是否确认删除服务编码为"${codeText}"的数据项？`,
-    "提示",
+    t('dataService.confirm.delete', { name: codeText }),
+    t('common.confirmTitle'),
     {
-      confirmButtonText: "确定删除",
-      cancelButtonText: "取消",
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       confirmButtonType: "danger",
       type: "warning",
     }
@@ -385,14 +388,14 @@ function handleDelete(row) {
     .then(() => delDataService(serviceIds))
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('common.deleteSuccess'));
     })
     .catch(() => {});
 }
 
 /** 导出按钮操作 */
 function handleExport() {
-  ElMessage.info("导出功能暂未实现");
+  ElMessage.info(t('dataService.message.exportNotImplemented'));
 }
 
 /** 选择条数 */
@@ -425,7 +428,7 @@ function handleUpdate(row) {
     dsId = ids.value[0];
   } else {
     // 批量修改多条，提示用户只能选择一条
-    ElMessage.warning("请选择一条记录进行修改");
+    ElMessage.warning(t('dataService.message.selectOneRecord'));
     return;
   }
 

@@ -8,7 +8,7 @@
     destroy-on-close
     @open="handleOpen"
   >
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="110px" v-loading="loading">
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="auto" v-loading="loading">
       <el-form-item :label="t('license.platformSystem')">
         <el-input :model-value="form.platformOS" disabled />
       </el-form-item>

@@ -1,10 +1,10 @@
-export default {
-  label: "连线",
+export default (t) => ({
+  label: t('flow.designer.line'),
   components: [
     {
-      label: "连线名称",
+      label: t('flow.designer.lineName'),
       param: "meta.name",
       type: "input",
     },
   ],
-};
+});

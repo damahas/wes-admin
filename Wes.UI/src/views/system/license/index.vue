@@ -6,7 +6,7 @@
           <span>{{ t('license.title') }}</span>
         </div>
       </template>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="160px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <el-form-item :label="t('license.platformSystem')">{{ form.platformOS }}</el-form-item>
         <el-form-item :label="t('license.platformCode')">{{ form.platformCode }}</el-form-item>
         <el-form-item :label="t('license.licenseKey')" prop="licenseCode">
@@ -30,7 +30,7 @@
           <span>{{ t('license.activationInfo') }}</span>
         </div>
       </template>
-      <el-form :model="form" label-width="160px">
+      <el-form :model="form" label-width="auto">
         <el-form-item :label="t('license.licenseVersion')">
           {{ form.licenseModel.licenseType === 'enterprise' ? t('license.enterprise') : t('license.trial') }}
         </el-form-item>

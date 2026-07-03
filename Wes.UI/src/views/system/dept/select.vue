@@ -5,7 +5,7 @@
       ref="queryFormRef"
       size="small"
       :inline="true"
-      label-width="68px"
+      label-width="auto"
       @submit.prevent
     >
       <el-form-item :label="t('deptManage.deptName')" prop="deptName">

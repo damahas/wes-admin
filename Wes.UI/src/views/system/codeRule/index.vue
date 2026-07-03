@@ -18,7 +18,7 @@
             @click="handleAdd"
             v-hasPermi="['system:coderule:add']"
           >
-            新增
+            {{ t('common.add') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
@@ -30,7 +30,7 @@
             @click="handleUpdate"
             v-hasPermi="['system:coderule:edit']"
           >
-            修改
+            {{ t('common.edit') }}
           </el-button>
         </el-col>
         <el-col :span="1.5">
@@ -42,7 +42,7 @@
             @click="handleDelete"
             v-hasPermi="['system:coderule:remove']"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </el-col>
         <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
@@ -54,20 +54,20 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="规则编码" align="center" prop="ruleCode" />
-        <el-table-column label="规则名称" align="center" prop="ruleName" />
-        <el-table-column label="规则类型" align="center" prop="ruleType">
+        <el-table-column :label="t('codeRule.ruleCode')" align="center" prop="ruleCode" />
+        <el-table-column :label="t('codeRule.ruleName')" align="center" prop="ruleName" />
+        <el-table-column :label="t('codeRule.ruleType')" align="center" prop="ruleType">
           <template #default="scope">
             <dict-tag :options="sys_code_type" :value="scope.row.ruleType" />
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column :label="t('common.status')" align="center" prop="status">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
         <el-table-column
-          label="最后修改时间"
+          :label="t('codeRule.lastUpdateTime')"
           align="center"
           prop="updateTime"
           width="180"
@@ -77,7 +77,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="t('common.actions')"
           align="center"
           class-name="small-padding fixed-width"
         >
@@ -89,7 +89,7 @@
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:coderule:edit']"
             >
-              修改
+              {{ t('common.edit') }}
             </el-button>
             <el-button
               type="danger"
@@ -98,7 +98,7 @@
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:coderule:remove']"
             >
-              删除
+              {{ t('common.delete') }}
             </el-button>
           </template>
         </el-table-column>
@@ -115,25 +115,25 @@
 
     <!-- 添加或修改数据对话框 -->
     <el-dialog :title="title" v-model="open" width="50%" append-to-body>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="auto">
         <el-row>
           <el-col :span="11">
-            <el-form-item label="规则编码" prop="ruleCode">
-              <el-input v-model="form.ruleCode" placeholder="请输入规则编码" />
+            <el-form-item :label="t('codeRule.ruleCode')" prop="ruleCode">
+              <el-input v-model="form.ruleCode" :placeholder="t('codeRule.placeholder.ruleCode')" />
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="规则名称" prop="ruleName">
-              <el-input v-model="form.ruleName" placeholder="请输入规则名称" />
+            <el-form-item :label="t('codeRule.ruleName')" prop="ruleName">
+              <el-input v-model="form.ruleName" :placeholder="t('codeRule.placeholder.ruleName')" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11">
-            <el-form-item label="规则类型" prop="ruleType">
+            <el-form-item :label="t('codeRule.ruleType')" prop="ruleType">
               <el-select
                 v-model="form.ruleType"
-                placeholder="规则类型"
+                :placeholder="t('codeRule.ruleType')"
                 style="width: 100%"
                 filterable
                 clearable
@@ -148,7 +148,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="状态" prop="status">
+            <el-form-item :label="t('common.status')" prop="status">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in sys_normal_disable"
@@ -163,10 +163,8 @@
         </el-row>
       </el-form>
 
-      <!-- <el-tabs v-model="activeName" type="card"> -->
-      <!-- <el-tab-pane label="序号片段" name="first"> -->
       <el-alert
-        title="拖拽表格序号调整顺序"
+        :title="t('codeRule.dragTip')"
         type="info"
         :closable="false"
         style="margin-bottom: 9px"
@@ -180,7 +178,7 @@
         icon="Plus"
         @click="handleEditPart(-1)"
       >
-        添加片段
+        {{ t('codeRule.addPart') }}
       </el-button>
       <el-table
         ref="partTable"
@@ -190,20 +188,20 @@
         size="small"
       >
         <el-table-column
-          label="序号"
+          :label="t('codeRule.seqNo')"
           type="index"
           min-width="50"
           class-name="allowDrag"
         />
-        <el-table-column label="字符规则" align="center" prop="partValue" />
-        <el-table-column label="规则类型" align="center" prop="partType">
+        <el-table-column :label="t('codeRule.partValue')" align="center" prop="partValue" />
+        <el-table-column :label="t('codeRule.partType')" align="center" prop="partType">
           <template #default="scope">
-            {{ partTypes[scope.row.partType] }}
+            {{ partTypes.value[scope.row.partType] }}
           </template>
         </el-table-column>
-        <el-table-column label="描述" align="center" prop="remark" />
+        <el-table-column :label="t('common.remark')" align="center" prop="remark" />
         <el-table-column
-          label="操作"
+          :label="t('common.actions')"
           align="center"
           class-name="small-padding fixed-width"
         >
@@ -214,7 +212,7 @@
               icon="Edit"
               @click="handleEditPart(scope.$index)"
             >
-              修改
+              {{ t('common.edit') }}
             </el-button>
             <el-button
               link
@@ -222,28 +220,26 @@
               icon="Delete"
               @click="handleDelPart(scope.$index)"
             >
-              删除
+              {{ t('common.delete') }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <!-- </el-tab-pane> -->
-      <!-- </el-tabs> -->
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
 
     <el-dialog :title="partTitle" v-model="partOpen" width="520px" append-to-body>
-      <el-form ref="partFormRef" :model="partForm" :rules="partRules" label-width="120px">
-        <el-form-item label="规则段类型" prop="partType">
+      <el-form ref="partFormRef" :model="partForm" :rules="partRules" label-width="auto">
+        <el-form-item :label="t('codeRule.partType')" prop="partType">
           <el-select
             v-model="partForm.partType"
-            placeholder="规则段类型"
+            :placeholder="t('codeRule.partType')"
             style="width: 100%"
           >
             <el-option
@@ -255,18 +251,18 @@
           </el-select>
         </el-form-item>
         <div v-if="partForm.partType === 'string'">
-          <el-form-item label="固定字符" prop="partValue">
-            <el-input v-model="partForm.partValue" placeholder="请输入固定字符" />
+          <el-form-item :label="t('codeRule.partTypes.string')" prop="partValue">
+            <el-input v-model="partForm.partValue" :placeholder="t('codeRule.placeholder.fixedChar')" />
           </el-form-item>
         </div>
         <div v-if="partForm.partType === 'calc'">
-          <el-form-item label="动态字符规则" prop="partValue">
-            <el-input v-model="partForm.partValue" placeholder="[A-Z][a-z][0-9]" />
+          <el-form-item :label="t('codeRule.dynamicRule')" prop="partValue">
+            <el-input v-model="partForm.partValue" :placeholder="t('codeRule.placeholder.dynamicRule')" />
           </el-form-item>
-          <el-form-item label="重置类型" prop="resetType">
+          <el-form-item :label="t('codeRule.resetType')" prop="resetType">
             <el-select
               v-model="partForm.resetType"
-              placeholder="重置类型"
+              :placeholder="t('codeRule.resetType')"
               style="width: 100%"
             >
               <el-option
@@ -278,46 +274,46 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            label="周开始日期"
+            :label="t('codeRule.weekStartDay')"
             prop="weekStartDay"
             v-if="partForm.resetType === 'week'"
           >
             <el-select
               v-model="partForm.weekStartDay"
-              placeholder="周开始日期"
+              :placeholder="t('codeRule.weekStartDay')"
               style="width: 100%"
             >
-              <el-option label="周日" :value="0" />
-              <el-option label="周一" :value="1" />
-              <el-option label="周二" :value="2" />
-              <el-option label="周三" :value="3" />
-              <el-option label="周四" :value="4" />
-              <el-option label="周五" :value="5" />
-              <el-option label="周六" :value="6" />
+              <el-option :label="t('codeRule.weekDays.sunday')" :value="0" />
+              <el-option :label="t('codeRule.weekDays.monday')" :value="1" />
+              <el-option :label="t('codeRule.weekDays.tuesday')" :value="2" />
+              <el-option :label="t('codeRule.weekDays.wednesday')" :value="3" />
+              <el-option :label="t('codeRule.weekDays.thursday')" :value="4" />
+              <el-option :label="t('codeRule.weekDays.friday')" :value="5" />
+              <el-option :label="t('codeRule.weekDays.saturday')" :value="6" />
             </el-select>
           </el-form-item>
-          <el-form-item label="数字是否跳过0">
+          <el-form-item :label="t('codeRule.isSkipZero')">
             <el-checkbox v-model="partForm.isSkipZero" :true-value="1" :false-value="0" />
           </el-form-item>
         </div>
         <div v-if="partForm.partType === 'date'">
-          <el-form-item label="动态字符规则" prop="partValue">
-            <el-input v-model="partForm.partValue" placeholder="yyyy-MM-dd HH:mm:ss" />
+          <el-form-item :label="t('codeRule.dynamicRule')" prop="partValue">
+            <el-input v-model="partForm.partValue" :placeholder="t('codeRule.placeholder.dateFormat')" />
           </el-form-item>
         </div>
-        <el-form-item label="描述" prop="remark">
+        <el-form-item :label="t('common.remark')" prop="remark">
           <el-input
             type="textarea"
             row="3"
             v-model="partForm.remark"
-            placeholder="请输入描述"
+            :placeholder="t('codeRule.placeholder.description')"
           />
         </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSavePart">确 定</el-button>
-          <el-button @click="partOpen = false">取 消</el-button>
+          <el-button type="primary" @click="handleSavePart">{{ t('common.submit') }}</el-button>
+          <el-button @click="partOpen = false">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -328,6 +324,7 @@
 import { ref, reactive, toRefs, nextTick, computed, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getDict } from "@/utils";
+import { useI18n } from "vue-i18n";
 import QueryForm from "@/components/QueryForm/index.vue";
 import {
   listSysCodeRule,
@@ -337,6 +334,8 @@ import {
   updateSysCodeRule,
 } from "@/api/system/codeRule";
 import Sortable from "sortablejs";
+
+const { t } = useI18n();
 
 const { sys_code_type, sys_normal_disable } = getDict(
   "sys_code_type",
@@ -357,34 +356,34 @@ const formRef = ref(null);
 const partFormRef = ref(null);
 
 // 查询条件配置
-const queryConfig = [
+const queryConfig = computed(() => [
   {
-    label: "规则编码",
+    label: t('codeRule.ruleCode'),
     prop: "ruleCode",
     type: "input",
-    placeholder: "请输入规则编码",
+    placeholder: t('codeRule.placeholder.ruleCode'),
   },
   {
-    label: "规则名称",
+    label: t('codeRule.ruleName'),
     prop: "ruleName",
     type: "input",
-    placeholder: "请输入规则名称",
+    placeholder: t('codeRule.placeholder.ruleName'),
   },
   {
-    label: "规则类型",
+    label: t('codeRule.ruleType'),
     prop: "ruleType",
     type: "select",
-    placeholder: "规则类型",
+    placeholder: t('codeRule.ruleType'),
     options: sys_code_type,
   },
   {
-    label: "状态",
+    label: t('common.status'),
     prop: "status",
     type: "select",
-    placeholder: "状态",
+    placeholder: t('common.status'),
     options: sys_normal_disable,
   },
-];
+]);
 
 const data = reactive({
   form: {
@@ -396,32 +395,32 @@ const data = reactive({
     params: {},
   },
   rules: {
-    ruleCode: [{ required: true, message: "规则编码不能为空", trigger: "blur" }],
-    ruleName: [{ required: true, message: "规则名称不能为空", trigger: "blur" }],
+    ruleCode: [{ required: true, message: computed(() => t('codeRule.rules.ruleCodeRequired')), trigger: "blur" }],
+    ruleName: [{ required: true, message: computed(() => t('codeRule.rules.ruleNameRequired')), trigger: "blur" }],
   },
   partForm: {},
   partRules: {
-    partType: [{ required: true, message: "请选择规则片段类型", trigger: "change" }],
-    partValue: [{ required: true, message: "字符规则不能为空", trigger: "blur" }],
-    resetType: [{ required: true, message: "请选择规则片段类型", trigger: "change" }],
-    weekStartDay: [{ required: true, message: "请选择周开始日期", trigger: "change" }],
+    partType: [{ required: true, message: computed(() => t('codeRule.rules.partTypeRequired')), trigger: "change" }],
+    partValue: [{ required: true, message: computed(() => t('codeRule.rules.charRuleRequired')), trigger: "blur" }],
+    resetType: [{ required: true, message: computed(() => t('codeRule.rules.resetTypeRequired')), trigger: "change" }],
+    weekStartDay: [{ required: true, message: computed(() => t('codeRule.rules.weekStartDayRequired')), trigger: "change" }],
   },
 });
 let { queryParams, form, rules, partForm, partRules } = toRefs(data);
 const partTitle = ref("");
 const partOpen = ref(false);
 const partIndex = ref(-1);
-const partTypes = {
-  string: "固定字符串",
-  calc: "动态字符",
-  date: "日期时间",
-};
-const resetTypes = {
-  week: "周",
-  month: "月",
-  quarter: "季",
-  year: "年",
-};
+const partTypes = computed(() => ({
+  string: t('codeRule.partTypes.string'),
+  calc: t('codeRule.partTypes.calc'),
+  date: t('codeRule.partTypes.date'),
+}));
+const resetTypes = computed(() => ({
+  week: t('codeRule.resetTypes.week'),
+  month: t('codeRule.resetTypes.month'),
+  quarter: t('codeRule.resetTypes.quarter'),
+  year: t('codeRule.resetTypes.year'),
+}));
 const sortable = ref(undefined);
 const originPartValue = ref("");
 
@@ -487,7 +486,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加序号生成规则";
+  title.value = t('codeRule.addTitle');
   nextTick(() => {
     initSort();
   });
@@ -499,7 +498,7 @@ function handleUpdate(row) {
   getSysCodeRule(ruleId).then((response) => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改序号生成规则";
+    title.value = t('codeRule.editTitle');
     nextTick(() => {
       initSort();
     });
@@ -513,7 +512,7 @@ function submitForm() {
         ? updateSysCodeRule(form.value)
         : addSysCodeRule(form.value);
       apiCall.then(() => {
-        ElMessage.success(form.value.ruleId ? "修改成功" : "新增成功");
+        ElMessage.success(form.value.ruleId ? t('common.editSuccess') : t('common.addSuccess'));
         open.value = false;
         getList();
       });
@@ -523,16 +522,16 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const ruleIds = row.ruleId || ids.value;
-  ElMessageBox.confirm('是否确认删除编号为"' + ruleIds + '"的数据项？', "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('codeRule.confirm.delete', { name: ruleIds }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delSysCodeRule(ruleIds))
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('common.deleteSuccess'));
     })
     .catch(() => {});
 }
@@ -542,14 +541,14 @@ function handleEditPart(index) {
   if (index > -1) {
     partForm.value = { ...form.value.parts[index] };
     originPartValue.value = partForm.value.partValue ?? "";
-    partTitle.value = "修改序号片段";
+    partTitle.value = t('codeRule.editPart');
   } else {
     partForm.value = {
       weekStartDay: 1,
       isSkipZero: 0,
     };
     originPartValue.value = "";
-    partTitle.value = "新增序号片段";
+    partTitle.value = t('codeRule.addPart');
   }
   if (partFormRef.value) partFormRef.value.resetFields();
   partOpen.value = true;
@@ -575,11 +574,11 @@ function handleSavePart() {
         partForm.value.partValue !== originPartValue.value
       ) {
         ElMessageBox.confirm(
-          "动态字符规则已变更，保存后当前序号将立即重置并重新计数，确认保存吗？",
-          "提示",
+          t('codeRule.ruleChangeConfirm'),
+          t('codeRule.resetConfirmTitle'),
           {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
+            confirmButtonText: t('common.confirm'),
+            cancelButtonText: t('common.cancel'),
             type: "warning",
           }
         )

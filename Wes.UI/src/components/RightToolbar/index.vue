@@ -4,19 +4,19 @@
       <el-tooltip
         class="item"
         effect="dark"
-        :content="showSearch ? '隐藏搜索' : '显示搜索'"
+        :content="showSearch ? t('common.hideSearch') : t('common.showSearch')"
         placement="top"
         v-if="search"
       >
         <el-button circle icon="Search" @click="toggleSearch()" />
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+      <el-tooltip class="item" effect="dark" :content="t('common.refresh')" placement="top">
         <el-button circle icon="Refresh" @click="refresh()" />
       </el-tooltip>
       <el-tooltip
         class="item"
         effect="dark"
-        content="显隐列"
+        :content="t('common.showHideColumns')"
         placement="top"
         v-if="columns"
       >
@@ -62,6 +62,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
   showSearch: {

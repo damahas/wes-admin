@@ -95,7 +95,7 @@
 
     <!-- 日志详情对话框 -->
     <el-dialog title="日志详情" v-model="detailOpen" width="700px" append-to-body>
-      <el-form :model="detailForm" label-width="110px">
+      <el-form :model="detailForm" label-width="auto">
         <el-form-item label="任务名称">{{ detailForm.jobName }}</el-form-item>
         <el-form-item label="任务组名">{{ detailForm.jobGroup }}</el-form-item>
         <el-form-item label="调用目标">{{ detailForm.invokeTarget }}</el-form-item>

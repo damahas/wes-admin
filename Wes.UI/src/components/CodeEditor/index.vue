@@ -19,11 +19,11 @@
         </el-select>
 
         <el-button-group size="small" style="margin-left: 10px">
-          <el-button @click="formatCode" :icon="MagicStick" title="格式化代码">
-            格式化
+          <el-button @click="formatCode" :icon="MagicStick" :title="t('common.formatCode')">
+            {{ t('common.format') }}
           </el-button>
-          <el-button @click="insertSnippet" :icon="DocumentAdd" title="插入代码片段">
-            片段
+          <el-button @click="insertSnippet" :icon="DocumentAdd" :title="t('common.insertSnippet')">
+            {{ t('common.snippet') }}
           </el-button>
         </el-button-group>
       </div>

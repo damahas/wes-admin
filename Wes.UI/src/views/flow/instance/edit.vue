@@ -3,28 +3,28 @@
     <!-- 添加或修改数据对话框 -->
     <el-dialog :title="title" v-model="open" width="800px" append-to-body>
       <el-descriptions border>
-        <el-descriptions-item label="业务id">
+        <el-descriptions-item :label="t('flow.instance.businessId')">
           {{ form.businessId }}
         </el-descriptions-item>
-        <el-descriptions-item label="业务编码" :span="2">
+        <el-descriptions-item :label="t('flow.instance.businessCode')" :span="2">
           {{ form.businessCode }}
         </el-descriptions-item>
-        <el-descriptions-item label="流程名称">
+        <el-descriptions-item :label="t('flow.instance.flowName')">
           {{ form.process?.processName }}
         </el-descriptions-item>
-        <el-descriptions-item label="流程版本">
+        <el-descriptions-item :label="t('flow.instance.flowVersion')">
           {{ form.version?.version }}
         </el-descriptions-item>
-        <el-descriptions-item label="发起人">
+        <el-descriptions-item :label="t('flow.instance.initiator')">
           {{ getName(form.createUser) }}
         </el-descriptions-item>
-        <el-descriptions-item label="流程状态">
+        <el-descriptions-item :label="t('flow.instance.flowStatus')">
           <status-tag :status="form.instanceStatus" />
         </el-descriptions-item>
-        <el-descriptions-item label="是否加急">
-          {{ form.isUrgent > 0 ? "急" : "正常" }}
+        <el-descriptions-item :label="t('flow.instance.isUrgent')">
+          {{ form.isUrgent > 0 ? t('flow.instance.urgentYes') : t('flow.instance.normal') }}
         </el-descriptions-item>
-        <el-descriptions-item label="创建时间">
+        <el-descriptions-item :label="t('flow.instance.createTime')">
           {{ form.createTime }}
         </el-descriptions-item>
       </el-descriptions>
@@ -50,15 +50,15 @@
                 :key="task.instanceTaskId"
               >
                 <div style="margin: 6px 0" v-if="node.nodeType == 'start'">
-                  发起人：{{ getName(task.actualUser) }}
+                  {{ t('flow.instance.initiator') }}：{{ getName(task.actualUser) }}
                 </div>
                 <div style="margin: 6px 0" v-if="node.nodeType == 'task'">
                   <div style="display: flex">
-                    处理人：{{ getName(task.actualUser) }}
+                    {{ t('flow.instance.handler') }}：{{ getName(task.actualUser) }}
                     <status-tag :status="task.taskResult" style="margin-left: 8px" />
                   </div>
                   <div style="margin-top: 9px">
-                    审批意见：{{ task.comments }}
+                    {{ t('flow.instance.approvalComment') }}：{{ task.comments }}
                     <el-button
                       size="small"
                       type="primary"
@@ -66,12 +66,12 @@
                       v-if="task.taskResult === 0"
                       @click="handleDelegate(task)"
                     >
-                      委 托
+                      {{ t('flow.instance.delegate') }}
                     </el-button>
                   </div>
                 </div>
                 <div style="margin: 6px 0" v-if="node.nodeType == 'notice'">
-                  查看人：{{ getName(task.actualUser) }}
+                  {{ t('flow.instance.viewer') }}：{{ getName(task.actualUser) }}
                 </div>
               </el-card>
             </div>
@@ -81,7 +81,7 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="cancel">确 定</el-button>
+          <el-button type="primary" @click="cancel">{{ t('flow.instance.confirm') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -92,9 +92,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { getInstance, delegateTask } from "@/api/flow/instance";
 import statusTag from "./statusTag.vue";
 import selectUser from "@/views/system/user/select.vue";
+
+const { t } = useI18n();
 
 const selectUserRef = ref(null);
 
@@ -129,7 +132,7 @@ function openDialog(id) {
 function handleGet(id) {
   getInstance(id).then((response) => {
     form.value = response.data;
-    title.value = `流程实例-${form.value.businessCode}`;
+    title.value = `${t('flow.instance.title')}-${form.value.businessCode}`;
     open.value = true;
   });
 }

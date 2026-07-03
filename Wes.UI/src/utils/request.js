@@ -21,6 +21,8 @@ service.interceptors.request.use(
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
+    // 带上当前语言
+    config.headers["Accept-Language"] = store.state.system.locale;
     // get请求映射params参数
     if (config.method === 'get' && config.params) {
       const queryString = tansParams(config.params);

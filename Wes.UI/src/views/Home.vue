@@ -34,11 +34,11 @@
           <div class="stat-icon-wrap">
             <i class="fa fa-shield"></i>
           </div>
-          <span class="stat-badge">角色</span>
+          <span class="stat-badge">{{ t('home.role') }}</span>
         </div>
         <div class="stat-number">12</div>
         <div class="stat-footer">
-          <span class="stat-label">已配置角色</span>
+          <span class="stat-label">{{ t('home.configuredRoles') }}</span>
           <span class="stat-trend up"><i class="fa fa-arrow-up"></i> 5%</span>
         </div>
       </div>
@@ -47,12 +47,12 @@
           <div class="stat-icon-wrap">
             <i class="fa fa-sitemap"></i>
           </div>
-          <span class="stat-badge">部门</span>
+          <span class="stat-badge">{{ t('home.dept') }}</span>
         </div>
         <div class="stat-number">8</div>
         <div class="stat-footer">
-          <span class="stat-label">组织架构</span>
-          <span class="stat-trend flat"><i class="fa fa-minus"></i> 持平</span>
+          <span class="stat-label">{{ t('home.orgStructure') }}</span>
+          <span class="stat-trend flat"><i class="fa fa-minus"></i> {{ t('home.flat') }}</span>
         </div>
       </div>
       <div class="stat-card flows">
@@ -60,11 +60,11 @@
           <div class="stat-icon-wrap">
             <i class="fa fa-code-fork"></i>
           </div>
-          <span class="stat-badge">流程</span>
+          <span class="stat-badge">{{ t('home.flow') }}</span>
         </div>
         <div class="stat-number">5</div>
         <div class="stat-footer">
-          <span class="stat-label">流程模板</span>
+          <span class="stat-label">{{ t('home.flowTemplates') }}</span>
           <span class="stat-trend up"><i class="fa fa-arrow-up"></i> 8%</span>
         </div>
       </div>
@@ -73,47 +73,47 @@
     <!-- 快捷入口 + 公告 -->
     <div class="middle-row">
       <div class="quick-section">
-        <h3 class="section-title">快捷入口</h3>
+        <h3 class="section-title">{{ t('home.quickEntry') }}</h3>
         <div class="quick-links">
           <div class="quick-link" @click="$router.push('/system/user')">
             <div class="ql-icon user"><i class="fa fa-user-plus"></i></div>
             <div class="ql-text">
-              <span class="ql-name">用户管理</span>
-              <span class="ql-desc">管理账号与权限</span>
+              <span class="ql-name">{{ t('home.userManagement') }}</span>
+              <span class="ql-desc">{{ t('home.userDesc') }}</span>
             </div>
           </div>
           <div class="quick-link" @click="$router.push('/system/role')">
             <div class="ql-icon role"><i class="fa fa-shield"></i></div>
             <div class="ql-text">
-              <span class="ql-name">角色管理</span>
-              <span class="ql-desc">分配菜单权限</span>
+              <span class="ql-name">{{ t('home.roleManagement') }}</span>
+              <span class="ql-desc">{{ t('home.roleDesc') }}</span>
             </div>
           </div>
           <div class="quick-link" @click="$router.push('/system/menu')">
             <div class="ql-icon menu"><i class="fa fa-list"></i></div>
             <div class="ql-text">
-              <span class="ql-name">菜单管理</span>
-              <span class="ql-desc">配置系统菜单</span>
+              <span class="ql-name">{{ t('home.menuManagement') }}</span>
+              <span class="ql-desc">{{ t('home.menuDesc') }}</span>
             </div>
           </div>
           <div class="quick-link" @click="$router.push('/system/dept')">
             <div class="ql-icon dept"><i class="fa fa-sitemap"></i></div>
             <div class="ql-text">
-              <span class="ql-name">部门管理</span>
-              <span class="ql-desc">组织架构维护</span>
+              <span class="ql-name">{{ t('home.deptManagement') }}</span>
+              <span class="ql-desc">{{ t('home.deptDesc') }}</span>
             </div>
           </div>
           <div class="quick-link" @click="$router.push('/flow/process')">
             <div class="ql-icon flow"><i class="fa fa-code-fork"></i></div>
             <div class="ql-text">
-              <span class="ql-name">流程设计</span>
-              <span class="ql-desc">设计审批流程</span>
+              <span class="ql-name">{{ t('home.flowDesign') }}</span>
+              <span class="ql-desc">{{ t('home.flowDesc') }}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="notice-section">
-        <h3 class="section-title">系统公告</h3>
+        <h3 class="section-title">{{ t('home.notice') }}</h3>
         <div class="notice-card">
           <div class="notice-item">
             <div class="notice-dot"></div>
@@ -151,74 +151,74 @@
     <div class="bottom-row">
       <div class="info-card">
         <h3 class="section-title">
-          <i class="fa fa-server"></i> 系统信息
+          <i class="fa fa-server"></i> {{ t('home.systemInfo') }}
         </h3>
         <div class="info-grid">
           <div class="info-item">
-            <span class="info-key">系统版本</span>
+            <span class="info-key">{{ t('home.systemVersion') }}</span>
             <span class="info-val">v2.0.0</span>
           </div>
           <div class="info-item">
-            <span class="info-key">前端框架</span>
-            <span class="info-val">Vue 3 + Element Plus</span>
+            <span class="info-key">{{ t('home.frontendFramework') }}</span>
+            <span class="info-val">{{ t('home.vueFramework') }}</span>
           </div>
           <div class="info-item">
-            <span class="info-key">后端框架</span>
-            <span class="info-val">.NET 6 + SqlSugar</span>
+            <span class="info-key">{{ t('home.backendFramework') }}</span>
+            <span class="info-val">{{ t('home.dotnetFramework') }}</span>
           </div>
           <div class="info-item">
-            <span class="info-key">数据库</span>
-            <span class="info-val">MySQL</span>
+            <span class="info-key">{{ t('home.database') }}</span>
+            <span class="info-val">{{ t('home.mysql') }}</span>
           </div>
         </div>
       </div>
       <div class="info-card">
         <h3 class="section-title">
-          <i class="fa fa-lightbulb-o"></i> 操作指引
+          <i class="fa fa-lightbulb-o"></i> {{ t('home.guideTitle') }}
         </h3>
         <ul class="guide-list">
           <li>
             <span class="guide-step">1</span>
-            <span>通过「系统管理」维护用户、角色、菜单等基础数据</span>
+            <span>{{ t('home.guideStep1') }}</span>
           </li>
           <li>
             <span class="guide-step">2</span>
-            <span>通过「流程管理」设计审批流程并跟踪流程实例</span>
+            <span>{{ t('home.guideStep2') }}</span>
           </li>
           <li>
             <span class="guide-step">3</span>
-            <span>分配角色时请确保赋予正确的菜单和数据权限</span>
+            <span>{{ t('home.guideStep3') }}</span>
           </li>
           <li>
             <span class="guide-step">4</span>
-            <span>系统配置支持动态开关验证码、日志级别等功能</span>
+            <span>{{ t('home.guideStep4') }}</span>
           </li>
         </ul>
       </div>
       <div class="info-card">
         <h3 class="section-title">
-          <i class="fa fa-clock-o"></i> 最近访问
+          <i class="fa fa-clock-o"></i> {{ t('home.recentVisit') }}
         </h3>
         <div class="recent-list">
           <div class="recent-item" @click="$router.push('/system/user')">
             <i class="fa fa-circle"></i>
-            <span>用户管理</span>
-            <span class="recent-time">10分钟前</span>
+            <span>{{ t('home.userManagement') }}</span>
+            <span class="recent-time">10{{ t('home.minutesAgo') }}</span>
           </div>
           <div class="recent-item" @click="$router.push('/system/role')">
             <i class="fa fa-circle"></i>
-            <span>角色管理</span>
-            <span class="recent-time">30分钟前</span>
+            <span>{{ t('home.roleManagement') }}</span>
+            <span class="recent-time">30{{ t('home.minutesAgo') }}</span>
           </div>
           <div class="recent-item" @click="$router.push('/system/menu')">
             <i class="fa fa-circle"></i>
-            <span>菜单管理</span>
-            <span class="recent-time">1小时前</span>
+            <span>{{ t('home.menuManagement') }}</span>
+            <span class="recent-time">1{{ t('home.hoursAgo') }}</span>
           </div>
           <div class="recent-item" @click="$router.push('/system/dept')">
             <i class="fa fa-circle"></i>
-            <span>部门管理</span>
-            <span class="recent-time">昨天</span>
+            <span>{{ t('home.deptManagement') }}</span>
+            <span class="recent-time">{{ t('home.yesterday') }}</span>
           </div>
         </div>
       </div>

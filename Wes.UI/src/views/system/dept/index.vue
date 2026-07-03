@@ -17,12 +17,12 @@
             icon="Plus"
             @click="handleAdd"
             v-hasPermi="['system:dept:add']"
-            >新增</el-button
+            >{{ t('common.add') }}</el-button
           >
         </el-col>
         <el-col :span="1.5">
           <el-button type="info" plain icon="Sort" @click="toggleExpandAll"
-            >展开/折叠</el-button
+            >{{ t('common.expand') }}</el-button
           >
         </el-col>
         <right-toolbar
@@ -39,20 +39,20 @@
         :default-expand-all="isExpandAll"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
-        <el-table-column prop="deptName" label="部门名称"></el-table-column>
-        <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="deptName" :label="t('deptManage.deptName')"></el-table-column>
+        <el-table-column prop="orderNum" :label="t('common.sort')" width="200"></el-table-column>
+        <el-table-column prop="status" :label="t('common.status')" width="100">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="220">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="220">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="t('common.actions')"
           align="center"
           width="260"
           class-name="small-padding fixed-width"
@@ -64,7 +64,7 @@
               icon="Edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:dept:edit']"
-              >修改</el-button
+              >{{ t('common.edit') }}</el-button
             >
             <el-button
               link
@@ -72,7 +72,7 @@
               icon="Plus"
               @click="handleAdd(scope.row)"
               v-hasPermi="['system:dept:add']"
-              >新增</el-button
+              >{{ t('common.add') }}</el-button
             >
             <el-button
               v-if="scope.row.parentId != 0"
@@ -81,7 +81,7 @@
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:dept:remove']"
-              >删除</el-button
+              >{{ t('common.delete') }}</el-button
             >
           </template>
         </el-table-column>
@@ -90,27 +90,27 @@
 
     <!-- 添加或修改部门对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form ref="deptRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="deptRef" :model="form" :rules="rules" label-width="auto">
         <el-row>
           <el-col :span="24" v-if="form.parentId !== 0">
-            <el-form-item label="上级部门" prop="parentId">
+            <el-form-item :label="t('deptManage.parentDept')" prop="parentId">
               <el-tree-select
                 v-model="form.parentId"
                 :data="deptOptions"
                 :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
                 value-key="deptId"
-                placeholder="选择上级部门"
+                :placeholder="t('deptManage.placeholder.parentDept')"
                 check-strictly
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="部门名称" prop="deptName">
-              <el-input v-model="form.deptName" placeholder="请输入部门名称" />
+            <el-form-item :label="t('deptManage.deptName')" prop="deptName">
+              <el-input v-model="form.deptName" :placeholder="t('deptManage.placeholder.deptName')" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="显示排序" prop="orderNum">
+            <el-form-item :label="t('deptManage.displayOrder')" prop="orderNum">
               <el-input-number
                 v-model="form.orderNum"
                 controls-position="right"
@@ -119,26 +119,26 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="负责人" prop="leader">
-              <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20" />
+            <el-form-item :label="t('deptManage.leader')" prop="leader">
+              <el-input v-model="form.leader" :placeholder="t('deptManage.placeholder.leader')" maxlength="20" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="联系电话" prop="phone">
+            <el-form-item :label="t('deptManage.phone')" prop="phone">
               <el-input
                 v-model="form.phone"
-                placeholder="请输入联系电话"
+                :placeholder="t('deptManage.placeholder.phone')"
                 maxlength="11"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+            <el-form-item :label="t('deptManage.email')" prop="email">
+              <el-input v-model="form.email" :placeholder="t('deptManage.placeholder.email')" maxlength="50" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="部门状态">
+            <el-form-item :label="t('deptManage.deptStatus')">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in sys_normal_disable"
@@ -153,8 +153,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ t('common.submit') }}</el-button>
+          <el-button @click="cancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -162,9 +162,9 @@
 </template>
 
 <script setup name="Dept">
-import { getCurrentInstance } from "vue";
-import { ref, reactive, toRefs, nextTick } from "vue";
+import { ref, reactive, toRefs, nextTick, computed } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { getDict, handleTree } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
 import {
@@ -176,7 +176,7 @@ import {
   listDeptExcludeChild,
 } from "@/api/system/dept";
 
-const { proxy } = getCurrentInstance();
+const { t } = useI18n();
 const { sys_normal_disable } = getDict("sys_normal_disable");
 
 const deptList = ref([]);
@@ -191,21 +191,21 @@ const queryRef = ref(null);
 const deptRef = ref(null);
 
 // 查询条件配置
-const queryConfig = [
+const queryConfig = computed(() => [
   {
-    label: "部门名称",
+    label: t('deptManage.deptName'),
     prop: "deptName",
     type: "input",
-    placeholder: "请输入部门名称",
+    placeholder: t('deptManage.placeholder.deptName'),
   },
   {
-    label: "状态",
+    label: t('common.status'),
     prop: "status",
     type: "select",
-    placeholder: "部门状态",
+    placeholder: t('deptManage.placeholder.status'),
     options: sys_normal_disable,
   },
-];
+]);
 
 const data = reactive({
   form: {},
@@ -214,16 +214,16 @@ const data = reactive({
     status: undefined,
   },
   rules: {
-    parentId: [{ required: true, message: "上级部门不能为空", trigger: "blur" }],
-    deptName: [{ required: true, message: "部门名称不能为空", trigger: "blur" }],
-    orderNum: [{ required: true, message: "显示排序不能为空", trigger: "blur" }],
+    parentId: [{ required: true, message: computed(() => t('deptManage.rules.parentRequired')), trigger: "blur" }],
+    deptName: [{ required: true, message: computed(() => t('deptManage.rules.deptNameRequired')), trigger: "blur" }],
+    orderNum: [{ required: true, message: computed(() => t('deptManage.rules.orderNumRequired')), trigger: "blur" }],
     email: [
-      { type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"] },
+      { type: "email", message: computed(() => t('deptManage.rules.emailInvalid')), trigger: ["blur", "change"] },
     ],
     phone: [
       {
         pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-        message: "请输入正确的手机号码",
+        message: computed(() => t('deptManage.rules.phoneInvalid')),
         trigger: "blur",
       },
     ],
@@ -277,13 +277,13 @@ function resetQuery() {
 function handleAdd(row) {
   reset();
   listDept().then((response) => {
-    deptOptions.value = proxy.handleTree(response.data, "deptId");
+    deptOptions.value = handleTree(response.data, "deptId");
   });
   if (row != undefined) {
     form.value.parentId = row.deptId;
   }
   open.value = true;
-  title.value = "添加部门";
+  title.value = t('deptManage.addTitle');
 }
 
 /** 展开/折叠操作 */
@@ -299,12 +299,12 @@ function toggleExpandAll() {
 function handleUpdate(row) {
   reset();
   listDeptExcludeChild(row.deptId).then((response) => {
-    deptOptions.value = proxy.handleTree(response.data, "deptId");
+    deptOptions.value = handleTree(response.data, "deptId");
   });
   getDept(row.deptId).then((response) => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改部门";
+    title.value = t('deptManage.editTitle');
   });
 }
 
@@ -314,7 +314,7 @@ function submitForm() {
     if (valid) {
       const apiCall = form.value.deptId ? updateDept(form.value) : addDept(form.value);
       apiCall.then(() => {
-        ElMessage.success(form.value.deptId ? "修改成功" : "新增成功");
+        ElMessage.success(form.value.deptId ? t('common.editSuccess') : t('common.addSuccess'));
         open.value = false;
         getList();
       });
@@ -324,16 +324,16 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  ElMessageBox.confirm('是否确认删除名称为"' + row.deptName + '"的数据项?', "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('deptManage.confirm.delete', { name: row.deptName }), t('common.confirmTitle'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     confirmButtonType: "danger",
     type: "warning",
   })
     .then(() => delDept(row.deptId))
     .then(() => {
       getList();
-      ElMessage.success("删除成功");
+      ElMessage.success(t('common.deleteSuccess'));
     })
     .catch(() => {});
 }

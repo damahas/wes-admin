@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="流程设计"
+    :title="t('flow.designer.title')"
     :fullscreen="true"
     :show-close="false"
     @close="handleClose"
@@ -9,10 +9,10 @@
     <template #header>
       <div class="flow-dialog-header">
         <span>
-          流程设计--{{ form.process?.processName }}-
+          {{ t('flow.designer.title') }}--{{ form.process?.processName }}-
           <el-select
             v-model="form.versionId"
-            placeholder="请选择版本"
+            :placeholder="t('flow.designer.selectVersion')"
             size="default"
             style="margin-left: 12px; width: 160px"
             @change="handleVersionChange"
@@ -32,7 +32,7 @@
           </el-select>
         </span>
         <el-alert
-          title="当前版本已锁定，不可修改"
+          :title="t('flow.designer.locked')"
           size="small"
           v-if="form.isLock == 1"
           type="warning"
@@ -41,15 +41,15 @@
           center
         />
         <div class="header-actions">
-          <el-button type="info" @click="handleVersion" link> 新建版本 </el-button>
+          <el-button type="info" @click="handleVersion" link>{{ t('flow.designer.newVersion') }}</el-button>
           <el-button type="primary" @click="handleSave" v-if="form.isLock == 0">
-            保存流程
+            {{ t('flow.designer.saveFlow') }}
           </el-button>
           <el-button type="danger" @click="handleDelete" v-if="form.isLock == 0">
-            删除流程
+            {{ t('flow.designer.deleteFlow') }}
           </el-button>
-          <el-button @click="handleReset" v-if="form.isLock == 0"> 重 置 </el-button>
-          <el-button @click="handleClose">关 闭</el-button>
+          <el-button @click="handleReset" v-if="form.isLock == 0">{{ t('flow.designer.reset') }}</el-button>
+          <el-button @click="handleClose">{{ t('flow.designer.close') }}</el-button>
         </div>
       </div>
     </template>
@@ -58,7 +58,7 @@
       <el-aside width="180px" class="flow-nodes">
         <div class="nodes-header">
           <i class="fa fa-sitemap"></i>
-          <span>流程节点</span>
+          <span>{{ t('flow.designer.flowNodes') }}</span>
         </div>
         <div class="nodes-content">
           <div v-for="item in flowNodes" :key="item.groupName" class="node-group">
@@ -112,12 +112,18 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, reactive } from "vue";
 import { Graph, Snapline, Dnd } from "@antv/x6";
 import { ElMessageBox, ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { getVersion, updateVersion, listVersion, delVersion } from "@/api/flow/process";
-import { flowNodes, traits, ports } from "./config";
+import { useFlowConfig, ports } from "./config";
 import nodeAttr from "./components/nodeAttr.vue";
 import FlowNodeComponent from "./components/customNode/index.vue";
 import { register } from "@antv/x6-vue-shape";
 import ContextMenu from "@/components/ContextMenu/index.vue";
+
+const { t } = useI18n();
+
+// 获取翻译后的配置
+const { flowNodes, traits, getElementTrait } = useFlowConfig(t);
 
 const emit = defineEmits(["close"]);
 
@@ -351,7 +357,7 @@ function initGraph() {
     showContextMenu(e.clientX, e.clientY, [
       {
         key: "delete",
-        label: "删除",
+        label: t('flow.designer.delete'),
         icon: "fa fa-trash",
         action: () => node.remove(),
       },
@@ -364,7 +370,7 @@ function initGraph() {
     showContextMenu(e.clientX, e.clientY, [
       {
         key: "delete",
-        label: "删除",
+        label: t('flow.designer.delete'),
         icon: "fa fa-trash",
         action: () => edge.remove(),
       },
@@ -466,31 +472,6 @@ function initGraph() {
       graph.removeCells(cells);
     }
   });
-}
-
-function allowDrop(e) {
-  e.preventDefault();
-}
-
-// 添加手动连线功能
-function addEdge(sourceId, targetId) {
-  if (!graph || sourceId === targetId) return;
-
-  // 检查是否已存在连线
-  const edges = graph.getEdges();
-  const exists = edges.some(
-    (edge) => edge.getSourceCellId() === sourceId && edge.getTargetCellId() === targetId
-  );
-
-  if (!exists) {
-    graph.addEdge({
-      source: sourceId,
-      target: targetId,
-      attrs: {
-        line: { stroke: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#c6c9ce', strokeWidth: 2 },
-      },
-    });
-  }
 }
 
 function handleGetData(versionId) {
@@ -627,14 +608,14 @@ function handleSave() {
 }
 
 function handleDelete() {
-  ElMessageBox.confirm("确定要删除该流程版本吗？此操作不可恢复。", "提示", {
-    confirmButtonText: "确定删除",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('flow.designer.deleteConfirm'), t('flow.designer.deleteTip'), {
+    confirmButtonText: t('flow.designer.deleteConfirmBtn'),
+    cancelButtonText: t('flow.designer.deleteCancel'),
     confirmButtonType: "danger",
     type: "warning",
   }).then(() => {
     delVersion(form.value.versionId).then(() => {
-      ElMessage.success("删除成功");
+      ElMessage.success(t('flow.designer.deleteSuccess'));
       loadVersionList(form.value.processId);
       handleClose();
     });
@@ -681,17 +662,13 @@ defineExpose({ open });
 </script>
 
 <style lang="scss" scoped>
-:global(.el-dialog.is-fullscreen) {
+::global(.el-dialog.is-fullscreen) {
   padding: 0;
 }
 
-:global(.is-fullscreen .el-dialog__header) {
+::global(.is-fullscreen .el-dialog__header) {
   padding-bottom: 0;
 }
-
-// .flow-container {
-//   height: calc(100% - 80px);
-// }
 
 .flow-dialog-header {
   display: flex;

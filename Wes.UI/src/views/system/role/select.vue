@@ -5,7 +5,7 @@
       ref="queryFormRef"
       size="small"
       :inline="true"
-      label-width="68px"
+      label-width="auto"
     >
       <el-form-item :label="t('role.roleName')" prop="roleName">
         <el-input

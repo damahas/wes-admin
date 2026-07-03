@@ -7,9 +7,9 @@
       @click="handleImport"
       v-if="showButton"
     >
-      {{ buttonText }}
+      {{ displayButtonText }}
     </el-button>
-    <el-dialog :title="title" v-model="visible" width="400px" append-to-body>
+    <el-dialog :title="displayTitle" v-model="visible" width="400px" append-to-body>
       <el-upload
         ref="uploadRef"
         :limit="1"
@@ -24,28 +24,28 @@
         drag
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__text">{{ t('common.uploadDragText') }}</div>
         <template #tip>
           <div class="el-upload__tip text-center">
             <div class="el-upload__tip" v-if="showUpdateSupport">
-              <el-checkbox v-model="updateSupport" />是否更新已经存在的数据
+              <el-checkbox v-model="updateSupport" />{{ t('common.updateExistingData') }}
             </div>
-            <span v-if="acceptTip">{{ acceptTip }}</span>
+            <span v-if="displayAcceptTip">{{ displayAcceptTip }}</span>
             <el-link
               v-if="templateUrl"
               type="primary"
               style="font-size: 12px; vertical-align: baseline"
               @click="handleDownloadTemplate"
             >
-              下载模板
+              {{ t('common.downloadTemplate') }}
             </el-link>
           </div>
         </template>
       </el-upload>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleUpload">确 定</el-button>
-          <el-button @click="handleCancel">取 消</el-button>
+          <el-button type="primary" @click="handleUpload">{{ t('common.submit') }}</el-button>
+          <el-button @click="handleCancel">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -54,15 +54,18 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import store from "@/store";
 import { UploadFilled } from "@element-plus/icons-vue";
 import { download } from "@/utils";
+
+const { t } = useI18n();
 
 const props = defineProps({
   // 按钮配置
   buttonText: {
     type: String,
-    default: "导入",
+    default: "",
   },
   buttonType: {
     type: String,
@@ -91,11 +94,11 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: "导入",
+    default: "",
   },
   acceptTip: {
     type: String,
-    default: "仅允许导入xls、xlsx格式文件。",
+    default: "",
   },
   showUpdateSupport: {
     type: Boolean,
@@ -107,6 +110,11 @@ const props = defineProps({
     default: null,
   },
 });
+
+// 国际化默认值（defineProps 中不能使用 t()，通过 computed 补充）
+const displayButtonText = computed(() => props.buttonText || t('common.upload'));
+const displayTitle = computed(() => props.title || t('common.import'));
+const displayAcceptTip = computed(() => props.acceptTip || t('common.importFileTip'));
 
 const emit = defineEmits(["success", "error"]);
 

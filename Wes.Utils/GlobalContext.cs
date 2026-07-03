@@ -41,6 +41,11 @@ namespace Wes.Utils
         public static AsyncLocal<string> Token = new AsyncLocal<string>();
 
         /// <summary>
+        /// 当前语言
+        /// </summary>
+        public static AsyncLocal<string> Lang = new AsyncLocal<string>();
+
+        /// <summary>
         /// 设备序列号
         /// </summary>
         public static string DeviceId
@@ -151,6 +156,7 @@ namespace Wes.Utils
         public const string CaptchaVaildImg = "captcha_v_";
         public const string CodeRule = "code_";
         public const string DeviceId = "deviceId";
+        public const string I18n = "i18n_";
     }
 
     /// <summary>

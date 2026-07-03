@@ -122,10 +122,7 @@ const handleSliderSuccess = (data) => {
     if (loginForm.userName && loginForm.password) {
       handleLogin();
     } else {
-      sliderCodeRef.$message({
-        message: "验证成功！",
-        type: "success",
-      });
+      ElMessage.success(t('request.success') || '验证成功');
     }
     return;
   }

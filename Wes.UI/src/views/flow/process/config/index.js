@@ -1,38 +1,39 @@
 const traitModules = import.meta.glob("./*.config.js", { eager: true })
 
-export const traits = Object.keys(traitModules).reduce((sum, path) => {
-  const matchType = path.replace(/(\.config\.js|\\|\/|\.)/g, "")
-  return {
-    ...sum,
-    [matchType]: traitModules[path].default,
-  }
-}, {})
+export const useFlowConfig = (t) => {
+  const traits = Object.keys(traitModules).reduce((sum, path) => {
+    const matchType = path.replace(/(\.config\.js|\\|\/|\.)/g, "")
+    return {
+      ...sum,
+      [matchType]: traitModules[path].default(t),
+    }
+  }, {})
 
-export const getElementTrait = (elementType) => {
-  return traits[elementType] || { label: "节点", components: [] }
+  const getElementTrait = (elementType) => {
+    return traits[elementType] || { label: t('flow.designer.node.general'), components: [] }
+  }
+
+  const nodeGroups = [
+    { groupName: t('flow.designer.group.basic'), types: ["start", "end"] },
+    { groupName: t('flow.designer.group.process'), types: ["task", "notice"] },
+  ]
+
+  const flowNodes = nodeGroups.map(({ groupName, types }) => ({
+    groupName,
+    nodes: types.map(type => {
+      const trait = traits[type]
+      return {
+        name: trait.label,
+        icon: trait.icon,
+        color: trait.color,
+        type: trait.type,
+      }
+    }),
+  }))
+
+  return { traits, flowNodes, getElementTrait }
 }
 
-// 节点分组配置
-const nodeGroups = [
-  { groupName: "基础", types: ["start", "end"] },
-  { groupName: "处理", types: ["task", "notice"] },
-]
-
-// 左侧节点列表
-export const flowNodes = nodeGroups.map(({ groupName, types }) => ({
-  groupName,
-  nodes: types.map(type => {
-    const trait = traits[type]
-    return {
-      name: trait.label,
-      icon: trait.icon,
-      color: trait.color,
-      type: trait.type,
-    }
-  }),
-}))
-
-// 连接桩
 export const ports = {
   groups: {
     top: {

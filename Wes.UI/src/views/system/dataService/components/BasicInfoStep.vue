@@ -18,7 +18,7 @@
       </div>
 
       <div class="step-card-body">
-        <el-form :model="formData" :rules="rules" ref="formRef" label-width="110px" class="service-form">
+        <el-form :model="formData" :rules="rules" ref="formRef" label-width="auto" class="service-form">
           <div class="form-section">
             <div class="section-title">
               <el-icon><OfficeBuilding /></el-icon>

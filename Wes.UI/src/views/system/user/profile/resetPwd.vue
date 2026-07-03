@@ -1,5 +1,5 @@
 <template>
-   <el-form ref="pwdRef" :model="user" :rules="rules" label-width="80px">
+   <el-form ref="pwdRef" :model="user" :rules="rules" label-width="auto">
       <el-form-item :label="t('user.oldPassword')" prop="oldPassword">
          <el-input v-model="user.oldPassword" :placeholder="t('user.placeholder.oldPassword')" type="password" show-password />
       </el-form-item>
@@ -17,11 +17,16 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n'
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import { useI18n } from "vue-i18n";
 import { updateUserPwd } from "@/api/system/user";
 
-const { t } = useI18n()
-const { proxy } = getCurrentInstance();
+const { t } = useI18n();
+const router = useRouter();
+
+const pwdRef = ref(null);
 
 const user = reactive({
   oldPassword: undefined,
@@ -45,10 +50,10 @@ const rules = ref({
 
 /** 提交按钮 */
 function submit() {
-  proxy.$refs.pwdRef.validate(valid => {
+  pwdRef.value?.validate(valid => {
     if (valid) {
-      updateUserPwd(user.oldPassword, user.newPassword).then(response => {
-        proxy.$modal.msgSuccess(t("common.editSuccess"));
+      updateUserPwd(user.oldPassword, user.newPassword).then(() => {
+        ElMessage.success(t("common.editSuccess"));
       });
     }
   });
@@ -56,6 +61,6 @@ function submit() {
 
 /** 关闭按钮 */
 function close() {
-  proxy.$tab.closePage();
+  router.back();
 };
 </script>

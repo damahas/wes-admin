@@ -5,9 +5,24 @@
 </template>
 
 <script>
+import { useI18n } from "vue-i18n";
+
 export default {
   props: {
     status: Number,
+  },
+  setup() {
+    const { t } = useI18n();
+    const statusMap = {
+      0: "flow.instance.statusMap.start",
+      10: "flow.instance.statusMap.approving",
+      100: "flow.instance.statusMap.approved",
+      101: "flow.instance.statusMap.rejected",
+      200: "flow.instance.statusMap.suspended",
+      201: "flow.instance.statusMap.delegated",
+      9999: "flow.instance.statusMap.autoProcessed",
+    };
+    return { t, statusMap };
   },
   methods: {
     getStatusType(status) {
@@ -31,24 +46,7 @@ export default {
       }
     },
     getStatusTitle(status) {
-      switch (status) {
-        case 0:
-          return "待处理";
-        case 10:
-          return "审批中";
-        case 100:
-          return "通过";
-        case 101:
-          return "不通过";
-        case 200:
-          return "挂起";
-        case 201:
-          return "委托";
-        case 9999:
-          return "自动处理";
-        default:
-          return status;
-      }
+      return this.t(this.statusMap[status]) || status;
     },
   },
 };

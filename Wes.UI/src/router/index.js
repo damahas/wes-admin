@@ -53,33 +53,7 @@ const routes = [
             meta: { title: '分配用户', activeMenu: '/system/role' }
           }
         ]
-      },
-      {
-        path: '/system/dict-data',
-        hidden: true,
-        permissions: ['system:dict:list'],
-        children: [
-          {
-            path: 'index/:dictId(\\d+)',
-            component: () => import('@/views/system/dict/data'),
-            name: 'Data',
-            meta: { title: '字典数据', activeMenu: '/system/dict' }
-          }
-        ]
-      },
-      // {
-      //   path: '/system/job-log',
-      //   hidden: true,
-      //   permissions: ['monitor:job:list'],
-      //   children: [
-      //     {
-      //       path: 'index/:jobId(\\d+)',
-      //       component: () => import('@/views/system/job/log'),
-      //       name: 'JobLog',
-      //       meta: { title: '调度日志', activeMenu: '/system/job' }
-      //     }
-      //   ]
-      // },
+      }
     ],
   },
   // {

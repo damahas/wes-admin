@@ -3,7 +3,7 @@
     size="small"
     :model-value="switchValue"
     :disabled="switchValue"
-    :title="switchValue ? '已启用版本，无法修改' : '启用版本'"
+    :title="switchValue ? t('flow.designer.versionEnabled') : t('flow.designer.enableVersionDesc')"
     @change="handleChange"
   >
   </el-switch>
@@ -11,7 +11,10 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { useVersion } from "@/api/flow/process";
+
+const { t } = useI18n();
 
 const props = defineProps({
   value: String,
@@ -38,8 +41,4 @@ watch(
     }
   }
 );
-
-// watch(switchValue, (val) => {
-//   emit("updateValue", val);
-// });
 </script>
