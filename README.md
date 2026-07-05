@@ -133,6 +133,8 @@ WesAdmin.sln
 
 ## 快速开始
 
+> 🚀 **体验测试环境**: [http://8.153.171.43:8980/](http://8.153.171.43:8980/)　　账号：**admin**　　密码：**123456**
+
 ### 环境要求
 
 - **后端**: [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
@@ -204,7 +206,7 @@ cd Wes.WebApi && dotnet publish -c Release
 ├── Wes.WebApi.dll              # 后端入口
 ├── appsettings.json            # 配置文件（可外挂）
 ├── UploadFile/                 # 上传文件目录（可外挂）
-├── DataProtection/             # 密钥持久化（可外挂）
+├── UploadFile/DataProtection/  # 密钥持久化（可外挂）
 └── *.dll                       # 其他发布产物
 /front/                         # 前端静态文件
 /etc/nginx/nginx.conf           # Nginx 配置
@@ -238,11 +240,12 @@ docker run -d \
   -p 80:80 \
   -v /host/path/appsettings.json:/app/appsettings.json \
   -v /host/path/UploadFile:/app/UploadFile \
-  -v /host/path/DataProtection:/app/DataProtection \
+  -v /etc/machine-id:/etc/machine-id:ro \
   wes-admin
 ```
 
-> nginx 监听 80 端口，反向代理 `/api/` → `localhost:8088`，前端静态文件由 `/front` 提供，`/file/` 静态文件由 `/app/UploadFile` 提供。`appsettings.json`、`UploadFile`、`DataProtection` 通过 `-v` 挂载宿主机目录实现配置外挂和文件持久化。
+> nginx 监听 80 端口，反向代理 `/api/` → `localhost:8088`，前端静态文件由 `/front` 提供，`/file/` 静态文件由 `/app/UploadFile` 提供。`appsettings.json`、`UploadFile`（含 DataProtection 密钥）通过 `-v` 挂载宿主机目录实现配置外挂和文件持久化。  
+> `/etc/machine-id` 挂载宿主机机器 ID，用作许可证设备指纹，保证容器重建后 License 不失效。
 
 ---
 
