@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using System.Linq;
 

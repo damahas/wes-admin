@@ -43,7 +43,7 @@ export default {
         processNameRequired: 'Process name is required',
         businessFieldRequired: 'Business field is required',
       },
-      steps: 'Flow Steps',
+      steps: 'Design',
       message: {
         addSuccess: 'Added successfully',
         editSuccess: 'Modified successfully',
@@ -83,6 +83,17 @@ export default {
       remark: 'Remark',
       line: 'Line',
       lineName: 'Line Name',
+      condition: 'Condition',
+      conditionName: 'Condition Name',
+      conditionExpr: 'Condition Expression',
+      addCondition: 'Add Condition',
+      removeCondition: 'Remove Condition',
+      conditionNameRequired: 'Condition name is required',
+      conditionNameDuplicate: 'Condition name already exists',
+      branchCondition: 'Branch Condition',
+      selectCondition: 'Select condition',
+      noCondition: 'None',
+      conditionExprPlaceholder: 'Condition expression (to be designed)',
       versionEnabled: 'Version is enabled and cannot be modified',
       enableVersionDesc: 'Enable Version',
       node: {
@@ -91,6 +102,7 @@ export default {
         end: 'End Node',
         task: 'Task Node',
         notice: 'Notice Node',
+        branch: 'Branch Node',
       },
       handleRuleOption: {
         one: 'One person approves',
@@ -100,6 +112,7 @@ export default {
       group: {
         basic: 'Basic',
         process: 'Process',
+        branch: 'Branch',
       },
       userType: {
         author: 'Initiator',
@@ -107,6 +120,7 @@ export default {
         dept: 'Department',
         leader: 'Department Leader',
         user: 'Specific User',
+        dataservice: 'Data Service',
       },
       leaderDesc: 'Department leader (searches upward if empty)',
     },

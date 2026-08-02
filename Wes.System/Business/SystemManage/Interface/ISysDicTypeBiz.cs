@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -8,13 +8,13 @@ namespace Wes.Business
 {
 	public interface ISysDicTypeBiz
 	{
-		public RowData<SysDicTypeModel> GetList(ParamData<DicTypeParam> param);
+		public RowData<SysDicTypeEntity> GetList(ParamData<DicTypeParam> param);
 
-		public ResultData<List<SysDicTypeModel>> GetAll();
+		public ResultData<List<SysDicTypeEntity>> GetAll();
 
-		public ResultData<SysDicTypeModel> GetById(long id);
+		public ResultData<SysDicTypeEntity> GetById(long id);
 
-		public ReturnData Save(SysDicTypeModel dic);
+		public ReturnData Save(SysDicTypeEntity dic);
 
 		public ReturnData Delete(string ids);
 

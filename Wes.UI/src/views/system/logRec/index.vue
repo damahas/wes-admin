@@ -50,7 +50,7 @@
               </template>
             </el-table-column>
             <el-table-column :label="t('logRec.column.operInfo')" align="center" prop="msg" />
-            <el-table-column :label="t('logRec.column.loginTime')" align="center" prop="loginTime" width="180">
+            <el-table-column :label="t('logRec.column.loginTime')" align="center" prop="loginTime" min-width="170">
               <template #default="scope">
                 <span>{{ formatTime(scope.row.loginTime) }}</span>
               </template>
@@ -116,7 +116,7 @@
                 <dict-tag :options="sys_common_status" :value="scope.row.status" />
               </template>
             </el-table-column>
-            <el-table-column :label="t('logRec.column.operTime')" align="center" prop="operTime" width="180">
+            <el-table-column :label="t('logRec.column.operTime')" align="center" prop="operTime" min-width="170">
               <template #default="scope">
                 <span>{{ formatTime(scope.row.operTime) }}</span>
               </template>

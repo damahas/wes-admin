@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wes.Business;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -37,13 +37,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPost]
-        public ReturnData Save([FromBody] SysDataServiceModel model)
+        public ReturnData Save([FromBody] SysDataServiceEntity model)
         {
             return _sysDataServiceBiz.Save(model);
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] SysDataServiceModel model)
+        public ReturnData Update([FromBody] SysDataServiceEntity model)
         {
             return _sysDataServiceBiz.Save(model);
         }

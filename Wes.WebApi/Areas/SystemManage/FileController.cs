@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
 using Wes.Utils.Model;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.ViewModel.SystemManage;
 using Microsoft.AspNetCore.Http;
 using Wes.Utils;
@@ -44,7 +44,7 @@ namespace Wes.WebApi.Areas.SystemManage
                 file.CopyTo(fs);
                 fs.Flush();
             }
-            return _sysFileBiz.Save(new SysFileModel()
+            return _sysFileBiz.Save(new SysFileEntity()
             {
                 FileName = file.FileName,
                 FilePath = filePath.Replace(GlobalContext.AppSettings.FilePath.TrimEnd('/'), ""),

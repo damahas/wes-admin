@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Wes.DbModel;
+using Wes.Entity;
 
 namespace Wes.ViewModel.FlowManage
 {

@@ -50,7 +50,7 @@
             <i :class="'fa fa-' + scope.row.icon" style="font-size: 13px" />
           </template>
         </el-table-column>
-        <el-table-column prop="orderNum" :label="t('common.sort')" width="60"></el-table-column>
+        <el-table-column prop="orderNum" :label="t('common.sort')" width="80"></el-table-column>
         <el-table-column
           prop="perms"
           :label="t('menuManage.perms')"
@@ -66,7 +66,7 @@
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.createTime')" align="center" min-width="120" prop="createTime">
+        <el-table-column :label="t('common.createTime')" align="center" width="170" prop="createTime">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
@@ -109,7 +109,7 @@
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" v-model="open" width="900px" append-to-body>
-      <el-form ref="menuRef" :model="form" :rules="rules" label-width="auto">
+      <el-form ref="menuRef" :model="form" :rules="rules" label-width="140px">
         <el-row>
           <el-col :span="24">
             <el-form-item :label="t('menuManage.parentMenu')">
@@ -590,7 +590,7 @@ async function loadMenuTranslations(menuId) {
   i18nValues.value = {};
   if (!menuId) return;
   try {
-    const res = await listI18n({ i18nKey: `sys.menu.${menuId}` });
+    const res = await listI18n({ params: { i18nKey: `sys.menu.${menuId}` } });
     const rows = res.rows || [];
     rows.forEach(row => {
       i18nValues.value[row.lang] = row.i18nValue;
@@ -603,7 +603,7 @@ async function upsertTranslation(menuId, lang, value) {
   if (!value) return;
   const key = `sys.menu.${menuId}`;
   try {
-    const res = await listI18n({ i18nKey: key, lang });
+    const res = await listI18n({ params: { i18nKey: key, lang } });
     const rows = res.rows || [];
     const existing = rows.find(r => r.lang === lang);
     if (existing?.i18nId) {

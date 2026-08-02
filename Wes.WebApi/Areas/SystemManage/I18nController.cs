@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
 using Wes.Utils.Model;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.ViewModel.SystemManage;
 
 namespace Wes.WebApi.Areas.SystemManage
@@ -33,13 +33,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPost]
-        public ReturnData Insert([FromBody] SysI18nModel model)
+        public ReturnData Insert([FromBody] SysI18nEntity model)
         {
             return _sysI18nBiz.Save(model);
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] SysI18nModel model)
+        public ReturnData Update([FromBody] SysI18nEntity model)
         {
             return _sysI18nBiz.Save(model);
         }

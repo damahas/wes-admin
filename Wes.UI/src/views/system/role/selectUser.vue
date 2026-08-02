@@ -80,7 +80,7 @@
           :label="t('common.createTime')"
           align="center"
           prop="createTime"
-          width="180"
+          min-width="170"
         >
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>

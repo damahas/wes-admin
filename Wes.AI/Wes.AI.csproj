@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- 允许使用 Semantic Kernel 的实验性 API（如 AgentKernelPluginFactory / Agent-as-Tool） -->
+    <NoWarn>SKEXP0110;SKEXP0001;SKEXP0050</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.77.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.77.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.214" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wes.Utils\Wes.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

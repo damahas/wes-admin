@@ -43,7 +43,7 @@ export default {
         processNameRequired: '流程名称不能为空',
         businessFieldRequired: '业务模块不能为空',
       },
-      steps: '流程步骤',
+      steps: '设计',
       message: {
         addSuccess: '新增成功',
         editSuccess: '修改成功',
@@ -83,6 +83,17 @@ export default {
       remark: '备注',
       line: '连线',
       lineName: '连线名称',
+      condition: '条件',
+      conditionName: '条件名称',
+      conditionExpr: '条件表达式',
+      addCondition: '添加条件',
+      removeCondition: '删除条件',
+      conditionNameRequired: '条件名称不能为空',
+      conditionNameDuplicate: '条件名称已存在',
+      branchCondition: '分支条件',
+      selectCondition: '请选择条件',
+      noCondition: '无',
+      conditionExprPlaceholder: '条件表达式（后期再设计）',
       versionEnabled: '已启用版本，无法修改',
       enableVersionDesc: '启用版本',
       node: {
@@ -91,6 +102,7 @@ export default {
         end: '结束节点',
         task: '处理节点',
         notice: '通知节点',
+        branch: '分支节点',
       },
       handleRuleOption: {
         one: '一个人同意',
@@ -100,6 +112,7 @@ export default {
       group: {
         basic: '基础',
         process: '处理',
+        branch: '分支',
       },
       userType: {
         author: '发起人',
@@ -107,6 +120,7 @@ export default {
         dept: '部门',
         leader: '部门负责人',
         user: '指定人',
+        dataservice: '数据服务',
       },
       leaderDesc: '部门负责人(为空往上级找)',
     },

@@ -614,6 +614,13 @@ html.dark .el-notification__content {
 }
 
 /* ========== el-drawer ========== */
+.el-drawer__header {
+  padding: 12px 16px;
+  margin-bottom: 0;
+}
+.el-drawer__body {
+  padding: 16px;
+}
 html.dark .el-drawer {
   background-color: var(--bg-card);
 }
@@ -710,8 +717,8 @@ html.dark .el-menu--popup {
   overflow: hidden;
 }
 .split-left-panel {
-  width: 280px;
-  min-width: 280px;
+  width: 272px;
+  min-width: 272px;
   padding: 16px 12px 12px;
   display: flex;
   flex-direction: column;

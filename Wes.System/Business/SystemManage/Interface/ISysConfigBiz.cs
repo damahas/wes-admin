@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -12,13 +12,13 @@ namespace Wes.Business
     {
         #region 配置操作
 
-        public RowData<SysConfigModel> GetList(ParamData<ConfigParam> param);
+        public RowData<SysConfigEntity> GetList(ParamData<ConfigParam> param);
 
-        public RowData<SysConfigModel> GetAll();
+        public RowData<SysConfigEntity> GetAll();
 
-        public ResultData<SysConfigModel> GetById(long id);
+        public ResultData<SysConfigEntity> GetById(long id);
 
-        public ReturnData Save(SysConfigModel config);
+        public ReturnData Save(SysConfigEntity config);
 
         public ReturnData Delete(string ids);
 

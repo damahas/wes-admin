@@ -3,8 +3,13 @@ export default (t) => ({
   components: [
     {
       label: t('flow.designer.lineName'),
-      param: "meta.name",
+      param: "name",
       type: "input",
+    },
+    {
+      label: t('flow.designer.branchCondition'),
+      param: "conditionId",
+      type: "conditionSelect",
     },
   ],
 });

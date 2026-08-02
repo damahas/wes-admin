@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.FlowManage;
 
@@ -8,13 +8,13 @@ namespace Wes.Business
 {
     public interface IFlowInstanceBiz
     {
-        public RowData<FlowInstanceModel> GetList(ParamData<FlowInstanceParam> param);
+        public RowData<FlowInstanceEntity> GetList(ParamData<FlowInstanceParam> param);
 
-        public ResultData<List<FlowInstanceModel>> GetAll();
+        public ResultData<List<FlowInstanceEntity>> GetAll();
 
-        public ResultData<FlowInstanceModel> GetById(long id);
+        public ResultData<FlowInstanceEntity> GetById(long id);
 
-        public ReturnData Save(FlowInstanceModel model);
+        public ReturnData Save(FlowInstanceEntity model);
 
         public ReturnData Delete(string ids);
 

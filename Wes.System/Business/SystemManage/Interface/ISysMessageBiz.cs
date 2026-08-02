@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -8,13 +8,13 @@ namespace Wes.Business
 {
     public interface ISysMessageBiz
     {
-        public RowData<SysMessageModel> GetList(ParamData<MessageParam> param);
+        public RowData<SysMessageEntity> GetList(ParamData<MessageParam> param);
 
-        public ResultData<List<SysMessageModel>> GetAll();
+        public ResultData<List<SysMessageEntity>> GetAll();
 
-        public ResultData<SysMessageModel> GetById(long id);
+        public ResultData<SysMessageEntity> GetById(long id);
 
-        public ReturnData Save(SysMessageModel model);
+        public ReturnData Save(SysMessageEntity model);
 
         public ReturnData Delete(string ids);
 

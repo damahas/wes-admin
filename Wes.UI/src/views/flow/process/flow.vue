@@ -8,38 +8,39 @@
   >
     <template #header>
       <div class="flow-dialog-header">
-        <span>
-          {{ t('flow.designer.title') }}--{{ form.process?.processName }}-
-          <el-select
-            v-model="form.versionId"
-            :placeholder="t('flow.designer.selectVersion')"
-            size="default"
-            style="margin-left: 12px; width: 160px"
-            @change="handleVersionChange"
-          >
-            <el-option
-              v-for="item in versionList"
-              :key="item.versionId"
-              :label="item.version"
-              :value="item.versionId"
+        <div class="header-left">
+          <span>
+            {{ form.process?.processName }}
+            <el-select
+              v-model="form.versionId"
+              :placeholder="t('flow.designer.selectVersion')"
+              size="default"
+              style="margin-left: 12px; width: 160px"
+              @change="handleVersionChange"
             >
-              <span v-if="item.isLock == 1">
-              <i class="fa fa-lock" style="margin-right: 4px; color: var(--text-secondary)"></i>
-                {{ item.version }}
-              </span>
-              <span v-else>{{ item.version }}</span>
-            </el-option>
-          </el-select>
-        </span>
-        <el-alert
-          :title="t('flow.designer.locked')"
-          size="small"
-          v-if="form.isLock == 1"
-          type="warning"
-          style="width: auto"
-          :closable="false"
-          center
-        />
+              <el-option
+                v-for="item in versionList"
+                :key="item.versionId"
+                :label="item.version"
+                :value="item.versionId"
+              >
+                <span v-if="item.isLock == 1">
+                <i class="fa fa-lock" style="margin-right: 4px; color: var(--text-secondary)"></i>
+                  {{ item.version }}
+                </span>
+                <span v-else>{{ item.version }}</span>
+              </el-option>
+            </el-select>
+          </span>
+          <el-alert
+            :title="t('flow.designer.locked')"
+            size="small"
+            v-if="form.isLock == 1"
+            type="warning"
+            style="width: auto"
+            :closable="false"
+          />
+        </div>
         <div class="header-actions">
           <el-button type="info" @click="handleVersion" link>{{ t('flow.designer.newVersion') }}</el-button>
           <el-button type="primary" @click="handleSave" v-if="form.isLock == 0">
@@ -93,6 +94,7 @@
           :type="currentType"
           :element="flowElement"
           :readonly="form.isLock == 1"
+          :graph-getter="() => graph"
         />
       </el-aside>
     </el-container>
@@ -201,9 +203,10 @@ function onNodeDragStart(e, node) {
   if (!nodeTraits) return;
 
   // 创建节点
+  const isBranch = node.type === "branch";
   const dragNode = graph.createNode({
-    width: 120,
-    height: 40,
+    width: isBranch ? 54 : 120,
+    height: isBranch ? 54 : 40,
     shape: "flow-node-vue",
     data: {
       type: node.type,
@@ -498,13 +501,14 @@ function loadGraphData(nodes, lines) {
   nodes.forEach((nodeData) => {
     const nodeType = nodeData.type || "task";
     const nodeTraits = traits[nodeType] || {};
+    const isBranch = nodeType === "branch";
 
     graph.addNode({
       id: nodeData.id,
       x: nodeData.x,
       y: nodeData.y,
-      width: 120,
-      height: 40,
+      width: isBranch ? 54 : 120,
+      height: isBranch ? 54 : 40,
       shape: "flow-node-vue",
       data: {
         type: nodeType,
@@ -527,6 +531,15 @@ function loadGraphData(nodes, lines) {
 
   // 加载连线
   lines.forEach((lineData) => {
+    const meta = lineData.meta || {};
+    // 标签优先显示分支条件名，其次连线名
+    let labelText = meta.name || "";
+    if (meta.conditionId) {
+      const srcNode = graph.getCellById(lineData.source);
+      const conds = srcNode?.getData()?.meta?.conditions || [];
+      const cond = conds.find((c) => c.id === meta.conditionId);
+      if (cond) labelText = cond.name;
+    }
     graph.addEdge({
       id: lineData.id,
       source: {
@@ -541,9 +554,7 @@ function loadGraphData(nodes, lines) {
         line: { stroke: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#c6c9ce', strokeWidth: 2 },
       },
       data: lineData.meta,
-      labels: lineData.meta?.name
-        ? [{ attrs: { text: { text: lineData.meta.name } } }]
-        : [],
+      labels: labelText ? [{ attrs: { text: { text: labelText } } }] : [],
     });
   });
 
@@ -662,12 +673,16 @@ defineExpose({ open });
 </script>
 
 <style lang="scss" scoped>
-::global(.el-dialog.is-fullscreen) {
+:global(.el-dialog.is-fullscreen) {
   padding: 0;
 }
 
-::global(.is-fullscreen .el-dialog__header) {
-  padding-bottom: 0;
+:global(.is-fullscreen .el-dialog__header) {
+  padding: 0;
+}
+
+:global(.is-fullscreen .el-dialog__body) {
+  padding: 0;
 }
 
 .flow-dialog-header {
@@ -677,9 +692,18 @@ defineExpose({ open });
   padding: 10px;
   border-bottom: 1px solid var(--border-color);
 
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
   .header-actions {
     display: flex;
     gap: 10px;
+    flex-shrink: 0;
   }
 }
 

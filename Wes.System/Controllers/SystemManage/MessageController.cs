@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Business;
 using Wes.Utils.Model;
 using Wes.Utils.Extension;

@@ -1,8 +1,11 @@
-using System;
+﻿using System;
+using Wes.Utils.Converter;
+using System.Text.Json.Serialization;
 namespace Wes.ViewModel.SystemManage
 {
     public class OnlineInfo
     {
+        [JsonConverter(typeof(LongToStringConverter))]
         public long TokenId { set; get; }
         public string UserName { set; get; }
         public string Browser { set; get; }

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Wes.AI\Wes.AI.csproj" />
     <ProjectReference Include="..\Wes.Scheduler\Wes.Scheduler.csproj" />
     <ProjectReference Include="..\Wes.System\Wes.System.csproj" />
     <ProjectReference Include="..\Wes.Utils\Wes.Utils.csproj" />

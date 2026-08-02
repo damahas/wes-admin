@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Wes.Utils.Converter;
+using System.Text.Json.Serialization;
 namespace Wes.ViewModel.SystemManage
 {
     public class UserParam
@@ -14,6 +16,7 @@ namespace Wes.ViewModel.SystemManage
 
         public string? Status { set; get; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         public long DeptId { set; get; }
 
         public DateTime? BeginTime { set; get; }

@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
 using Wes.Utils.Model;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.ViewModel.SystemManage;
 using Microsoft.AspNetCore.Http;
 using Wes.Utils;

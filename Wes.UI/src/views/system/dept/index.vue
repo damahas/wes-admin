@@ -40,13 +40,14 @@
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
         <el-table-column prop="deptName" :label="t('deptManage.deptName')"></el-table-column>
+        <el-table-column prop="deptLevel" :label="t('deptManage.deptLevel')" width="120"></el-table-column>
         <el-table-column prop="orderNum" :label="t('common.sort')" width="200"></el-table-column>
         <el-table-column prop="status" :label="t('common.status')" width="100">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="220">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
@@ -135,6 +136,11 @@
           <el-col :span="12">
             <el-form-item :label="t('deptManage.email')" prop="email">
               <el-input v-model="form.email" :placeholder="t('deptManage.placeholder.email')" maxlength="50" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item :label="t('deptManage.deptLevel')" prop="deptLevel">
+              <el-input v-model="form.deptLevel" :placeholder="t('deptManage.placeholder.deptLevel')" maxlength="50" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -253,6 +259,7 @@ function reset() {
     deptId: undefined,
     parentId: undefined,
     deptName: undefined,
+    deptLevel: undefined,
     orderNum: 0,
     leader: undefined,
     phone: undefined,

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -7,11 +7,11 @@ namespace Wes.Business
 {
     public interface ISysI18nBiz
     {
-        public RowData<SysI18nModel> GetList(ParamData<I18nParam> param);
+        public RowData<SysI18nEntity> GetList(ParamData<I18nParam> param);
 
-        public ResultData<SysI18nModel> GetById(long id);
+        public ResultData<SysI18nEntity> GetById(long id);
 
-        public ReturnData Save(SysI18nModel model);
+        public ReturnData Save(SysI18nEntity model);
 
         public ReturnData Delete(string ids);
 

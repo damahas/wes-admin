@@ -13,7 +13,8 @@ namespace Wes.WebApi.Extensions
     {
         public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration, string dbName = "WesConnectionString")
         {
-            SqlSugarScope sqlSugar = new SqlSugarScope(new ConnectionConfig()
+            // Scoped 确保每个请求独立 SqlSugarScope，事务线程安全
+            services.AddScoped<ISqlSugarClient>(sp => new SqlSugarScope(new ConnectionConfig()
             {
                 DbType = DbType.MySql,
                 ConnectionString = configuration.GetConnectionString(dbName),
@@ -21,18 +22,17 @@ namespace Wes.WebApi.Extensions
             },
                 db =>
                 {
-                    //单例参数配置，所有上下文生效
                     db.Aop.OnLogExecuting = (sql, pars) =>
-                        {
-                            Console.WriteLine(sql);//输出sql
-                        };
-                });
-            // 自动扫描所有 Wes.* 程序集中带 [SugarTable] 的实体类
+                    {
+                        Console.WriteLine(sql);
+                    };
+                }));
+
+            // CodeFirst 初始化（启动时执行一次）
             var assemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => a.GetName().Name!.StartsWith("Wes."))
                 .ToList();
 
-            // 补充未被 JIT 加载的程序集
             foreach (var dll in Directory.GetFiles(AppContext.BaseDirectory, "Wes.*.dll"))
             {
                 var name = Path.GetFileNameWithoutExtension(dll);
@@ -48,9 +48,16 @@ namespace Wes.WebApi.Extensions
                 })
                 .Where(p => p.IsClass && p.GetCustomAttribute<SugarTable>() != null)
                 .ToArray();
-            sqlSugar.CodeFirst.SetStringDefaultLength(200).InitTables(types);
-            //这边是SqlSugarScope用AddSingleton
-            services.AddSingleton<ISqlSugarClient>(sqlSugar);
+
+            using (var initDb = new SqlSugarScope(new ConnectionConfig()
+            {
+                DbType = DbType.MySql,
+                ConnectionString = configuration.GetConnectionString(dbName),
+                IsAutoCloseConnection = true,
+            }))
+            {
+                initDb.CodeFirst.SetStringDefaultLength(200).InitTables(types);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wes.Business;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Hepler;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
@@ -44,13 +44,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] SysConfigModel config)
+        public ReturnData Update([FromBody] SysConfigEntity config)
         {
             return _sysConfigBiz.Save(config);
         }
 
         [HttpPost]
-        public ReturnData Insert([FromBody] SysConfigModel config)
+        public ReturnData Insert([FromBody] SysConfigEntity config)
         {
             return _sysConfigBiz.Save(config);
         }

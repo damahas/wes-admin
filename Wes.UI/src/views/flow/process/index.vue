@@ -73,6 +73,7 @@
           :label="t('common.actions')"
           align="center"
           class-name="small-padding fixed-width"
+          width="260"
         >
           <template #default="scope">
             <el-button

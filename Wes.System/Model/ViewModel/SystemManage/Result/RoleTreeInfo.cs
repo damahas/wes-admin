@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +19,7 @@ namespace Wes.ViewModel.SystemManage
         [JsonConverter(typeof(LongToStringConverter))]
         public long Id { set; get; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         [JsonIgnore]
         public long ParentId { set; get; }
 

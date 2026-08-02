@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33530.505
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11925.98 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wes.System", "Wes.System\Wes.System.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
@@ -10,6 +9,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wes.WebApi", "Wes.WebApi\Wes.WebApi.csproj", "{7634A700-AFDC-46C9-BC01-E0B6FDF22422}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wes.Scheduler", "Wes.Scheduler\Wes.Scheduler.csproj", "{D5E6F7A8-B9C0-1234-DEF5-67890ABCDEF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wes.AI", "Wes.AI\Wes.AI.csproj", "{ADF4A032-EE4B-467D-9620-DCDAEA0569BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +34,10 @@ Global
 		{D5E6F7A8-B9C0-1234-DEF5-67890ABCDEF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5E6F7A8-B9C0-1234-DEF5-67890ABCDEF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5E6F7A8-B9C0-1234-DEF5-67890ABCDEF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADF4A032-EE4B-467D-9620-DCDAEA0569BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF4A032-EE4B-467D-9620-DCDAEA0569BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADF4A032-EE4B-467D-9620-DCDAEA0569BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADF4A032-EE4B-467D-9620-DCDAEA0569BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

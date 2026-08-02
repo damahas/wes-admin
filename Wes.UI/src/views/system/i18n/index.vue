@@ -67,7 +67,7 @@
         <el-table-column :label="t('i18n.i18nKey')" prop="i18nKey" min-width="200" :show-overflow-tooltip="true" />
         <el-table-column :label="t('i18n.lang')" prop="lang" width="120" align="center" />
         <el-table-column :label="t('i18n.i18nValue')" prop="i18nValue" min-width="250" :show-overflow-tooltip="true" />
-        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="180">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>

@@ -109,7 +109,7 @@
             layout="auto"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column type="selection" width="55" align="center" />
             <el-table-column
               :label="t('user.account')"
               align="center"
@@ -154,7 +154,7 @@
               align="center"
               prop="createTime"
               v-if="columns.createTime.visible"
-              width="160"
+              min-width="170"
             >
               <template #default="scope">
                 <span>{{ formatTime(scope.row.createTime) }}</span>
@@ -203,7 +203,7 @@
                         @click="handleAuthRole(scope.row)"
                         v-hasPermi="['system:user:edit']"
                       >
-                        <el-icon><Files /></el-icon>{{ t('user.authRole') }}
+                        <el-icon><Files /></el-icon>{{ t('user.assignRole') }}
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </template>

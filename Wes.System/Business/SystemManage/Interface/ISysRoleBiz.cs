@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel;
 using Wes.ViewModel.SystemManage;
@@ -12,9 +12,9 @@ namespace Wes.Business
     {
         #region 权限操作
 
-        public RowData<SysRoleModel> GetList(ParamData<RoleParam> param);
+        public RowData<SysRoleEntity> GetList(ParamData<RoleParam> param);
 
-        public ResultData<SysRoleModel> GetById(long id);
+        public ResultData<SysRoleEntity> GetById(long id);
 
         public ReturnData Save(RoleModel role);
 

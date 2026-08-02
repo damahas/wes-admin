@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
 using SqlSugar;
-using Wes.DbModel;
+using Wes.Scheduler.Model.Entity;
 using Wes.Scheduler;
 
 namespace Wes.Scheduler
@@ -52,7 +52,7 @@ namespace Wes.Scheduler
             //    此处从 sys_job 读取后逐个 CheckExists 再 Add/Reschedule，保证与业务表一致。
             //    过滤掉 cron 为空或格式无效的任务，避免加载异常。
             var db = _serviceProvider.GetRequiredService<ISqlSugarClient>();
-            var jobs = await db.Queryable<SysJobModel>()
+            var jobs = await db.Queryable<SysJobEntity>()
                 .Where(p => p.Status == "0")
                 .ToListAsync(cancellationToken);
 
@@ -104,7 +104,7 @@ namespace Wes.Scheduler
             var db = _serviceProvider.GetRequiredService<ISqlSugarClient>();
 
             // 查出现有 invoke_target 集合
-            var existingTargets = await db.Queryable<SysJobModel>()
+            var existingTargets = await db.Queryable<SysJobEntity>()
                 .Select(p => p.InvokeTarget)
                 .ToListAsync();
 
@@ -124,7 +124,7 @@ namespace Wes.Scheduler
                 if (existingNames.Contains(executor.Name))
                     continue;
 
-                var model = new SysJobModel
+                var model = new SysJobEntity
                 {
                     JobId = 0,
                     JobName = executor.Name,

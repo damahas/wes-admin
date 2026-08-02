@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -8,15 +8,15 @@ namespace Wes.Service
 {
     public interface ISysFileService
     {
-        public List<SysFileModel> GetList(ParamData<FileParam> param, out int total);
+        public List<SysFileEntity> GetList(ParamData<FileParam> param, out int total);
 
-        public List<SysFileModel> GetListByTableId(string tableName, long tableId);
+        public List<SysFileEntity> GetListByTableId(string tableName, long tableId);
 
-        public List<SysFileModel> GetAll();
+        public List<SysFileEntity> GetAll();
 
-        public SysFileModel GetById(long id);
+        public SysFileEntity GetById(long id);
 
-        public bool Save(SysFileModel model);
+        public bool Save(SysFileEntity model);
 
         public bool Delete(List<long> ids);
     }

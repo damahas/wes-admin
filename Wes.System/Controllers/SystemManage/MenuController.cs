@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -36,13 +36,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] SysMenuModel dept)
+        public ReturnData Update([FromBody] SysMenuEntity dept)
         {
             return _sysMenuBiz.Save(dept);
         }
 
         [HttpPost]
-        public ReturnData Insert([FromBody] SysMenuModel dept)
+        public ReturnData Insert([FromBody] SysMenuEntity dept)
         {
             return _sysMenuBiz.Save(dept);
         }

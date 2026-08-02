@@ -37,14 +37,9 @@
           {{ fullscreen ? "退出全屏" : "全屏" }}
         </el-button>
 
-        <el-tooltip
-          :content="`行: ${cursorPosition.line}, 列: ${cursorPosition.column}`"
-          placement="top"
-        >
-          <div class="cursor-info">
-            行 {{ cursorPosition.line }}, 列 {{ cursorPosition.column }}
-          </div>
-        </el-tooltip>
+        <div class="cursor-info">
+          行 {{ cursorPosition.line }}, 列 {{ cursorPosition.column }}
+        </div>
       </div>
     </div>
 
@@ -140,6 +135,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { useStore } from "vuex";
+import { useI18n } from "vue-i18n";
 import {
   MagicStick,
   DocumentAdd,
@@ -174,6 +170,7 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue", "update:language", "change", "save"]);
 
 const store = useStore();
+const { t } = useI18n();
 const isDark = computed(() => store.getters["system/isDark"]);
 
 const codeValue = ref(props.modelValue);

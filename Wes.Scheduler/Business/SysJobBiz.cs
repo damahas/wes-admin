@@ -1,14 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
-using Wes.DbModel;
-using Wes.Service;
+using Wes.Scheduler.Model.Entity;
+using Wes.Scheduler.Model.ViewModel;
+using Wes.Scheduler.Services;
 using Wes.Scheduler;
 using Wes.Utils;
 using Wes.Utils.Extension;
 using Wes.Utils.Model;
-using Wes.ViewModel.SystemManage;
 
-namespace Wes.Business
+namespace Wes.Scheduler.Business
 {
     public class SysJobBiz : ISysJobBiz
     {
@@ -19,22 +19,22 @@ namespace Wes.Business
             _sysJobService = sysJobService;
         }
 
-        public RowData<SysJobModel> GetList(ParamData<JobParam> param)
+        public RowData<SysJobEntity> GetList(ParamData<JobParam> param)
         {
             int total = 0;
-            var result = new RowData<SysJobModel>(_sysJobService.GetList(param, out total))
+            var result = new RowData<SysJobEntity>(_sysJobService.GetList(param, out total))
             {
                 total = total
             };
             return result;
         }
 
-        public ResultData<SysJobModel> GetById(long id)
+        public ResultData<SysJobEntity> GetById(long id)
         {
-            return new ResultData<SysJobModel>(_sysJobService.GetById(id));
+            return new ResultData<SysJobEntity>(_sysJobService.GetById(id));
         }
 
-        public ReturnData Save(SysJobModel model)
+        public ReturnData Save(SysJobEntity model)
         {
             // 启用状态（0）需要 cron 校验；暂停状态（1）不校验，直接落库
             if (model.Status == "0")
@@ -75,7 +75,7 @@ namespace Wes.Business
                 : new ReturnData(500, "删除失败！");
         }
 
-        public ReturnData ChangeStatus(SysJobModel model)
+        public ReturnData ChangeStatus(SysJobEntity model)
         {
             var job = _sysJobService.GetById(model.JobId);
             if (job == null)
@@ -111,7 +111,7 @@ namespace Wes.Business
 
         // ============ Quartz 同步 ============
 
-        private static async Task SyncToSchedulerAsync(SysJobModel job)
+        private static async Task SyncToSchedulerAsync(SysJobEntity job)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Wes.Business
             }
         }
 
-        private static async Task RemoveFromSchedulerAsync(SysJobModel job)
+        private static async Task RemoveFromSchedulerAsync(SysJobEntity job)
         {
             try
             {

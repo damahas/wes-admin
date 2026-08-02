@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -10,19 +10,19 @@ namespace Wes.Service
     public interface ISysRoleService
     {
 
-        public SysRoleModel GetByRoleKey(string roleKey);
+        public SysRoleEntity GetByRoleKey(string roleKey);
 
-        public List<SysRoleModel> GetByUserId(long userId);
+        public List<SysRoleEntity> GetByUserId(long userId);
 
         #region 角色操作
 
-        public SysRoleModel GetById(long roleId);
+        public SysRoleEntity GetById(long roleId);
 
-        public List<SysRoleModel> GetList(ParamData<RoleParam> param, out int total);
+        public List<SysRoleEntity> GetList(ParamData<RoleParam> param, out int total);
 
-        public List<SysRoleModel> GetAll();
+        public List<SysRoleEntity> GetAll();
 
-        public bool Save(SysRoleModel role);
+        public bool Save(SysRoleEntity role);
 
         public bool Delete(List<long> ids);
 
@@ -42,7 +42,7 @@ namespace Wes.Service
 
         public List<long> GetRoleDeptIds(long roleId);
 
-        public bool SaveRoleDept(List<SysRoleDeptModel> roleDepts);
+        public bool SaveRoleDept(List<SysRoleDeptEntity> roleDepts);
 
         public bool DeleteRoleDept(long roleId, List<long> deptIds);
 
@@ -54,7 +54,7 @@ namespace Wes.Service
 
         public List<long> GetRoleMenuIds(long roleId);
 
-        public bool SaveRoleMenu(List<SysRoleMenuModel> roleMenus);
+        public bool SaveRoleMenu(List<SysRoleMenuEntity> roleMenus);
 
         public bool DeleteRoleMenu(long roleId, List<long> menuIds);
 

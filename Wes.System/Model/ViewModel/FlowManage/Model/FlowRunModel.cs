@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using SqlSugar;
-using Wes.DbModel;
+using Wes.Entity;
 
+using Wes.Utils.Converter;
 namespace Wes.ViewModel.FlowManage
 {
     public class FlowRunModel
@@ -23,6 +24,7 @@ namespace Wes.ViewModel.FlowManage
         /// <summary>
         public int IsRecall { get; set; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         /// <summary>
         /// 业务主键id
         /// <summary>
@@ -55,6 +57,7 @@ namespace Wes.ViewModel.FlowManage
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public FlowStatusEnum? InstanceStatus { get; set; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         /// <summary>
         /// 任务id
         /// <summary>
@@ -63,7 +66,7 @@ namespace Wes.ViewModel.FlowManage
         /// <summary>
         /// 节点信息
         /// </summary>
-        public FlowInstanceNodeModel Node { set; get; }
+        public FlowInstanceNodeEntity Node { set; get; }
 
         /// <summary>
         /// 选择人员

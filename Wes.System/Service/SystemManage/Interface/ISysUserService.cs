@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -9,31 +9,31 @@ namespace Wes.Service
 {
     public interface ISysUserService
     {
-        public SysUserModel Login(string userName, string password);
+        public SysUserEntity Login(string userName, string password);
 
-        public List<SysUserModel> GetListByRoleId(ParamData<RoleUserParam> param, out int total);
+        public List<SysUserEntity> GetListByRoleId(ParamData<RoleUserParam> param, out int total);
 
         #region 用户操作
 
-        public SysUserModel GetById(long userId);
+        public SysUserEntity GetById(long userId);
 
-        public SysUserModel GetByAccout(string account);
+        public SysUserEntity GetByAccout(string account);
 
-        public List<SysUserModel> GetByRoleId(long roleId);
+        public List<SysUserEntity> GetByRoleId(long roleId);
 
-        public List<SysUserModel> GetByDeptId(long deptId);
+        public List<SysUserEntity> GetByDeptId(long deptId);
 
         public long GetLeaderIdByUserId(long userId);
 
         public long GetLeaderIdByAccount(string account);
 
-        public SysUserModel GetByUserName(string userName);
+        public SysUserEntity GetByUserName(string userName);
 
-        public List<SysUserModel> GetList(ParamData<UserParam> param, out int total);
+        public List<SysUserEntity> GetList(ParamData<UserParam> param, out int total);
 
-        public List<SysUserModel> GetList(List<long> userIds);
+        public List<SysUserEntity> GetList(List<long> userIds);
 
-        public bool Save(SysUserModel user);
+        public bool Save(SysUserEntity user);
 
         public bool Delete(List<long> ids);
 
@@ -41,9 +41,9 @@ namespace Wes.Service
 
         #region 用户角色操作
 
-        public List<SysUserRoleModel> GetUserRole(long userId);
+        public List<SysUserRoleEntity> GetUserRole(long userId);
 
-        public bool SaveUserRole(List<SysUserRoleModel> userRoles);
+        public bool SaveUserRole(List<SysUserRoleEntity> userRoles);
 
         public bool DeleteUserRole(long userId, List<long> roleIds);
 
@@ -51,9 +51,9 @@ namespace Wes.Service
 
         #region 用户岗位操作
 
-        public List<SysUserPostModel> GetUserPost(long userId);
+        public List<SysUserPostEntity> GetUserPost(long userId);
 
-        public bool SaveUserPost(List<SysUserPostModel> userPosts);
+        public bool SaveUserPost(List<SysUserPostEntity> userPosts);
 
         public bool DeleteUserPost(long userId, List<long> postIds);
 
@@ -61,15 +61,15 @@ namespace Wes.Service
 
         #region Token操作
 
-        public SysUserModel GetByToken(string token);
+        public SysUserEntity GetByToken(string token);
 
-        public SysTokenModel GetToken(string token);
+        public SysTokenEntity GetToken(string token);
 
-        public SysTokenModel SaveToken(SysTokenModel tokenModel);
+        public SysTokenEntity SaveToken(SysTokenEntity tokenModel);
 
         public bool InvalidToken(string token);
 
-        public SysTokenModel InvalidToken(long tokenId);
+        public SysTokenEntity InvalidToken(long tokenId);
 
         public List<OnlineInfo> GetOnlineList(ParamData<OnlineParam> param, out int total);
 

@@ -127,7 +127,54 @@ WesAdmin.sln
     └── Hepler/                      #   通用工具 (图片 / IP归属地 / 网络)
 ```
 
-**依赖关系**: `WebApi` → `Scheduler` / `System` → `Utils`
+**依赖关系**: `WebApi` → `Scheduler` / `System` / `AI` → `Utils`
+
+### AI 模块（Wes.AI）— 基于 Semantic Kernel
+
+Wes.AI 采用 **Microsoft Semantic Kernel 1.77** 重写，支持多模型接入和 Function Calling。
+
+```
+Wes.AI/
+├── Models/                     # 实体（ai_model 数据库模型配置）和 DTO
+├── Kernel/
+│   └── KernelProvider.cs       # SK Kernel 工厂，从数据库读取配置，ConcurrentDictionary 缓存
+├── Plugins/                    # 工具插件（[KernelFunction] 属性注解注册）
+│   ├── SqlPlugin.cs            #   SQL 生成 / 解释
+│   ├── TicketPlugin.cs         #   工单操作
+│   └── KnowledgePlugin.cs      #   知识库检索
+├── Services/
+│   └── AgentService.cs         #   Agent 对话（含 "chat" 类型，复用框架，无独立纯对话实现）
+├── Controllers/
+│   └── AiAgentController.cs    #   /api/ai/agent/{type}，含 providers / models
+└── Extensions/
+    └── AiServiceExtensions.cs  #   DI 注册（AddAiServices）
+```
+
+**支持的模型**：OpenAI / DeepSeek / Qwen / GLM 等兼容 OpenAI 协议的模型。AI 提供商与模型配置已迁移到数据库，存储在 `ai_model` 表中，由 `ModelConfigSeeder` 初始化种子数据（见 `Wes.AI/Extensions/ModelConfigSeeder.cs`），运行时由 `KernelProvider` 从数据库读取，不再依赖 `appsettings.json` 中的 `AI` 节点。可通过 AI 配置接口或数据库直接维护 `Provider` / `ApiKey` / `BaseUrl` / `ModelId` 等字段。
+
+**三层调用流水**：
+
+```
+Controller          → Service              → SK Kernel
+──────────────────────────────────────────────────────────
+/api/ai/agent/chat  AgentService("chat")  IChatCompletionService
+                       (复用 Agent 框架)      ↓ OpenAI 兼容 API
+
+/api/ai/agent/{t}     AgentService           ChatCompletionAgent
+                       (Function Calling)     ↓ kernel.Plugins
+                                              ├─ sql/SqlPlugin
+                                              ├─ ticket/TicketPlugin
+                                              └─ knowledge/KnowledgePlugin
+/api/ai/agent/{t}
+  /stream            SSE 流式               IAsyncEnumerable
+```
+
+**待扩展**：
+
+- **RAG 向量检索** — `KnowledgePlugin` 接入 `ISemanticTextMemory` / Qdrant / Azure AI Search，实现知识库语义搜索
+- **多 Agent 协作** — `AgentGroupChat` 编排多个 Agent 协同完成复杂任务
+- **Planner 任务规划** — `HandlebarsPlanner` / `FunctionCallingStepwisePlanner` 自动拆解多步骤任务
+- **新 Plugin** — 新建类 + `[KernelFunction]` 属性注解，注册到 `EnsurePlugins()` 即可
 
 ---
 

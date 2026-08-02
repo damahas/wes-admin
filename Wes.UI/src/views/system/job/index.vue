@@ -91,7 +91,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="160">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
@@ -165,7 +165,7 @@
           </template>
         </el-table-column>
         <el-table-column :label="t('job.elapsedTime')" align="center" prop="elapsedTime" width="90" />
-        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="160">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>

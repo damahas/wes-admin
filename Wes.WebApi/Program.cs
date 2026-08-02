@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Wes.AI.Extensions;
 using Wes.Utils;
 using Wes.Utils.Converter;
 using Wes.Utils.Hepler;
@@ -25,11 +26,15 @@ builder.Services.AddControllers(opt =>
 })
 .AddApplicationPart(Assembly.Load("Wes.System"))
 .AddApplicationPart(Assembly.Load("Wes.Scheduler"))
+.AddApplicationPart(Assembly.Load("Wes.AI"))
 .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
 })
 .AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
+
+// AI 模块（Semantic Kernel）：Kernel 提供者、Agent/Session 服务、模型种子
+builder.Services.AddAiServices(builder.Configuration);
 
 builder.Services.AddMemoryCache();
 

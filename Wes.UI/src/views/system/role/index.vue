@@ -79,7 +79,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="180">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>
@@ -128,7 +128,7 @@
                     @click="handleAuthUser(scope.row)"
                     v-hasPermi="['system:role:edit']"
                   >
-                    <el-icon><User /></el-icon>{{ t('role.authUser') }}
+                    <el-icon><User /></el-icon>{{ t('role.assignUser') }}
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>

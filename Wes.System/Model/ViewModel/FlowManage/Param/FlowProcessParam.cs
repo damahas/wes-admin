@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Wes.Utils.Converter;
+using System.Text.Json.Serialization;
 namespace Wes.ViewModel.FlowManage
 {
     public class FlowProcessParam
@@ -10,8 +12,10 @@ namespace Wes.ViewModel.FlowManage
 
         public string? ProcessName { get; set; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         public long ParentId { get; set; }
 
+        [JsonConverter(typeof(LongToStringConverter))]
         public long CurVersionId { get; set; }
 
         public string? BusinessField { get; set; }

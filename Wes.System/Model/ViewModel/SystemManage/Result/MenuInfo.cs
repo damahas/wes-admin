@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Text.Json.Serialization;
 
+using Wes.Utils.Converter;
 namespace Wes.ViewModel.SystemManage
 {
     public class MenuRootInfo : MenuInfo
@@ -21,8 +22,10 @@ namespace Wes.ViewModel.SystemManage
 
     public class MenuInfo
     {
+        [JsonConverter(typeof(LongToStringConverter))]
         [JsonIgnore]
         public long MenuId { set; get; }
+        [JsonConverter(typeof(LongToStringConverter))]
         [JsonIgnore]
         public long ParentId { set; get; }
         public string Component { set; get; }

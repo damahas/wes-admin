@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 
 namespace Wes.ViewModel.SystemManage
@@ -27,7 +27,7 @@ namespace Wes.ViewModel.SystemManage
             }
         }
 
-        public List<SysPostModel> Posts { set; get; }
+        public List<SysPostEntity> Posts { set; get; }
 
         public List<long> RoleIds
         {
@@ -37,6 +37,6 @@ namespace Wes.ViewModel.SystemManage
             }
         }
 
-        public List<SysRoleModel> Roles { set; get; }
+        public List<SysRoleEntity> Roles { set; get; }
     }
 }

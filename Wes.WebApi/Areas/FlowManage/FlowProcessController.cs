@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Business;
 using Wes.Utils.Model;
 using Wes.Utils.Extension;
@@ -45,13 +45,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] FlowProcessModel model)
+        public ReturnData Update([FromBody] FlowProcessEntity model)
         {
             return _flowProcessBiz.Save(model);
         }
 
         [HttpPost]
-        public ReturnData Insert([FromBody] FlowProcessModel model)
+        public ReturnData Insert([FromBody] FlowProcessEntity model)
         {
             return _flowProcessBiz.Save(model);
         }
@@ -83,14 +83,14 @@ namespace Wes.WebApi.Areas.SystemManage
 
         [HttpPut]
         [Route("version")]
-        public ReturnData UpdateVersion([FromBody] FlowProcessVersionModel model)
+        public ReturnData UpdateVersion([FromBody] FlowProcessVersionEntity model)
         {
             return _flowProcessBiz.SaveVersion(model);
         }
 
         [HttpPost]
         [Route("version")]
-        public ReturnData InsertVersion([FromBody] FlowProcessVersionModel model)
+        public ReturnData InsertVersion([FromBody] FlowProcessVersionEntity model)
         {
             return _flowProcessBiz.SaveVersion(model);
         }

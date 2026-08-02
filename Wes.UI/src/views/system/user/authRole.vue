@@ -25,7 +25,7 @@
       @selection-change="handleSelectionChange"
       :data="roles?.slice((pageNum - 1) * pageSize, pageNum * pageSize)"
     >
-      <el-table-column :label="t('common.sort')" width="55" type="index" align="center">
+      <el-table-column :label="t('common.sort')" width="80" type="index" align="center">
         <template #default="scope">
           <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
         </template>
@@ -42,7 +42,7 @@
         :label="t('common.createTime')"
         align="center"
         prop="createTime"
-        width="180"
+        min-width="170"
       >
         <template #default="scope">
           <span>{{ formatTime(scope.row.createTime) }}</span>

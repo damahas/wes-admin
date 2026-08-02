@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
 using Wes.Utils.Model;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.ViewModel.SystemManage;
 
 namespace Wes.WebApi.Areas.SystemManage
@@ -40,14 +40,14 @@ namespace Wes.WebApi.Areas.SystemManage
 
         [HttpPut]
         [Route("type")]
-        public ReturnData UpdateDic([FromBody] SysDicTypeModel dic)
+        public ReturnData UpdateDic([FromBody] SysDicTypeEntity dic)
         {
             return _sysDicTypeBiz.Save(dic);
         }
 
         [HttpPost]
         [Route("type")]
-        public ReturnData InsertDic([FromBody] SysDicTypeModel dic)
+        public ReturnData InsertDic([FromBody] SysDicTypeEntity dic)
         {
             return _sysDicTypeBiz.Save(dic);
         }
@@ -100,14 +100,14 @@ namespace Wes.WebApi.Areas.SystemManage
 
         [HttpPut]
         [Route("data")]
-        public ReturnData UpdateDicData([FromBody] SysDicDataModel dic)
+        public ReturnData UpdateDicData([FromBody] SysDicDataEntity dic)
         {
             return _sysDicDataBiz.Save(dic);
         }
 
         [HttpPost]
         [Route("data")]
-        public ReturnData InsertDicData([FromBody] SysDicDataModel dic)
+        public ReturnData InsertDicData([FromBody] SysDicDataEntity dic)
         {
             return _sysDicDataBiz.Save(dic);
         }
@@ -123,7 +123,7 @@ namespace Wes.WebApi.Areas.SystemManage
         [Route("data/type/{dicType}")]
         public ReturnData GetDicDataListByDicType(string dicType)
         {
-            return new ResultData<List<SysDicDataModel>>(_sysDicDataBiz.GetListByDicType(dicType));
+            return new ResultData<List<SysDicDataEntity>>(_sysDicDataBiz.GetListByDicType(dicType));
         }
 
         [HttpPost]

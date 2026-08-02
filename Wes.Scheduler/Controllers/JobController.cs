@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Wes.Business;
-using Wes.DbModel;
+using Wes.Scheduler.Business;
+using Wes.Scheduler.Model.Entity;
+using Wes.Scheduler.Model.ViewModel;
 using Wes.Utils.Extension;
 using Wes.Utils.Model;
-using Wes.ViewModel.SystemManage;
 
-namespace Wes.WebApi.Areas.SystemManage
+namespace Wes.Scheduler.Controllers
 {
     /// <summary>
     /// 定时任务管理
@@ -39,7 +39,7 @@ namespace Wes.WebApi.Areas.SystemManage
 
         /// <summary>新增任务</summary>
         [HttpPost]
-        public ReturnData AddJob([FromBody] SysJobModel model)
+        public ReturnData AddJob([FromBody] SysJobEntity model)
         {
             model.JobId = 0; // 强制走新增
             return _sysJobBiz.Save(model);
@@ -47,7 +47,7 @@ namespace Wes.WebApi.Areas.SystemManage
 
         /// <summary>编辑任务</summary>
         [HttpPut]
-        public ReturnData UpdateJob([FromBody] SysJobModel model)
+        public ReturnData UpdateJob([FromBody] SysJobEntity model)
         {
             return _sysJobBiz.Save(model);
         }
@@ -61,7 +61,7 @@ namespace Wes.WebApi.Areas.SystemManage
 
         /// <summary>修改任务状态</summary>
         [HttpPut("changeStatus")]
-        public ReturnData ChangeStatus([FromBody] SysJobModel model)
+        public ReturnData ChangeStatus([FromBody] SysJobEntity model)
         {
             return _sysJobBiz.ChangeStatus(model);
         }

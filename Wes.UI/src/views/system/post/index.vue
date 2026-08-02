@@ -72,7 +72,7 @@
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" width="180">
+        <el-table-column :label="t('common.createTime')" align="center" prop="createTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.createTime) }}</span>
           </template>

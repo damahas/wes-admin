@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Business;
 using Wes.Utils.Model;
 using Wes.Utils.Extension;
@@ -36,13 +36,13 @@ namespace Wes.WebApi.Areas.FlowManage
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] FlowInstanceModel model)
+        public ReturnData Update([FromBody] FlowInstanceEntity model)
         {
             return _flowInstanceBiz.Save(model);
         }
 
         [HttpPost]
-        public ReturnData Insert([FromBody] FlowInstanceModel model)
+        public ReturnData Insert([FromBody] FlowInstanceEntity model)
         {
             return _flowInstanceBiz.Save(model);
         }

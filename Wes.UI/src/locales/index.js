@@ -2,17 +2,25 @@ import { createI18n } from 'vue-i18n'
 import { getInitialLocale } from '../utils/locale'
 import system from './zh/system'
 import flow from './zh/flow'
+import ai from './zh/ai'
+import home from './zh/home'
 import systemEn from './en/system'
 import flowEn from './en/flow'
+import aiEn from './en/ai'
+import homeEn from './en/home'
 
 const messages = {
   'zh-CN': {
     ...system,
-    ...flow
+    ...flow,
+    ...ai,
+    ...home
   },
   'en-US': {
     ...systemEn,
-    ...flowEn
+    ...flowEn,
+    ...aiEn,
+    ...homeEn
   }
 }
 

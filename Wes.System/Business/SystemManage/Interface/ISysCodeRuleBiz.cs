@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -8,9 +8,9 @@ namespace Wes.Business
 {
     public interface ISysCodeRuleBiz
     {
-        public RowData<SysCodeRuleModel> GetList(ParamData<CodeRuleParam> param);
+        public RowData<SysCodeRuleEntity> GetList(ParamData<CodeRuleParam> param);
 
-        public ResultData<List<SysCodeRuleModel>> GetAll();
+        public ResultData<List<SysCodeRuleEntity>> GetAll();
 
         public ResultData<CodeRuleInfo> GetById(long id);
 

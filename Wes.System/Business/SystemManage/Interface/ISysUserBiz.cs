@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel;
 using Wes.ViewModel.SystemManage;
@@ -24,7 +24,7 @@ namespace Wes.Business
 
         #region 用户操作
 
-        public RowData<SysUserModel> GetList(ParamData<UserParam> param);
+        public RowData<SysUserEntity> GetList(ParamData<UserParam> param);
 
         public UserReturnInfo GetById(long id);
 
@@ -40,9 +40,9 @@ namespace Wes.Business
 
         #region 角色用户
 
-        public RowData<SysUserModel> GetRoleUserList(ParamData<RoleUserParam> param);
+        public RowData<SysUserEntity> GetRoleUserList(ParamData<RoleUserParam> param);
 
-        public RowData<SysUserModel> GetRoleNoExistUserList(ParamData<RoleUserParam> param);
+        public RowData<SysUserEntity> GetRoleNoExistUserList(ParamData<RoleUserParam> param);
 
         public ResultData<object> GetUserRole(long id);
 

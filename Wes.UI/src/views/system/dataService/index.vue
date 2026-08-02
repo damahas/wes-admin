@@ -104,7 +104,7 @@
             :data="serviceList"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column type="selection" width="55" align="center" />
             <el-table-column
               :label="columns.serviceCode.label"
               align="center"
@@ -153,7 +153,7 @@
               align="center"
               prop="createTime"
               v-if="columns.createTime && columns.createTime.visible"
-              width="160"
+              min-width="170"
             >
               <template #default="scope">
                 <span>{{ formatTime(scope.row.createTime) }}</span>

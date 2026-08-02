@@ -2,7 +2,8 @@
   <el-tree-select
     v-model="selectedValue"
     :data="treeOptions"
-    node-key="value"
+    :props="{ label: 'label', value: 'value', children: 'children' }"
+    node-key="dictValue"
     default-expand-all
     @change="handleChange"
   />
@@ -26,7 +27,9 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue", "change"]);
 
 const treeOptions = computed(() => {
-  return handleTree(props.options);
+  // 深拷贝切断响应式引用，防止 handleTree 的 in-place children 赋值触发 Vue 循环更新
+  const safe = JSON.parse(JSON.stringify(props.options));
+  return handleTree(safe);
 });
 
 const selectedValue = computed({

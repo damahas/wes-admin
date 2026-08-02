@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -11,17 +11,17 @@ namespace Wes.Service
     {
         #region 参数操作
 
-        public SysConfigModel GetById(long configId);
+        public SysConfigEntity GetById(long configId);
 
-        public List<SysConfigModel> GetByIds(List<long> ids);
+        public List<SysConfigEntity> GetByIds(List<long> ids);
 
-        public SysConfigModel GetByConfigKey(string configKey);
+        public SysConfigEntity GetByConfigKey(string configKey);
 
-        public List<SysConfigModel> GetList(ParamData<ConfigParam> param, out int total);
+        public List<SysConfigEntity> GetList(ParamData<ConfigParam> param, out int total);
 
-        public List<SysConfigModel> GetAll();
+        public List<SysConfigEntity> GetAll();
 
-        public bool Save(SysConfigModel config);
+        public bool Save(SysConfigEntity config);
 
         public bool Delete(List<long> ids);
 

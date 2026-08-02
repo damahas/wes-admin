@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;

@@ -67,10 +67,10 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="t('codeRule.lastUpdateTime')"
+          :label="t('common.lastUpdateTime')"
           align="center"
           prop="updateTime"
-          width="180"
+          min-width="170"
         >
           <template #default="scope">
             <span>{{ formatTime(scope.row.updateTime) }}</span>
@@ -190,13 +190,13 @@
         <el-table-column
           :label="t('codeRule.seqNo')"
           type="index"
-          min-width="50"
+          width="80"
           class-name="allowDrag"
         />
         <el-table-column :label="t('codeRule.partValue')" align="center" prop="partValue" />
         <el-table-column :label="t('codeRule.partType')" align="center" prop="partType">
           <template #default="scope">
-            {{ partTypes.value[scope.row.partType] }}
+            {{ partTypes?.[scope.row.partType] }}
           </template>
         </el-table-column>
         <el-table-column :label="t('common.remark')" align="center" prop="remark" />

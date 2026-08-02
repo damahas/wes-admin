@@ -38,17 +38,17 @@
         <el-table-column :label="t('online.loginLocation')" align="center" prop="loginLocation" :show-overflow-tooltip="true" />
         <el-table-column :label="t('online.browser')" align="center" prop="browser" :show-overflow-tooltip="true" />
         <!-- <el-table-column :label="t('online.os')" align="center" prop="os" :show-overflow-tooltip="true" /> -->
-        <el-table-column :label="t('online.loginTime')" align="center" prop="loginTime" min-width="160">
+        <el-table-column :label="t('online.loginTime')" align="center" prop="loginTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.loginTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="t('online.expireTime')" align="center" prop="expirationTime" min-width="160">
+        <el-table-column :label="t('online.expireTime')" align="center" prop="expirationTime" min-width="170">
           <template #default="scope">
             <span>{{ formatTime(scope.row.expirationTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="t('common.actions')" align="center" width="100" class-name="small-padding fixed-width">
+        <el-table-column :label="t('common.actions')" align="center" width="140" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-button
               v-if="isNotExpired(null, scope.row)"

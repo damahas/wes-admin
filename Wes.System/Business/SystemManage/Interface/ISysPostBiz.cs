@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel;
 using Wes.ViewModel.SystemManage;
@@ -12,11 +12,11 @@ namespace Wes.Business
     {
         #region 岗位操作
 
-        public RowData<SysPostModel> GetList(ParamData<PostParam> param);
+        public RowData<SysPostEntity> GetList(ParamData<PostParam> param);
 
-        public ResultData<SysPostModel> GetById(long id);
+        public ResultData<SysPostEntity> GetById(long id);
 
-        public ReturnData Save(SysPostModel post);
+        public ReturnData Save(SysPostEntity post);
 
         public ReturnData Delete(string ids);
 

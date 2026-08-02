@@ -16,6 +16,7 @@ export const useFlowConfig = (t) => {
   const nodeGroups = [
     { groupName: t('flow.designer.group.basic'), types: ["start", "end"] },
     { groupName: t('flow.designer.group.process'), types: ["task", "notice"] },
+    { groupName: t('flow.designer.group.branch'), types: ["branch"] },
   ]
 
   const flowNodes = nodeGroups.map(({ groupName, types }) => ({

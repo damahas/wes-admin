@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wes.DbModel;
+using Wes.Entity;
 
 namespace Wes.ViewModel.FlowManage
 {
@@ -17,6 +17,6 @@ namespace Wes.ViewModel.FlowManage
         /// <summary>
         /// 待选择人员
         /// </summary>
-        public List<SysUserModel> Users { set; get; }
+        public List<SysUserEntity> Users { set; get; }
     }
 }

@@ -7,38 +7,34 @@
       @reset="resetQuery"
     />
 
-    <el-row :gutter="10" class="mb8" style="margin-top: 10px">
-      <span>{{ t('common.selectedLabel') }}</span>
-      <el-tag
-        v-for="(tag, index) in checked"
+    <el-row :gutter="10" class="mb8">
+      <el-checkbox
+        v-for="(item, index) in checked"
         :key="index"
-        closable
-        style="margin-right: 6px"
-        @close="handleCloseTag(index)"
+        :model-value="true"
+        @change="handleCloseTag(index)"
+        style="margin-right: 12px"
       >
-        {{ tag.userName }}
-      </el-tag>
+        {{ item.userName }}
+      </el-checkbox>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @row-click="handleRowClick">
       <el-table-column width="55" align="center">
         <template #default="scope">
-          <el-check-tag :checked="isChecked(scope.row)" @change="handleToggle(scope.row)">
-            {{ isChecked(scope.row) ? t('user.selected') : t('user.select') }}
-          </el-check-tag>
+          <el-checkbox :model-value="isChecked(scope.row)" @change="handleToggle(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column :label="t('user.userId')" align="center" prop="userId" />
       <el-table-column
         :label="t('user.account')"
         align="center"
-        prop="userName"
+        prop="account"
         :show-overflow-tooltip="true"
       />
       <el-table-column
-        :label="t('user.nickName')"
+        :label="t('user.userName')"
         align="center"
-        prop="nickName"
+        prop="userName"
         :show-overflow-tooltip="true"
       />
       <el-table-column
@@ -53,7 +49,7 @@
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column :label="t('common.createTime')" align="center" width="160">
+      <el-table-column :label="t('common.createTime')" align="center" min-width="170">
         <template #default="scope">
           <span>{{ formatTime(scope.row.createTime) }}</span>
         </template>
@@ -96,20 +92,18 @@ const isOpen = ref(false);
 
 const queryParams = reactive({
   pageNum: 1,
-  pageSize: 8,
+  pageSize: 6,
   params: {},
 });
 
 const queryConfig = computed(() => [
-  { label: t("user.account"), prop: "userName", type: "input", placeholder: t("user.placeholder.searchAccount") },
-  { label: t("user.nickName"), prop: "nickName", type: "input", placeholder: t("user.placeholder.searchName") },
-  {
-    label: t("user.phone"),
-    prop: "phonenumber",
-    type: "input",
-    placeholder: t("user.placeholder.phoneSearch"),
-  },
+  { label: t("user.account"), prop: "account", type: "input", placeholder: t("user.placeholder.searchAccount") },
+  { label: t("user.userName"), prop: "userName", type: "input", placeholder: t("user.placeholder.searchAccount") },
 ]);
+
+const props = defineProps({
+  isSingle: { type: Boolean, default: true },
+});
 
 const emit = defineEmits(["handleData"]);
 
@@ -147,7 +141,7 @@ function handleToggle(row) {
   if (isChecked(row)) {
     checked.value = checked.value.filter((p) => p.userId != row.userId);
   } else {
-    if (checked.value.length && isSingle) {
+    if (checked.value.length && props.isSingle) {
       checked.value = [];
     }
     checked.value.push(row);

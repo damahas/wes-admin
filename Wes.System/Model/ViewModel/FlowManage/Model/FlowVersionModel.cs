@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
-using Wes.DbModel;
+using Wes.Entity;
 
+using Wes.Utils.Converter;
 namespace Wes.ViewModel.FlowManage
 {
     /// <summary>
@@ -11,7 +12,9 @@ namespace Wes.ViewModel.FlowManage
     /// </summary>
     public class FlowVersionModel
     {
+        [JsonConverter(typeof(LongToStringConverter))]
         public long processId { set; get; }
+        [JsonConverter(typeof(LongToStringConverter))]
         public long versionId { set; get; }
         public List<FlowVersionNodeModel> nodes { get; set; }
         public List<FlowVersionLineModel> lines { get; set; }
@@ -39,6 +42,7 @@ namespace Wes.ViewModel.FlowManage
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public NodeHandleByEnum type { get; set; }
+        [JsonConverter(typeof(LongToStringConverter))]
         public long handleId { set; get; }
     }
 

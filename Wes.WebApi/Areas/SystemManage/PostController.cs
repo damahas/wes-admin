@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Wes.Business;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -36,13 +36,13 @@ namespace Wes.WebApi.Areas.SystemManage
         }
 
         [HttpPut]
-        public ReturnData Update([FromBody] SysPostModel role)
+        public ReturnData Update([FromBody] SysPostEntity role)
         {
             return _sysPostBiz.Save(role);
         }
 
         [HttpPost]
-        public ReturnData Insert([FromBody] SysPostModel role)
+        public ReturnData Insert([FromBody] SysPostEntity role)
         {
             return _sysPostBiz.Save(role);
         }

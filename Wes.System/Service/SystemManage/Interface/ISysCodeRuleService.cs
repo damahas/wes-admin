@@ -1,7 +1,7 @@
 using SqlSugar;
 using System;
 using System.Collections.Generic;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Model;
 using Wes.ViewModel.SystemManage;
 
@@ -11,15 +11,15 @@ namespace Wes.Service
     {
         #region 编码主表操作
 
-        public List<SysCodeRuleModel> GetList(ParamData<CodeRuleParam> param, out int total);
+        public List<SysCodeRuleEntity> GetList(ParamData<CodeRuleParam> param, out int total);
 
-        public List<SysCodeRuleModel> GetAll();
+        public List<SysCodeRuleEntity> GetAll();
 
-        public SysCodeRuleModel GetById(long id);
+        public SysCodeRuleEntity GetById(long id);
 
-        public SysCodeRuleModel GetByRuleCode(string ruleCode);
+        public SysCodeRuleEntity GetByRuleCode(string ruleCode);
 
-        public bool Save(SysCodeRuleModel model, ISqlSugarClient client);
+        public bool Save(SysCodeRuleEntity model, ISqlSugarClient client);
 
         public bool Delete(List<long> ids);
 
@@ -27,9 +27,9 @@ namespace Wes.Service
 
         #region 片段操作
 
-        public List<SysCodeRulePartModel> GetPartListByRuleId(long ruleId);
+        public List<SysCodeRulePartEntity> GetPartListByRuleId(long ruleId);
 
-        public bool SavePart(SysCodeRulePartModel model, ISqlSugarClient client);
+        public bool SavePart(SysCodeRulePartEntity model, ISqlSugarClient client);
 
         public bool DeletePart(List<long> ids, ISqlSugarClient client);
 

@@ -1,10 +1,10 @@
-using Wes.DbModel;
-using Wes.Service;
+using Wes.Scheduler.Model.Entity;
+using Wes.Scheduler.Model.ViewModel;
+using Wes.Scheduler.Services;
 using Wes.Utils.Extension;
 using Wes.Utils.Model;
-using Wes.ViewModel.SystemManage;
 
-namespace Wes.Business
+namespace Wes.Scheduler.Business
 {
     public class SysJobLogBiz : ISysJobLogBiz
     {
@@ -15,19 +15,19 @@ namespace Wes.Business
             _sysJobLogService = sysJobLogService;
         }
 
-        public RowData<SysJobLogModel> GetList(ParamData<JobLogParam> param)
+        public RowData<SysJobLogEntity> GetList(ParamData<JobLogParam> param)
         {
             int total = 0;
-            var result = new RowData<SysJobLogModel>(_sysJobLogService.GetList(param, out total))
+            var result = new RowData<SysJobLogEntity>(_sysJobLogService.GetList(param, out total))
             {
                 total = total
             };
             return result;
         }
 
-        public ResultData<SysJobLogModel> GetById(long id)
+        public ResultData<SysJobLogEntity> GetById(long id)
         {
-            return new ResultData<SysJobLogModel>(_sysJobLogService.GetById(id));
+            return new ResultData<SysJobLogEntity>(_sysJobLogService.GetById(id));
         }
 
         public ReturnData Delete(string ids)

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
-using Wes.DbModel;
+using Wes.Entity;
 using Wes.Utils.Converter;
 
 namespace Wes.ViewModel.SystemManage
@@ -61,6 +61,6 @@ namespace Wes.ViewModel.SystemManage
         /// <summary>
         public DateTime? UpdateTime { get; set; }
 
-        public List<SysCodeRulePartModel> Parts { set; get; }
+        public List<SysCodeRulePartEntity> Parts { set; get; }
     }
 }

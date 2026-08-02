@@ -15,6 +15,7 @@ let downloadLoadingInstance;
  * @returns {string} 格式化后的日期字符串
  */
 export function formatTime(time, pattern = 'YYYY-MM-DD HH:mm:ss') {
+    if (!time) return ''
     return moment(time).format(pattern);
 }
 

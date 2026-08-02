@@ -19,93 +19,150 @@
 
       <div class="step-card-body">
         <el-form :model="formData" :rules="rules" ref="formRef" label-width="auto" class="service-form">
-          <div class="form-section">
-            <div class="section-title">
-              <el-icon><OfficeBuilding /></el-icon>
-              <span>基本信息</span>
-            </div>
-            <div class="form-grid">
-              <el-form-item label="服务编码" prop="serviceCode">
-                <el-input
-                  v-model="formData.serviceCode"
-                  placeholder="请输入服务编码"
-                  maxlength="50"
-                  clearable
-                >
-                  <template #prefix>
-                    <el-icon><Key /></el-icon>
-                  </template>
-                </el-input>
-              </el-form-item>
+          <div class="form-layout">
+            <!-- 左侧：基本信息 + 备注 -->
+            <div class="form-left">
+              <div class="form-section">
+                <div class="section-title">
+                  <el-icon><OfficeBuilding /></el-icon>
+                  <span>基本信息</span>
+                </div>
+                <div class="form-grid">
+                  <el-form-item label="服务编码" prop="serviceCode">
+                    <el-input
+                      v-model="formData.serviceCode"
+                      placeholder="请输入服务编码"
+                      maxlength="50"
+                      clearable
+                    >
+                      <template #prefix>
+                        <el-icon><Key /></el-icon>
+                      </template>
+                    </el-input>
+                  </el-form-item>
 
-              <el-form-item label="服务名称" prop="serviceName">
-                <el-input
-                  v-model="formData.serviceName"
-                  placeholder="请输入服务名称"
-                  maxlength="100"
-                  clearable
-                >
-                  <template #prefix>
-                    <el-icon><Edit /></el-icon>
-                  </template>
-                </el-input>
-              </el-form-item>
+                  <el-form-item label="服务名称" prop="serviceName">
+                    <el-input
+                      v-model="formData.serviceName"
+                      placeholder="请输入服务名称"
+                      maxlength="100"
+                      clearable
+                    >
+                      <template #prefix>
+                        <el-icon><Edit /></el-icon>
+                      </template>
+                    </el-input>
+                  </el-form-item>
 
-              <el-form-item label="分类" prop="category">
-                <DictSelect
-                  v-model="formData.category"
-                  :options="categoryOptions"
-                  placeholder="请选择分类"
-                  style="width: 100%"
-                />
-              </el-form-item>
+                  <el-form-item label="分类" prop="category">
+                    <DictSelect
+                      v-model="formData.category"
+                      :options="categoryOptions"
+                      placeholder="请选择分类"
+                      style="width: 100%"
+                    />
+                  </el-form-item>
 
-              <el-form-item label="服务状态">
-                <el-switch
-                  v-model="formData.status"
-                  active-value="0"
-                  inactive-value="1"
-                  active-text="启用"
-                  inactive-text="停用"
-                  inline-prompt
-                />
-              </el-form-item>
-            </div>
+                  <el-form-item label="服务状态">
+                    <el-switch
+                      v-model="formData.status"
+                      active-value="0"
+                      inactive-value="1"
+                      active-text="启用"
+                      inactive-text="停用"
+                      inline-prompt
+                    />
+                  </el-form-item>
+                </div>
 
-            <div class="form-section template-section">
-              <div class="section-title">
-                <el-icon><Grid /></el-icon>
-                <span>加载模板</span>
+                <div class="inner-section template-section">
+                  <div class="section-title">
+                    <el-icon><Grid /></el-icon>
+                    <span>加载模板</span>
+                  </div>
+                  <div class="template-grid">
+                    <div
+                      v-for="template in templateList"
+                      :key="template.value"
+                      class="template-item"
+                      @click="selectTemplate(template)"
+                    >
+                      <el-icon><component :is="template.icon" /></el-icon>
+                      <span>{{ template.label }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="template-grid">
-                <div
-                  v-for="template in templateList"
-                  :key="template.value"
-                  class="template-item"
-                  @click="selectTemplate(template)"
-                >
-                  <el-icon><component :is="template.icon" /></el-icon>
-                  <span>{{ template.label }}</span>
+
+              <div class="form-section">
+                <div class="section-title">
+                  <el-icon><Document /></el-icon>
+                  <span>备注信息</span>
+                </div>
+                <el-form-item label="服务描述">
+                  <el-input
+                    v-model="formData.remark"
+                    type="textarea"
+                    placeholder="请输入服务描述信息，用于说明服务的用途和使用方法..."
+                    maxlength="500"
+                    :rows="4"
+                    show-word-limit
+                  />
+                </el-form-item>
+              </div>
+            </div>
+
+            <!-- 右侧：输入变量 -->
+            <div class="form-right">
+              <div class="form-section param-section">
+                <div class="section-title">
+                  <el-icon><Setting /></el-icon>
+                  <span>输入变量</span>
+                </div>
+                <div class="param-config-area">
+                  <div class="param-list">
+                    <div v-for="(param, index) in inputParams" :key="index" class="param-item">
+                      <el-input
+                        v-model="param.key"
+                        placeholder="变量名"
+                        size="small"
+                        @change="onParamChange"
+                      />
+                      <el-select
+                        v-model="param.type"
+                        size="small"
+                        @change="onParamChange"
+                      >
+                        <el-option label="字符串" value="string" />
+                        <el-option label="数字" value="number" />
+                        <el-option label="布尔" value="boolean" />
+                        <el-option label="日期" value="date" />
+                        <el-option label="对象" value="object" />
+                      </el-select>
+                      <el-button
+                        size="small"
+                        type="danger"
+                        plain
+                        :icon="Delete"
+                        @click="removeInputParam(index)"
+                      />
+                    </div>
+                    <div v-if="inputParams.length === 0" class="param-empty">
+                      暂未配置输入变量
+                    </div>
+                  </div>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    plain
+                    style="margin-top: 12px"
+                    @click="addInputParam"
+                  >
+                    + 添加变量
+                  </el-button>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="form-section">
-            <div class="section-title">
-              <el-icon><Document /></el-icon>
-              <span>备注信息</span>
-            </div>
-            <el-form-item label="服务描述">
-              <el-input
-                v-model="formData.remark"
-                type="textarea"
-                placeholder="请输入服务描述信息，用于说明服务的用途和使用方法..."
-                maxlength="500"
-                :rows="4"
-                show-word-limit
-              />
-            </el-form-item>
           </div>
         </el-form>
       </div>
@@ -114,8 +171,8 @@
 </template>
 
 <script setup name="BasicInfoStep">
-import { defineProps, defineEmits, ref } from 'vue'
-import { Key, Edit, Document, OfficeBuilding, Grid, Check, Search, List, Operation, Connection } from '@element-plus/icons-vue'
+import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
+import { Key, Edit, Document, OfficeBuilding, Grid, Check, Search, List, Operation, Connection, Setting, Delete } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import DictSelect from '@/components/DictSelect'
 
@@ -158,6 +215,48 @@ const props = defineProps({
 const emit = defineEmits(['validate', 'template-select'])
 
 const formRef = ref(null)
+
+// ==================== 输入变量管理 ====================
+const inputParams = ref([])
+
+function loadInputParams() {
+  try {
+    const config = props.formData.paramConfig
+    if (config && typeof config === 'string' && config.trim()) {
+      inputParams.value = JSON.parse(config)
+    } else if (Array.isArray(config)) {
+      inputParams.value = config
+    } else {
+      inputParams.value = []
+    }
+  } catch {
+    inputParams.value = []
+  }
+}
+
+function syncParamConfig() {
+  props.formData.paramConfig = JSON.stringify(inputParams.value)
+}
+
+function onParamChange() {
+  syncParamConfig()
+}
+
+function addInputParam() {
+  inputParams.value.push({ key: '', type: 'string' })
+  syncParamConfig()
+}
+
+function removeInputParam(index) {
+  inputParams.value.splice(index, 1)
+  syncParamConfig()
+}
+
+// 初始化及监听外部变化
+loadInputParams()
+watch(() => props.formData.paramConfig, () => {
+  loadInputParams()
+})
 
 // 模板列表
 const templateList = [
@@ -322,22 +421,57 @@ defineExpose({
 }
 
 .step-card-body {
-  padding: 16px;
+  padding: 24px 40px;
   display: flex;
   justify-content: center;
 }
 
 .service-form {
-  max-width: 800px;
-  width: 100%;
+}
+
+/* 左右两栏布局 */
+.form-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.form-left {
+  width: 520px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-right {
+  width: 340px;
+  flex-shrink: 0;
 }
 
 .form-section {
-  margin-bottom: 28px;
   padding: 20px;
   background: var(--bg-hover);
   border-radius: 10px;
   border: 1px solid var(--border-color);
+}
+
+/* 右侧变量面板占满高度 */
+.param-section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+
+.param-section .param-config-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.param-section .param-list {
+  flex: 1;
 }
 
 .section-title {
@@ -354,12 +488,15 @@ defineExpose({
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
-.form-section:last-child {
-  margin-bottom: 0;
+.inner-section {
+  margin-top: 16px;
+  padding: 0;
+  background: none;
+  border: none;
 }
 
 :deep(.el-form-item) {
@@ -382,10 +519,6 @@ defineExpose({
 
 :deep(.el-input__wrapper) {
   border-radius: 6px;
-}
-
-.template-section {
-  margin-top: 16px;
 }
 
 .template-grid {
@@ -416,5 +549,40 @@ defineExpose({
 
 .template-item .el-icon {
   font-size: 14px;
+}
+
+/* 输入变量配置区域 */
+.param-config-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.param-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.param-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.param-item .el-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.param-item .el-select {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.param-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 16px 0;
 }
 </style>
