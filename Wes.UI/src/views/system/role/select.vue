@@ -198,7 +198,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-::deep(.el-dialog__body) {
+:deep(.el-dialog__body) {
   padding-top: 0;
 }
 </style>
