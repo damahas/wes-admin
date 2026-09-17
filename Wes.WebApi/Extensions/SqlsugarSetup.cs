@@ -57,8 +57,6 @@ namespace Wes.WebApi.Extensions
             }))
             {
                 initDb.CodeFirst.SetStringDefaultLength(200).InitTables(types);
-                // CodeFirst 只建表不补列：补齐 AI 模块后续新增的列（耗时、真实 token 标记等）
-                Wes.AI.Services.AiMessageSchema.EnsureColumns(initDb);
             }
         }
     }

@@ -126,7 +126,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { addDateRange } from "@/utils";
 import QueryForm from "@/components/QueryForm/index.vue";
-import { listJobLog, getJobLog, delJobLog, cleanJobLog } from "@/api/scheduler/job";
+import { listJobLog, getJobLog, delJobLog, cleanJobLog } from "@/api/system/job";
 
 const route = useRoute();
 const router = useRouter();

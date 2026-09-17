@@ -25,11 +25,6 @@
     <ProjectReference Include="..\Wes.Utils\Wes.Utils.csproj" />
   </ItemGroup>
 
-  <!-- 排除已迁移到 Wes.System 的源文件，避免重复编译 -->
-  <ItemGroup>
-    <Compile Remove="Areas\**" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Update="UploadFile\Captcha\captcha1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
