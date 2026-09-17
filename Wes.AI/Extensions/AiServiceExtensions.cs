@@ -19,16 +19,22 @@ public static class AiServiceExtensions
         // SK Kernel 提供者（单例，管理多提供商 Kernel，配置来自数据库 ai_model）
         services.AddSingleton<KernelProvider>();
 
+        // 本轮对话指标暂存（后端 Stopwatch 实测耗时 + 模型返回的真实 token，保存消息时落库）
+        services.AddSingleton<AiTurnStore>();
+
         // AI 聊天场景统一复用 Agent 框架的 "chat" 类型
         services.AddScoped<IAgentService, AgentService>();
 
         // AI 会话持久化服务
         services.AddScoped<ISessionService, SessionService>();
 
+        // AI 模型配置维护（能力、密钥、默认项）
+        services.AddScoped<IAiModelService, AiModelService>();
+
         // AI 模型配置种子（启动时空表则插入默认数据，apikey 为空）
         services.AddHostedService<ModelConfigSeeder>();
 
-        // AI 助手插件：无状态，注册为单例。
+        // AI 插件：无状态，注册为单例。
         // 注意：AgentService 把插件实例解析后注册到【单例缓存的 Kernel】上，
         // 因此插件本身不能是 Scoped。插件内部如需 Scoped 服务（如 ISqlSugarClient），
         // 应在方法内自行 CreateScope 解析（SqlPlugin 已这样做）。

@@ -30,6 +30,9 @@ builder.Services.AddControllers(opt =>
 .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+    // 雪花 ID 等 long 值前端统一按字符串传输（long 在 JS 中会丢精度），允许从字符串读取数字
+    options.JsonSerializerOptions.NumberHandling =
+        System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString;
 })
 .AddMvcOptions(options => options.Filters.Add(new AuthorizeFilter()));
 

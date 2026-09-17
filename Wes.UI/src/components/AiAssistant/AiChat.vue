@@ -21,11 +21,11 @@
         :key="start + i"
         class="ai-msg"
         :class="`ai-msg--${msg.role}`"
-        v-memo="[msg.content, msg.role, msg.toolCalls]"
+        v-memo="[msg.content, msg.role, msg.toolCalls, msg.tokens, msg.elapsedMs, msg.promptTokens, msg.completionTokens, msg.tokensEstimated, msg.usageSource]"
       >
         <div class="ai-msg__avatar">
           <span v-if="msg.role === 'user'">U</span>
-          <span v-else>AI</span>
+          <span v-else class="ai-msg__avatar-ai">AI</span>
         </div>
         <div class="ai-msg__body">
           <!-- 正在生成中的空助手消息：在气泡内显示打字动画，而不是额外再出现一个加载气泡 -->
@@ -41,6 +41,17 @@
               :key="tc.id"
               class="ai-tool-badge"
             >{{ t('ai.toolCalling') }}: {{ tc.name }}</span>
+          </div>
+          <!-- 回答统计徽章：token 消耗 + 耗时（提问不展示统计） -->
+          <div v-if="msg.role === 'assistant'" class="ai-msg__meta">
+            <span v-if="tokensOf(msg) > 0" class="ai-msg__badge" :title="tokensTitle(msg)">
+              <i class="fa-solid fa-database"></i>
+              Tokens: {{ msg.tokensEstimated ? '~' : '' }}{{ formatTokens(tokensOf(msg)) }}
+            </span>
+            <span v-if="msg.elapsedMs > 0" class="ai-msg__badge">
+              <i class="fa-solid fa-clock"></i>
+              {{ t('ai.elapsed') }}: {{ formatElapsed(msg.elapsedMs) }}
+            </span>
           </div>
         </div>
       </div>
@@ -60,6 +71,12 @@
       </div>
       <div class="ai-input-toolbar">
         <div class="ai-toolbar-left">
+          <ContextRing
+            :used="contextUsed"
+            :max="maxContext"
+            :compressed="!!usage?.compressed"
+            class="ai-context-ring"
+          />
           <el-dropdown trigger="click" @command="v => emit('update:model', v)" class="ai-dropdown">
             <span class="ai-dropdown-link">
               {{ modelLabel }} <i class="fa fa-chevron-down"></i>
@@ -95,19 +112,58 @@ import { useI18n } from 'vue-i18n'
 import { Promotion, VideoPause } from '@element-plus/icons-vue'
 import { renderMarkdown } from './markdown'
 import * as echarts from 'echarts'
+import ContextRing from './ContextRing.vue'
+import { estimateTokens, formatTokens } from '@/utils/contextTokens'
 
 const props = defineProps({
   messages: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
   model: { type: String, default: '' },
   models: { type: Array, default: () => [] },
-  providers: { type: Array, default: () => [] }
+  providers: { type: Array, default: () => [] },
+  // 后端返回的最近一次上下文用量（含是否压缩），为空时用本地估算
+  usage: { type: Object, default: null },
+  localTokens: { type: Number, default: 0 },
+  maxContext: { type: Number, default: 0 }
 })
 const emit = defineEmits(['update:model', 'send', 'stop'])
 
 const { t } = useI18n()
 const input = ref('')
 const msgRef = ref(null)
+
+// 上下文占用：优先用后端返回的真实用量，未返回时用本地估算；两者都叠加当前输入框的占用
+const contextUsed = computed(() => {
+  const base = props.usage?.usedTokens ?? props.localTokens
+  return base + estimateTokens(input.value)
+})
+
+/**
+ * 单条消息的 token 数：优先用落库/流式结束后写入的 msg.tokens，否则本地实时估算。
+ * 内容为空（正在生成）时返回 0 不展示，避免每来一个字就重算一遍长文本；
+ * 这里不依赖 loading，避免 loading 未复位导致最后一条始终不显示徽章。
+ */
+function tokensOf(msg) {
+  if (msg.role === 'assistant' && !msg.content) return 0
+  return msg.tokens ?? estimateTokens(msg.content)
+}
+
+/** token 徽章悬浮说明：区分「模型真实返回」「输入实测+输出估算」「全部本地估算」 */
+function tokensTitle(msg) {
+  if (msg.usageSource === 'model') return t('ai.tokensReal')
+  if (msg.usageSource === 'probe') return t('ai.tokensProbe')
+  if (msg.tokensEstimated === true) return t('ai.tokensEstimated')
+  if (msg.promptTokens != null) return t('ai.tokensReal')
+  return t('ai.outputTokens')
+}
+
+/** 回答耗时格式化：<1分钟显示秒（1 位小数），超过则显示 x m y s */
+function formatElapsed(ms) {
+  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
+  const m = Math.floor(ms / 60000)
+  const s = Math.round((ms % 60000) / 1000)
+  return `${m}m ${s}s`
+}
 
 const providerName = (name) =>
   props.providers.find(p => p.name === name)?.displayName || name
@@ -188,6 +244,7 @@ function onMessagesClick(e) {
 // markdown.js 把 ```echart 代码块渲染成 <div class="ai-chart" data-option="..."> 占位，
 // 这里在消息渲染后扫描占位元素，初始化 echarts 实例并 setOption。
 const chartInstances = new Map() // el -> { inst, option }
+let chartResizeObserver = null // 兜底：容器尺寸变化（气泡撑开、抽屉动画）时自动 resize
 
 // 根据当前亮/暗模式生成 ECharts 全局基础样式，统一配色与坐标轴/文字颜色
 function getChartBaseOption() {
@@ -242,6 +299,7 @@ function renderCharts() {
   for (const [el, rec] of chartInstances) {
     if (!el.isConnected) {
       rec.inst.dispose()
+      chartResizeObserver?.unobserve(el)
       chartInstances.delete(el)
     }
   }
@@ -278,6 +336,7 @@ function renderCharts() {
     inst.setOption(merged)
     inst.resize()
     chartInstances.set(el, { inst, option })
+    chartResizeObserver?.observe(el)
   })
 }
 
@@ -307,6 +366,13 @@ let themeObserver = null
 
 onMounted(() => {
   window.addEventListener('resize', resizeCharts)
+  // 容器尺寸变化时同步图表：即使初始化时宽度不准（气泡尚未撑开），也会被自动修正
+  chartResizeObserver = new ResizeObserver(entries => {
+    for (const entry of entries) {
+      const rec = chartInstances.get(entry.target)
+      if (rec && entry.contentRect.width > 0) rec.inst.resize()
+    }
+  })
   // 亮/暗主题切换时，重渲染所有图表以同步配色
   themeObserver = new MutationObserver(() => rerenderChartsTheme())
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
@@ -318,6 +384,7 @@ onMounted(() => {
 })
 onUnmounted(() => {
   window.removeEventListener('resize', resizeCharts)
+  chartResizeObserver?.disconnect()
   if (themeObserver) themeObserver.disconnect()
   chartInstances.forEach(rec => rec.inst.dispose())
   chartInstances.clear()
@@ -432,6 +499,30 @@ watch(() => props.loading, () => { if (!props.loading) { scrollToBottom(true); n
   gap: 4px;
   padding-left: 4px;
 }
+/* 回答统计徽章（token 消耗 / 耗时），风格跟随系统主题变量 */
+.ai-msg__meta {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  user-select: none;
+}
+.ai-msg__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--theme-color-light, rgba(107, 163, 104, 0.08));
+  color: var(--text-secondary, #8a8a8a);
+  border: 1px solid var(--border-color, #e5e5e5);
+}
+.ai-msg__badge i {
+  font-size: 12px;
+  color: var(--theme-color);
+}
 .ai-tool-badge {
   font-size: 12px;
   padding: 2px 8px;
@@ -516,6 +607,15 @@ watch(() => props.loading, () => { if (!props.loading) { scrollToBottom(true); n
   height: 100%;
   color: var(--text-secondary);
   font-size: 13px;
+}
+/* 含图表的消息撑满可用宽度：
+   气泡默认 shrink-to-fit，图表占位出现时气泡仅有"图表渲染中…"几个字的宽度，
+   echarts 此时初始化会把 canvas 宽度固化成该窄值，导致图表塌陷 */
+.ai-msg__body:has(.ai-chart) {
+  width: calc(100% - 48px);
+}
+.ai-msg__body:has(.ai-chart) .ai-msg__content {
+  width: 100%;
 }
 
 /* ==================== 语法高亮配色（亮色：github 风格） ==================== */
@@ -631,6 +731,11 @@ watch(() => props.loading, () => { if (!props.loading) { scrollToBottom(true); n
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+.ai-context-ring {
+  flex-shrink: 0;
+  margin-right: 2px;
+  cursor: help;
 }
 .ai-dropdown { line-height: 1; }
 .ai-dropdown-link {

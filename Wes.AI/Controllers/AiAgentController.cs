@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Wes.AI.Models.Entity;
+using Wes.AI.Models.Enum;
 using Wes.AI.Models.ViewModel;
 using Wes.AI.Services;
 using Wes.Utils.Model;
@@ -89,13 +90,20 @@ public class AiAgentController : ControllerBase
     /// <summary>
     /// 获取指定提供商的模型列表
     /// </summary>
+    /// <param name="provider">提供商，为空表示不限</param>
+    /// <param name="modelType">模型类型（llm / vision），为空表示不限</param>
+    /// <param name="capabilities">需要具备的能力位掩码（见 AiModelCapability），为空表示不限。
+    /// 例：前端要发图片时传 input_image 对应的位值，只返回能看图的模型。</param>
     [HttpGet]
     [Route("models")]
     public ResultData<List<ModelInfo>> GetModels(
         [FromQuery] string? provider,
+        [FromQuery] string? modelType,
+        [FromQuery] int? capabilities,
         [FromServices] Kernel.KernelProvider kernelProvider)
     {
-        var list = kernelProvider.GetModelList(provider);
+        var require = capabilities is > 0 ? (AiModelCapability)capabilities.Value : AiModelCapability.None;
+        var list = kernelProvider.GetModelList(provider, modelType, require);
         return new ResultData<List<ModelInfo>>(list);
     }
 }

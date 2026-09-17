@@ -114,3 +114,35 @@ export function deleteSession(id) {
 export function saveSessionMessages(id, messages) {
   return request({ url: `/ai/session/${id}/messages`, method: 'put', data: { messages } })
 }
+
+// ==================== 模型配置（能力/密钥/默认项） ====================
+
+/** 模型配置列表 */
+export function listAiModels(params) {
+  return request({ url: '/ai/model', method: 'get', params })
+}
+
+/** 模型配置详情 */
+export function getAiModel(id) {
+  return request({ url: `/ai/model/${id}`, method: 'get' })
+}
+
+/** 能力字典（输入/输出/附加三组） */
+export function getAiCapabilities() {
+  return request({ url: '/ai/model/capabilities', method: 'get' })
+}
+
+/** 新增模型配置 */
+export function addAiModel(data) {
+  return request({ url: '/ai/model', method: 'post', data })
+}
+
+/** 修改模型配置 */
+export function updateAiModel(id, data) {
+  return request({ url: `/ai/model/${id}`, method: 'put', data })
+}
+
+/** 删除模型配置（ids 逗号分隔） */
+export function delAiModel(ids) {
+  return request({ url: `/ai/model/${ids}`, method: 'delete' })
+}

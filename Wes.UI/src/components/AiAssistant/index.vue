@@ -3,7 +3,7 @@
     <el-drawer
       v-model="visible"
       direction="rtl"
-      :size="520"
+      :size="'min(720px, 92vw)'"
       :before-close="onBeforeClose"
       :z-index="2000"
       :show-close="false"
@@ -37,6 +37,9 @@
           :messages="messages"
           :loading="loading"
           :providers="providers"
+          :usage="contextUsage"
+          :local-tokens="localTokens"
+          :max-context="maxContext"
           @update:model="onModelChange"
           @send="onSend"
           @stop="onStop"
@@ -66,7 +69,7 @@ const { t } = useI18n()
 const {
   loading, sessions, activeSessionId, messages,
   providers, models,
-  model,
+  model, contextUsage, localTokens, maxContext,
   init,
   onNewSession: createSession2, onSelectSession: selectSession2,
   onDeleteSession, onSend, onStop

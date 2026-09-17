@@ -8,7 +8,7 @@ namespace Wes.Scheduler.Model.Entity
     /// 定时任务调度日志表
     /// </summary>
     [SugarTable("sys_job_log", "定时任务调度日志表", IsDisabledUpdateAll = true)]
-    public class SysJobLogEntity
+    public class JobLogEntity
     {
         [SugarColumn(ColumnName = "job_log_id", IsPrimaryKey = true, Length = 20, ColumnDescription = "任务日志ID")]
         [JsonConverter(typeof(LongToStringConverter))]

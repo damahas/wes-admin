@@ -41,7 +41,7 @@ namespace Wes.Scheduler
 
         // ==================== 调度操作 ====================
 
-        public async Task AddJobAsync(SysJobEntity job)
+        public async Task AddJobAsync(JobEntity job)
         {
             if (_scheduler == null) return;
 
@@ -85,7 +85,7 @@ namespace Wes.Scheduler
                 await _scheduler.PauseJob(jobKey);
         }
 
-        public async Task DeleteJobAsync(SysJobEntity job)
+        public async Task DeleteJobAsync(JobEntity job)
         {
             if (_scheduler == null) return;
             var triggerKey = TriggerKey(job);
@@ -99,25 +99,25 @@ namespace Wes.Scheduler
                 await _scheduler.DeleteJob(jobKey);
         }
 
-        public async Task PauseJobAsync(SysJobEntity job)
+        public async Task PauseJobAsync(JobEntity job)
         {
             if (_scheduler != null)
                 await _scheduler.PauseJob(JobKey(job));
         }
 
-        public async Task ResumeJobAsync(SysJobEntity job)
+        public async Task ResumeJobAsync(JobEntity job)
         {
             if (_scheduler != null)
                 await _scheduler.ResumeJob(JobKey(job));
         }
 
-        public async Task TriggerJobNowAsync(SysJobEntity job)
+        public async Task TriggerJobNowAsync(JobEntity job)
         {
             if (_scheduler != null)
                 await _scheduler.TriggerJob(JobKey(job));
         }
 
-        public async Task<bool> ExistsAsync(SysJobEntity job)
+        public async Task<bool> ExistsAsync(JobEntity job)
         {
             return _scheduler != null && await _scheduler.CheckExists(JobKey(job));
         }
@@ -127,7 +127,7 @@ namespace Wes.Scheduler
         public async Task ExecuteJob(long jobId, string jobName, string jobGroup, string invokeTarget)
         {
             var sw = Stopwatch.StartNew();
-            var log = new SysJobLogEntity
+            var log = new JobLogEntity
             {
                 JobName = jobName,
                 JobGroup = jobGroup,
@@ -167,8 +167,8 @@ namespace Wes.Scheduler
 
         // ==================== private ====================
 
-        private static JobKey JobKey(SysJobEntity job) => new(job.JobId.ToString(), job.JobGroup);
-        private static TriggerKey TriggerKey(SysJobEntity job) => new($"t_{job.JobId}", job.JobGroup);
+        private static JobKey JobKey(JobEntity job) => new(job.JobId.ToString(), job.JobGroup);
+        private static TriggerKey TriggerKey(JobEntity job) => new($"t_{job.JobId}", job.JobGroup);
 
         private static (string name, string? parameters) ParseInvokeTarget(string raw)
         {
@@ -184,12 +184,12 @@ namespace Wes.Scheduler
             return text.Length <= max ? text : text[..max];
         }
 
-        private static async Task SaveLogAsync(SysJobLogEntity log)
+        private static async Task SaveLogAsync(JobLogEntity log)
         {
             try
             {
                 using var scope = GlobalContext.ServiceProvider!.CreateScope();
-                var svc = scope.ServiceProvider.GetRequiredService<Wes.Scheduler.Services.ISysJobLogService>();
+                var svc = scope.ServiceProvider.GetRequiredService<Wes.Scheduler.Services.IJobLogService>();
                 svc.Save(log);
             }
             catch (Exception ex)

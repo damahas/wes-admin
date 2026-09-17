@@ -280,7 +280,7 @@ import {
   getJobLog,
   delJobLog,
   cleanJobLog,
-} from "@/api/system/job";
+} from "@/api/scheduler/job";
 
 const jobRef = ref(null);
 

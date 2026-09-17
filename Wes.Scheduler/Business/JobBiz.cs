@@ -10,31 +10,31 @@ using Wes.Utils.Model;
 
 namespace Wes.Scheduler.Business
 {
-    public class SysJobBiz : ISysJobBiz
+    public class JobBiz : IJobBiz
     {
-        private readonly ISysJobService _sysJobService;
+        private readonly IJobService _jobService;
 
-        public SysJobBiz(ISysJobService sysJobService)
+        public JobBiz(IJobService jobService)
         {
-            _sysJobService = sysJobService;
+            _jobService = jobService;
         }
 
-        public RowData<SysJobEntity> GetList(ParamData<JobParam> param)
+        public RowData<JobEntity> GetList(ParamData<JobParam> param)
         {
             int total = 0;
-            var result = new RowData<SysJobEntity>(_sysJobService.GetList(param, out total))
+            var result = new RowData<JobEntity>(_jobService.GetList(param, out total))
             {
                 total = total
             };
             return result;
         }
 
-        public ResultData<SysJobEntity> GetById(long id)
+        public ResultData<JobEntity> GetById(long id)
         {
-            return new ResultData<SysJobEntity>(_sysJobService.GetById(id));
+            return new ResultData<JobEntity>(_jobService.GetById(id));
         }
 
-        public ReturnData Save(SysJobEntity model)
+        public ReturnData Save(JobEntity model)
         {
             // 启用状态（0）需要 cron 校验；暂停状态（1）不校验，直接落库
             if (model.Status == "0")
@@ -44,7 +44,7 @@ namespace Wes.Scheduler.Business
                     return new ReturnData(500, $"Cron 表达式无效：{cronErr}");
             }
 
-            if (!_sysJobService.Save(model))
+            if (!_jobService.Save(model))
                 return new ReturnData(500, "保存失败！");
 
             // 启用状态 → 同步到 Quartz；暂停状态 → 只存数据库，不调 Quartz
@@ -63,21 +63,21 @@ namespace Wes.Scheduler.Business
             // 先移除 Quartz 调度
             foreach (var id in delIds)
             {
-                var job = _sysJobService.GetById(id);
+                var job = _jobService.GetById(id);
                 if (job != null)
                 {
                     _ = RemoveFromSchedulerAsync(job);
                 }
             }
 
-            return _sysJobService.Delete(delIds)
+            return _jobService.Delete(delIds)
                 ? new ReturnData()
                 : new ReturnData(500, "删除失败！");
         }
 
-        public ReturnData ChangeStatus(SysJobEntity model)
+        public ReturnData ChangeStatus(JobEntity model)
         {
-            var job = _sysJobService.GetById(model.JobId);
+            var job = _jobService.GetById(model.JobId);
             if (job == null)
                 return new ReturnData(500, "任务不存在！");
 
@@ -89,7 +89,7 @@ namespace Wes.Scheduler.Business
                     return new ReturnData(500, $"Cron 表达式无效，无法启用：{cronErr}");
             }
 
-            if (!_sysJobService.ChangeStatus(model))
+            if (!_jobService.ChangeStatus(model))
                 return new ReturnData(500, "状态修改失败！");
 
             // 启用 → 同步到 Quartz；暂停 → 从 Quartz 移除
@@ -100,7 +100,7 @@ namespace Wes.Scheduler.Business
 
         public ReturnData Run(long id)
         {
-            var job = _sysJobService.GetById(id);
+            var job = _jobService.GetById(id);
             if (job == null)
                 return new ReturnData(500, "任务不存在！");
 
@@ -111,7 +111,7 @@ namespace Wes.Scheduler.Business
 
         // ============ Quartz 同步 ============
 
-        private static async Task SyncToSchedulerAsync(SysJobEntity job)
+        private static async Task SyncToSchedulerAsync(JobEntity job)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Wes.Scheduler.Business
             }
         }
 
-        private static async Task RemoveFromSchedulerAsync(SysJobEntity job)
+        private static async Task RemoveFromSchedulerAsync(JobEntity job)
         {
             try
             {

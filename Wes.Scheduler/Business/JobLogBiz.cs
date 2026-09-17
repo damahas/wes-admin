@@ -6,28 +6,28 @@ using Wes.Utils.Model;
 
 namespace Wes.Scheduler.Business
 {
-    public class SysJobLogBiz : ISysJobLogBiz
+    public class JobLogBiz : IJobLogBiz
     {
-        private readonly ISysJobLogService _sysJobLogService;
+        private readonly IJobLogService _jobLogService;
 
-        public SysJobLogBiz(ISysJobLogService sysJobLogService)
+        public JobLogBiz(IJobLogService jobLogService)
         {
-            _sysJobLogService = sysJobLogService;
+            _jobLogService = jobLogService;
         }
 
-        public RowData<SysJobLogEntity> GetList(ParamData<JobLogParam> param)
+        public RowData<JobLogEntity> GetList(ParamData<JobLogParam> param)
         {
             int total = 0;
-            var result = new RowData<SysJobLogEntity>(_sysJobLogService.GetList(param, out total))
+            var result = new RowData<JobLogEntity>(_jobLogService.GetList(param, out total))
             {
                 total = total
             };
             return result;
         }
 
-        public ResultData<SysJobLogEntity> GetById(long id)
+        public ResultData<JobLogEntity> GetById(long id)
         {
-            return new ResultData<SysJobLogEntity>(_sysJobLogService.GetById(id));
+            return new ResultData<JobLogEntity>(_jobLogService.GetById(id));
         }
 
         public ReturnData Delete(string ids)
@@ -36,14 +36,14 @@ namespace Wes.Scheduler.Business
             if (delIds == null || delIds.Count == 0)
                 return new ReturnData(500, "参数有误！");
 
-            return _sysJobLogService.Delete(delIds)
+            return _jobLogService.Delete(delIds)
                 ? new ReturnData()
                 : new ReturnData(500, "删除失败！");
         }
 
         public ReturnData Clean()
         {
-            return _sysJobLogService.Clean()
+            return _jobLogService.Clean()
                 ? new ReturnData()
                 : new ReturnData(500, "清空失败！");
         }

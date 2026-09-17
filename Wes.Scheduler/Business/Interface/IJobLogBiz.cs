@@ -4,10 +4,10 @@ using Wes.Utils.Model;
 
 namespace Wes.Scheduler.Business
 {
-    public interface ISysJobLogBiz
+    public interface IJobLogBiz
     {
-        RowData<SysJobLogEntity> GetList(ParamData<JobLogParam> param);
-        ResultData<SysJobLogEntity> GetById(long id);
+        RowData<JobLogEntity> GetList(ParamData<JobLogParam> param);
+        ResultData<JobLogEntity> GetById(long id);
         ReturnData Delete(string ids);
         ReturnData Clean();
     }

@@ -7,13 +7,13 @@ using Wes.Utils.Model;
 
 namespace Wes.Scheduler.Services
 {
-    public class SysJobService : Repository<SysJobEntity>, ISysJobService
+    public class JobService : Repository<JobEntity>, IJobService
     {
-        public SysJobService(ISqlSugarClient db) : base(db) { }
+        public JobService(ISqlSugarClient db) : base(db) { }
 
-        public List<SysJobEntity> GetList(ParamData<JobParam> param, out int total)
+        public List<JobEntity> GetList(ParamData<JobParam> param, out int total)
         {
-            var exp = Expressionable.Create<SysJobEntity>();
+            var exp = Expressionable.Create<JobEntity>();
             if (param.Params != null)
             {
                 if (!string.IsNullOrWhiteSpace(param.Params.JobName))
@@ -25,24 +25,24 @@ namespace Wes.Scheduler.Services
             }
 
             total = 0;
-            var query = Context.Queryable<SysJobEntity>().Where(exp.ToExpression())
+            var query = Context.Queryable<JobEntity>().Where(exp.ToExpression())
                 .OrderBy(p => p.JobId, OrderByType.Desc);
             return param.PageSize == 0
                 ? query.ToList()
                 : query.ToPageList(param.PageNum, param.PageSize, ref total);
         }
 
-        public List<SysJobEntity> GetAll()
+        public List<JobEntity> GetAll()
         {
-            return Context.Queryable<SysJobEntity>().ToList();
+            return Context.Queryable<JobEntity>().ToList();
         }
 
-        public SysJobEntity? GetById(long id)
+        public JobEntity? GetById(long id)
         {
-            return Context.Queryable<SysJobEntity>().Where(p => p.JobId == id).First();
+            return Context.Queryable<JobEntity>().Where(p => p.JobId == id).First();
         }
 
-        public bool Save(SysJobEntity model)
+        public bool Save(JobEntity model)
         {
             if (model.JobId > 0)
             {
@@ -58,14 +58,14 @@ namespace Wes.Scheduler.Services
         public bool Delete(List<long> ids)
         {
             if (ids == null || ids.Count == 0) return false;
-            return Context.Deleteable<SysJobEntity>().In(ids).ExecuteCommand() > 0;
+            return Context.Deleteable<JobEntity>().In(ids).ExecuteCommand() > 0;
         }
 
-        public bool ChangeStatus(SysJobEntity model)
+        public bool ChangeStatus(JobEntity model)
         {
             var updateBy = GlobalContext.CurrentUser?.Account;
-            return Context.Updateable<SysJobEntity>()
-                .SetColumns(p => new SysJobEntity { Status = model.Status, UpdateTime = DateTime.Now, UpdateBy = updateBy })
+            return Context.Updateable<JobEntity>()
+                .SetColumns(p => new JobEntity { Status = model.Status, UpdateTime = DateTime.Now, UpdateBy = updateBy })
                 .Where(p => p.JobId == model.JobId)
                 .ExecuteCommand() > 0;
         }

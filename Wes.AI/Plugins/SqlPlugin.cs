@@ -10,7 +10,7 @@ using SqlSugar;
 namespace Wes.AI.Plugins;
 
 /// <summary>
-/// SQL 助手插件：生成并执行只读 SQL，支持查询表结构。
+/// SQL 插件（数据查询 Agent 专用）：生成并执行只读 SQL，支持查询表结构。
 /// 仅允许 SELECT / WITH 查询，禁止写操作与 DDL，避免破坏数据。
 /// 插件自身无状态，每次调用时在方法内创建 DI Scope 解析 Scoped 的 ISqlSugarClient，
 /// 以便安全地注册到单例缓存的 Kernel 中。

@@ -6,13 +6,13 @@ using Wes.Utils.Model;
 
 namespace Wes.Scheduler.Services
 {
-    public class SysJobLogService : Repository<SysJobLogEntity>, ISysJobLogService
+    public class JobLogService : Repository<JobLogEntity>, IJobLogService
     {
-        public SysJobLogService(ISqlSugarClient db) : base(db) { }
+        public JobLogService(ISqlSugarClient db) : base(db) { }
 
-        public List<SysJobLogEntity> GetList(ParamData<JobLogParam> param, out int total)
+        public List<JobLogEntity> GetList(ParamData<JobLogParam> param, out int total)
         {
-            var exp = Expressionable.Create<SysJobLogEntity>();
+            var exp = Expressionable.Create<JobLogEntity>();
             if (param.Params != null)
             {
                 if (!string.IsNullOrWhiteSpace(param.Params.JobName))
@@ -24,24 +24,24 @@ namespace Wes.Scheduler.Services
             }
 
             total = 0;
-            var query = Context.Queryable<SysJobLogEntity>().Where(exp.ToExpression())
+            var query = Context.Queryable<JobLogEntity>().Where(exp.ToExpression())
                 .OrderBy(p => p.CreateTime, OrderByType.Desc);
             return param.PageSize == 0
                 ? query.ToList()
                 : query.ToPageList(param.PageNum, param.PageSize, ref total);
         }
 
-        public List<SysJobLogEntity> GetAll()
+        public List<JobLogEntity> GetAll()
         {
-            return Context.Queryable<SysJobLogEntity>().ToList();
+            return Context.Queryable<JobLogEntity>().ToList();
         }
 
-        public SysJobLogEntity? GetById(long id)
+        public JobLogEntity? GetById(long id)
         {
-            return Context.Queryable<SysJobLogEntity>().Where(p => p.JobLogId == id).First();
+            return Context.Queryable<JobLogEntity>().Where(p => p.JobLogId == id).First();
         }
 
-        public bool Save(SysJobLogEntity model)
+        public bool Save(JobLogEntity model)
         {
             if (model.JobLogId > 0)
                 return Update(model);
@@ -51,12 +51,12 @@ namespace Wes.Scheduler.Services
         public bool Delete(List<long> ids)
         {
             if (ids == null || ids.Count == 0) return false;
-            return Context.Deleteable<SysJobLogEntity>().In(ids).ExecuteCommand() > 0;
+            return Context.Deleteable<JobLogEntity>().In(ids).ExecuteCommand() > 0;
         }
 
         public bool Clean()
         {
-            return Context.Deleteable<SysJobLogEntity>().ExecuteCommand() > 0;
+            return Context.Deleteable<JobLogEntity>().ExecuteCommand() > 0;
         }
     }
 }
